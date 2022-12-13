@@ -38,4 +38,14 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleReactionNotFoundException(ReactionNotFoundException exception) {
         return new ResponseEntity<>("Rating with given id doesn't exist", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(IdNotFoundException.class)
+    public ResponseEntity<Object> handleIdNotFoundException(IdNotFoundException exception) {
+        return new ResponseEntity<>("Id not found", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IdFoundException.class)
+    public ResponseEntity<Object> handleIdFoundException(IdFoundException exception) {
+        return new ResponseEntity<>("Id found. While creating a new object id is generated automatically", HttpStatus.BAD_REQUEST);
+    }
 }

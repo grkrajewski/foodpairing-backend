@@ -3,6 +3,8 @@ package com.myapp.foodpairingbackend.facade;
 import com.myapp.foodpairingbackend.domain.dto.DrinkIngredientDto;
 import com.myapp.foodpairingbackend.domain.entity.DrinkIngredient;
 import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdFoundException;
+import com.myapp.foodpairingbackend.exception.IdNotFoundException;
 import com.myapp.foodpairingbackend.mapper.DrinkIngredientMapper;
 import com.myapp.foodpairingbackend.service.DrinkIngredientService;
 import lombok.RequiredArgsConstructor;
@@ -31,15 +33,21 @@ public class DrinkIngredientFacade {
         drinkIngredientService.deleteDrinkIngredient(drinkIngredientId);
     }
 
-    public DrinkIngredientDto saveDrinkIngredient(DrinkIngredientDto drinkIngredientDto) throws DrinkNotFoundException {
-        DrinkIngredient drinkIngredient = drinkIngredientMapper.mapToDrinkIngredient(drinkIngredientDto);
-        DrinkIngredient savedDrinkIngredient = drinkIngredientService.saveDrinkIngredient(drinkIngredient);
-        return drinkIngredientMapper.mapToDrinkIngredientDto(savedDrinkIngredient);
+    public DrinkIngredientDto saveDrinkIngredient(DrinkIngredientDto drinkIngredientDto) throws DrinkNotFoundException, IdFoundException {
+        if (drinkIngredientDto.getId() == null) {
+            DrinkIngredient drinkIngredient = drinkIngredientMapper.mapToDrinkIngredient(drinkIngredientDto);
+            DrinkIngredient savedDrinkIngredient = drinkIngredientService.saveDrinkIngredient(drinkIngredient);
+            return drinkIngredientMapper.mapToDrinkIngredientDto(savedDrinkIngredient);
+        }
+        throw new IdFoundException();
     }
 
-    public DrinkIngredientDto updateDrinkIngredient(DrinkIngredientDto drinkIngredientDto) throws DrinkNotFoundException {
-        DrinkIngredient drinkIngredient = drinkIngredientMapper.mapToDrinkIngredient(drinkIngredientDto);
-        DrinkIngredient savedDrinkIngredient = drinkIngredientService.saveDrinkIngredient(drinkIngredient);
-        return drinkIngredientMapper.mapToDrinkIngredientDto(savedDrinkIngredient);
+    public DrinkIngredientDto updateDrinkIngredient(DrinkIngredientDto drinkIngredientDto) throws DrinkNotFoundException, IdNotFoundException {
+        if (drinkIngredientDto.getId() != null) {
+            DrinkIngredient drinkIngredient = drinkIngredientMapper.mapToDrinkIngredient(drinkIngredientDto);
+            DrinkIngredient savedDrinkIngredient = drinkIngredientService.saveDrinkIngredient(drinkIngredient);
+            return drinkIngredientMapper.mapToDrinkIngredientDto(savedDrinkIngredient);
+        }
+        throw new IdNotFoundException();
     }
 }

@@ -3,6 +3,8 @@ package com.myapp.foodpairingbackend.facade;
 import com.myapp.foodpairingbackend.domain.dto.DrinkDto;
 import com.myapp.foodpairingbackend.domain.entity.Drink;
 import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdFoundException;
+import com.myapp.foodpairingbackend.exception.IdNotFoundException;
 import com.myapp.foodpairingbackend.mapper.DrinkMapper;
 import com.myapp.foodpairingbackend.service.DrinkService;
 import lombok.RequiredArgsConstructor;
@@ -31,15 +33,21 @@ public class DrinkFacade {
         drinkService.deleteDrink(drinkId);
     }
 
-    public DrinkDto saveDrinkInDb(DrinkDto drinkDto) throws DrinkNotFoundException {
-        Drink drink = drinkMapper.mapToDrink(drinkDto);
-        Drink savedDrink = drinkService.saveDrink(drink);
-        return drinkMapper.mapToDrinkDto(savedDrink);
+    public DrinkDto saveDrinkInDb(DrinkDto drinkDto) throws DrinkNotFoundException, IdFoundException {
+        if (drinkDto.getId() == null) {
+            Drink drink = drinkMapper.mapToDrink(drinkDto);
+            Drink savedDrink = drinkService.saveDrink(drink);
+            return drinkMapper.mapToDrinkDto(savedDrink);
+        }
+        throw new IdFoundException();
     }
 
-    public DrinkDto updateDrink(DrinkDto drinkDto) throws DrinkNotFoundException {
-        Drink drink = drinkMapper.mapToDrink(drinkDto);
-        Drink savedDrink = drinkService.saveDrink(drink);
-        return drinkMapper.mapToDrinkDto(savedDrink);
+    public DrinkDto updateDrink(DrinkDto drinkDto) throws DrinkNotFoundException, IdNotFoundException {
+        if (drinkDto.getId() != null) {
+            Drink drink = drinkMapper.mapToDrink(drinkDto);
+            Drink savedDrink = drinkService.saveDrink(drink);
+            return drinkMapper.mapToDrinkDto(savedDrink);
+        }
+        throw new IdNotFoundException();
     }
 }

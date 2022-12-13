@@ -2,6 +2,8 @@ package com.myapp.foodpairingbackend.controller;
 
 import com.myapp.foodpairingbackend.domain.dto.DrinkDto;
 import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdFoundException;
+import com.myapp.foodpairingbackend.exception.IdNotFoundException;
 import com.myapp.foodpairingbackend.facade.DrinkFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -34,12 +36,12 @@ public class DrinkController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DrinkDto> saveDrinkInDb(@RequestBody DrinkDto drinkDto) throws DrinkNotFoundException {
+    public ResponseEntity<DrinkDto> saveDrinkInDb(@RequestBody DrinkDto drinkDto) throws DrinkNotFoundException, IdFoundException {
         return ResponseEntity.ok(drinkFacade.saveDrinkInDb(drinkDto));
     }
 
     @PutMapping
-    public ResponseEntity<DrinkDto> updateDrink(@RequestBody DrinkDto drinkDto) throws DrinkNotFoundException {
+    public ResponseEntity<DrinkDto> updateDrink(@RequestBody DrinkDto drinkDto) throws DrinkNotFoundException, IdNotFoundException {
         return ResponseEntity.ok(drinkFacade.updateDrink(drinkDto));
     }
 }

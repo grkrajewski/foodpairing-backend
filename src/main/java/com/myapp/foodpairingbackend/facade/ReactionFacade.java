@@ -3,6 +3,8 @@ package com.myapp.foodpairingbackend.facade;
 import com.myapp.foodpairingbackend.domain.dto.ReactionDto;
 import com.myapp.foodpairingbackend.domain.entity.Reaction;
 import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdFoundException;
+import com.myapp.foodpairingbackend.exception.IdNotFoundException;
 import com.myapp.foodpairingbackend.mapper.ReactionMapper;
 import com.myapp.foodpairingbackend.service.ReactionService;
 import lombok.RequiredArgsConstructor;
@@ -31,15 +33,21 @@ public class ReactionFacade {
         reactionService.deleteReaction(reactionId);
     }
 
-    public ReactionDto saveReaction(ReactionDto reactionDto) throws CommentNotFoundException {
-        Reaction reaction = reactionMapper.mapToReaction(reactionDto);
-        Reaction savedReaction = reactionService.saveReaction(reaction);
-        return reactionMapper.mapToReactionDto(savedReaction);
+    public ReactionDto saveReaction(ReactionDto reactionDto) throws CommentNotFoundException, IdFoundException {
+        if (reactionDto.getId() == null) {
+            Reaction reaction = reactionMapper.mapToReaction(reactionDto);
+            Reaction savedReaction = reactionService.saveReaction(reaction);
+            return reactionMapper.mapToReactionDto(savedReaction);
+        }
+        throw new IdFoundException();
     }
 
-    public ReactionDto updateReaction(ReactionDto reactionDto) throws CommentNotFoundException {
-        Reaction reaction = reactionMapper.mapToReaction(reactionDto);
-        Reaction savedReaction = reactionService.saveReaction(reaction);
-        return reactionMapper.mapToReactionDto(savedReaction);
+    public ReactionDto updateReaction(ReactionDto reactionDto) throws CommentNotFoundException, IdNotFoundException {
+        if (reactionDto.getId() != null) {
+            Reaction reaction = reactionMapper.mapToReaction(reactionDto);
+            Reaction savedReaction = reactionService.saveReaction(reaction);
+            return reactionMapper.mapToReactionDto(savedReaction);
+        }
+        throw new IdNotFoundException();
     }
 }

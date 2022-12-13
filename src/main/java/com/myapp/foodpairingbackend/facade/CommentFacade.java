@@ -4,6 +4,8 @@ import com.myapp.foodpairingbackend.domain.dto.CommentDto;
 import com.myapp.foodpairingbackend.domain.entity.Comment;
 import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
 import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdFoundException;
+import com.myapp.foodpairingbackend.exception.IdNotFoundException;
 import com.myapp.foodpairingbackend.mapper.CommentMapper;
 import com.myapp.foodpairingbackend.service.CommentService;
 import lombok.RequiredArgsConstructor;;
@@ -32,15 +34,23 @@ public class CommentFacade {
         commentService.deleteComment(commentId);
     }
 
-    public CommentDto saveComment(CommentDto commentDto) throws CompositionNotFoundException, CommentNotFoundException {
-        Comment comment = commentMapper.mapToComment(commentDto);
-        Comment savedComment = commentService.saveComment(comment);
-        return commentMapper.mapToCommentDto(savedComment);
+    public CommentDto saveComment(CommentDto commentDto) throws CompositionNotFoundException, CommentNotFoundException,
+            IdFoundException {
+        if (commentDto.getId() == null) {
+            Comment comment = commentMapper.mapToComment(commentDto);
+            Comment savedComment = commentService.saveComment(comment);
+            return commentMapper.mapToCommentDto(savedComment);
+        }
+        throw new IdFoundException();
     }
 
-    public CommentDto updateComment(CommentDto commentDto) throws CompositionNotFoundException, CommentNotFoundException {
-        Comment comment = commentMapper.mapToComment(commentDto);
-        Comment savedComment = commentService.saveComment(comment);
-        return commentMapper.mapToCommentDto(savedComment);
+    public CommentDto updateComment(CommentDto commentDto) throws CompositionNotFoundException, CommentNotFoundException,
+            IdNotFoundException {
+        if (commentDto.getId() != null) {
+            Comment comment = commentMapper.mapToComment(commentDto);
+            Comment savedComment = commentService.saveComment(comment);
+            return commentMapper.mapToCommentDto(savedComment);
+        }
+        throw new IdNotFoundException();
     }
 }

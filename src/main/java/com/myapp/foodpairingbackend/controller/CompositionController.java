@@ -1,11 +1,8 @@
 package com.myapp.foodpairingbackend.controller;
 
 import com.myapp.foodpairingbackend.domain.dto.CompositionDto;
+import com.myapp.foodpairingbackend.exception.*;
 import com.myapp.foodpairingbackend.facade.CompositionFacade;
-import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
-import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
-import com.myapp.foodpairingbackend.exception.DishNotFoundException;
-import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,13 +35,13 @@ public class CompositionController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CompositionDto> saveComposition(@RequestBody CompositionDto compositionDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException {
+            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdFoundException {
         return ResponseEntity.ok(compositionFacade.saveComposition(compositionDto));
     }
 
     @PutMapping
     public ResponseEntity<CompositionDto> updateComposition(@RequestBody CompositionDto compositionDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException {
+            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdNotFoundException {
         return ResponseEntity.ok(compositionFacade.updateComposition(compositionDto));
     }
 }

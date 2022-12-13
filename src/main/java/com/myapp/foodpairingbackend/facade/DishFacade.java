@@ -2,10 +2,7 @@ package com.myapp.foodpairingbackend.facade;
 
 import com.myapp.foodpairingbackend.domain.dto.DishDto;
 import com.myapp.foodpairingbackend.domain.entity.Dish;
-import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
-import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
-import com.myapp.foodpairingbackend.exception.DishNotFoundException;
-import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
+import com.myapp.foodpairingbackend.exception.*;
 import com.myapp.foodpairingbackend.mapper.DishMapper;
 import com.myapp.foodpairingbackend.service.DishService;
 import com.myapp.foodpairingbackend.validator.DishValidator;
@@ -36,22 +33,28 @@ public class DishFacade {
         dishService.deleteDish(dishId);
     }
 
-    public DishDto saveDishInDb(DishDto dishDto) throws DrinkNotFoundException,  DishNotFoundException,
-            CompositionNotFoundException, CommentNotFoundException {
-        Dish dish = dishMapper.mapToDish(dishDto);
-        DishDto mappedDish = null;
-        boolean isBookNew = dishValidator.validateDish(dish);
-        if (isBookNew) {
-            Dish savedDish = dishService.saveDish(dish);
-            mappedDish = dishMapper.mapToDishDto(savedDish);
+    public DishDto saveDishInDb(DishDto dishDto) throws DrinkNotFoundException, DishNotFoundException,
+            CompositionNotFoundException, CommentNotFoundException, IdFoundException {
+        if (dishDto.getId() == null) {
+            Dish dish = dishMapper.mapToDish(dishDto);
+            DishDto mappedDish = null;
+            boolean isDishNew = dishValidator.validateDish(dish);
+            if (isDishNew) {
+                Dish savedDish = dishService.saveDish(dish);
+                mappedDish = dishMapper.mapToDishDto(savedDish);
+            }
+            return mappedDish;
         }
-        return mappedDish;
+        throw new IdFoundException();
     }
 
-    public DishDto updateDish(DishDto dishDto) throws DrinkNotFoundException,  DishNotFoundException,
-            CompositionNotFoundException, CommentNotFoundException {
-        Dish dish = dishMapper.mapToDish(dishDto);
-        Dish savedDish = dishService.saveDish(dish);
-        return dishMapper.mapToDishDto(savedDish);
+    public DishDto updateDish(DishDto dishDto) throws DrinkNotFoundException, DishNotFoundException,
+            CompositionNotFoundException, CommentNotFoundException, IdNotFoundException {
+        if (dishDto.getId() != null) {
+            Dish dish = dishMapper.mapToDish(dishDto);
+            Dish savedDish = dishService.saveDish(dish);
+            return dishMapper.mapToDishDto(savedDish);
+        }
+        throw new IdNotFoundException();
     }
 }

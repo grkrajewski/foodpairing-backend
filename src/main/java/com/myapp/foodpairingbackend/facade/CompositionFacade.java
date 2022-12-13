@@ -4,10 +4,7 @@ import com.myapp.foodpairingbackend.config.AdminConfig;
 import com.myapp.foodpairingbackend.domain.Mail;
 import com.myapp.foodpairingbackend.domain.dto.CompositionDto;
 import com.myapp.foodpairingbackend.domain.entity.Composition;
-import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
-import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
-import com.myapp.foodpairingbackend.exception.DishNotFoundException;
-import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
+import com.myapp.foodpairingbackend.exception.*;
 import com.myapp.foodpairingbackend.mapper.CompositionMapper;
 import com.myapp.foodpairingbackend.service.CompositionService;
 import com.myapp.foodpairingbackend.service.EmailService;
@@ -43,23 +40,29 @@ public class CompositionFacade {
     }
 
     public CompositionDto saveComposition(CompositionDto compositionDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException {
-        Composition composition = compositionMapper.mapToComposition(compositionDto);
-        Composition savedComposition = compositionService.saveComposition(composition);
-        Mail mail = Mail.builder()
-                .mailTo(adminConfig.getAdminMail())
-                .subject(SUBJECT)
-                .message(MESSAGE_BEGINNING + composition.getId().toString() + MESSAGE_ENDING)
-                .build();
-        emailService.send(mail);
-        return compositionMapper.mapToCompositionDto(savedComposition);
+            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdFoundException {
+        if (compositionDto.getId() == null) {
+            Composition composition = compositionMapper.mapToComposition(compositionDto);
+            Composition savedComposition = compositionService.saveComposition(composition);
+            Mail mail = Mail.builder()
+                    .mailTo(adminConfig.getAdminMail())
+                    .subject(SUBJECT)
+                    .message(MESSAGE_BEGINNING + composition.getId().toString() + MESSAGE_ENDING)
+                    .build();
+            emailService.send(mail);
+            return compositionMapper.mapToCompositionDto(savedComposition);
+        }
+        throw new IdFoundException();
     }
 
     public CompositionDto updateComposition(CompositionDto compositionDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException {
-        Composition composition = compositionMapper.mapToComposition(compositionDto);
-        Composition savedComposition = compositionService.saveComposition(composition);
-        return compositionMapper.mapToCompositionDto(savedComposition);
+            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdNotFoundException {
+        if (compositionDto.getId() != null) {
+            Composition composition = compositionMapper.mapToComposition(compositionDto);
+            Composition savedComposition = compositionService.saveComposition(composition);
+            return compositionMapper.mapToCompositionDto(savedComposition);
+        }
+        throw new IdNotFoundException();
     }
 }
 

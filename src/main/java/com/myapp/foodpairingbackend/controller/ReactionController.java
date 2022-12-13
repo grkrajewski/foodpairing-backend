@@ -2,6 +2,8 @@ package com.myapp.foodpairingbackend.controller;
 
 import com.myapp.foodpairingbackend.domain.dto.ReactionDto;
 import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdFoundException;
+import com.myapp.foodpairingbackend.exception.IdNotFoundException;
 import com.myapp.foodpairingbackend.facade.ReactionFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -34,12 +36,14 @@ public class ReactionController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReactionDto> saveReaction(@RequestBody ReactionDto reactionDto) throws CommentNotFoundException {
+    public ResponseEntity<ReactionDto> saveReaction(@RequestBody ReactionDto reactionDto) throws CommentNotFoundException,
+            IdFoundException {
         return ResponseEntity.ok(reactionFacade.saveReaction(reactionDto));
     }
 
     @PutMapping
-    public ResponseEntity<ReactionDto> updateReaction(@RequestBody ReactionDto reactionDto) throws CommentNotFoundException {
+    public ResponseEntity<ReactionDto> updateReaction(@RequestBody ReactionDto reactionDto) throws CommentNotFoundException,
+            IdNotFoundException {
         return ResponseEntity.ok(reactionFacade.updateReaction(reactionDto));
     }
 }

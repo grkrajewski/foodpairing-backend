@@ -17,12 +17,12 @@ public class DishValidator {
 
     public boolean validateDish(Dish dish) {
         List<Dish> dbDishList = dishService.getDishes();
-        boolean isBookNew = true;
+        boolean isDishNew = true;
         for (Dish dishInDb : dbDishList) {
             if (dish.equals(dishInDb)) {
-                isBookNew = false;
+                isDishNew = false;
             }
         }
-        return isBookNew;
+        return isDishNew;
     }
 }

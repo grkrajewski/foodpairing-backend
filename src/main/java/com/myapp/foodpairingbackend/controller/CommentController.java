@@ -3,6 +3,8 @@ package com.myapp.foodpairingbackend.controller;
 import com.myapp.foodpairingbackend.domain.dto.CommentDto;
 import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
 import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdFoundException;
+import com.myapp.foodpairingbackend.exception.IdNotFoundException;
 import com.myapp.foodpairingbackend.facade.CommentFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -36,13 +38,13 @@ public class CommentController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentDto> saveComment(@RequestBody CommentDto commentDto) throws CompositionNotFoundException,
-            CommentNotFoundException {
+            CommentNotFoundException, IdFoundException {
         return ResponseEntity.ok(commentFacade.saveComment(commentDto));
     }
 
     @PutMapping
     public ResponseEntity<CommentDto> updateComment(@RequestBody CommentDto commentDto) throws CompositionNotFoundException,
-            CommentNotFoundException {
+            CommentNotFoundException, IdNotFoundException {
         return ResponseEntity.ok(commentFacade.updateComment(commentDto));
     }
 }

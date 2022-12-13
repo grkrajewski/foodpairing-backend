@@ -14,6 +14,9 @@ Application includes:
 Main technologies, which were used:
 Java, Spring Boot, Hibernate, Spring WEB, JUnit5, Mockito, MySQL, Vaadin.
 
+All endpoints were tested either with using Postman and with the help of frontend layer, which was made with the usage of Vaadin.
+Frontend part was created only to show the functionality and to support backend testing.
+
 Short description of project functionality:
 - you search dish by key word from first external API and save it in local database,
 - you create composition with chosen dish and random drink from second external API,

@@ -1,9 +1,9 @@
 package com.myapp.foodpairingbackend.mapper;
 
+import com.myapp.foodpairingbackend.domain.dataprovider.CommentProvider;
 import com.myapp.foodpairingbackend.domain.dto.ReactionDto;
 import com.myapp.foodpairingbackend.domain.entity.Reaction;
 import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
-import com.myapp.foodpairingbackend.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReactionMapper {
 
-    private final CommentService commentService;
+    private final CommentProvider commentProvider;
 
     public Reaction mapToReaction(final ReactionDto reactionDto) throws CommentNotFoundException {
         Reaction reaction = Reaction.builder()
                 .id(reactionDto.getId())
                 .description(reactionDto.getDescription())
                 .created(reactionDto.getCreated())
-                .comment(commentService.getComment(reactionDto.getCommentId()))
+                .comment(commentProvider.fetchComment(reactionDto))
                 .build();
         return reaction;
     }

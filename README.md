@@ -12,7 +12,7 @@ Application includes:
 - frontend layer performed with Vaadin framework (link below).
 
 Main technologies, which were used:
-Java, Spring Boot, Hibernate, Spring WEB, JUnit5, Mockito, MySQL, Vaadin.
+Java 11, Spring Boot, Hibernate, Spring WEB, JUnit5, Mockito, MySQL, Vaadin.
 
 All endpoints were tested either with using Postman and with the help of frontend layer, which was made with the usage of Vaadin.
 Frontend part was created only to show the functionality and to support backend testing.
@@ -25,7 +25,7 @@ Short description of project functionality:
 - you can comment compositions and also give feedback to the comments.
 In the future I will develop the API, adding new functionalities to it.
 
-Backend project link: https://github.com/grkrajewski/foodpairing-backend - port: 8080
+Backend project link: https://github.com/grkrajewski/foodpairing-backend - port: 8080 <br />
 Frontend project link: https://github.com/grkrajewski/foodpairing-frontend - port: 8081
 
 Either backend and fronted application should be downloaded and run locally. The project is based on local MySQL database.

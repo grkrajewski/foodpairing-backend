@@ -1,9 +1,9 @@
 package com.myapp.foodpairingbackend.mapper;
 
+import com.myapp.foodpairingbackend.domain.dataprovider.DrinkProvider;
 import com.myapp.foodpairingbackend.domain.dto.DrinkIngredientDto;
 import com.myapp.foodpairingbackend.domain.entity.DrinkIngredient;
 import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
-import com.myapp.foodpairingbackend.service.DrinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DrinkIngredientMapper {
 
-    private final DrinkService drinkService;
+    private final DrinkProvider drinkProvider;
 
     public DrinkIngredient mapToDrinkIngredient(final DrinkIngredientDto drinkIngredientDto) throws DrinkNotFoundException {
         DrinkIngredient drinkIngredient = DrinkIngredient.builder()
                 .id(drinkIngredientDto.getId())
                 .name(drinkIngredientDto.getName())
                 .measure(drinkIngredientDto.getMeasure())
-                .drink(drinkService.getDrink(drinkIngredientDto.getDrinkId()))
+                .drink(drinkProvider.fetchDrink(drinkIngredientDto))
                 .build();
         return drinkIngredient;
     }

@@ -1,10 +1,10 @@
 package com.myapp.foodpairingbackend.mapper;
 
+import com.myapp.foodpairingbackend.domain.dataprovider.CompositionProvider;
 import com.myapp.foodpairingbackend.domain.dto.CommentDto;
 import com.myapp.foodpairingbackend.domain.entity.Comment;
 import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
 import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
-import com.myapp.foodpairingbackend.service.CompositionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentMapper {
 
-    private final CompositionService compositionService;
+    private final CompositionProvider compositionProvider;
     private final ReactionMapper reactionMapper;
 
     public Comment mapToComment(final CommentDto commentDto) throws CompositionNotFoundException, CommentNotFoundException {
@@ -24,7 +24,7 @@ public class CommentMapper {
                 .id(commentDto.getId())
                 .description(commentDto.getDescription())
                 .created(commentDto.getCreated())
-                .composition(compositionService.getComposition(commentDto.getCompositionId()))
+                .composition(compositionProvider.fetchComposition(commentDto))
                 .reactionList(reactionMapper.mapToReactionList(commentDto.getReactionList()))
                 .build();
         return comment;

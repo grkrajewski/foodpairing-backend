@@ -1,9 +1,9 @@
 package com.myapp.foodpairingbackend.mapper;
 
+import com.myapp.foodpairingbackend.domain.dataprovider.DishProvider;
+import com.myapp.foodpairingbackend.domain.dataprovider.DrinkProvider;
 import com.myapp.foodpairingbackend.domain.dto.CompositionDto;
 import com.myapp.foodpairingbackend.domain.entity.Composition;
-import com.myapp.foodpairingbackend.service.DishService;
-import com.myapp.foodpairingbackend.service.DrinkService;
 import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
 import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
 import com.myapp.foodpairingbackend.exception.DishNotFoundException;
@@ -19,16 +19,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CompositionMapper {
 
-    private final DishService dishService;
-    private final DrinkService drinkService;
+    private final DishProvider dishProvider;
+    private final DrinkProvider drinkProvider;
     private final CommentMapper commentMapper;
 
     public Composition mapToComposition(final CompositionDto compositionDto) throws DishNotFoundException,
             DrinkNotFoundException, CompositionNotFoundException, CommentNotFoundException {
         Composition composition = Composition.builder()
                 .id(compositionDto.getId())
-                .dish(dishService.getDish(compositionDto.getDishId()))
-                .drink(drinkService.getDrink(compositionDto.getDrinkId()))
+                .dish(dishProvider.fetchDish(compositionDto))
+                .drink(drinkProvider.fetchDrink(compositionDto))
                 .created(compositionDto.getCreated())
                 .commentList(commentMapper.mapToCommentList(compositionDto.getCommentList()))
                 .build();

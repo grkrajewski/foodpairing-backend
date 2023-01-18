@@ -39,8 +39,8 @@ public class CompositionFacade {
         compositionService.deleteComposition(compositionId);
     }
 
-    public CompositionDto saveComposition(CompositionDto compositionDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdFoundException {
+    public CompositionDto saveComposition(CompositionDto compositionDto) throws DrinkNotFoundException, DishNotFoundException,
+            CompositionNotFoundException, CommentNotFoundException, IdFoundException, DrinkExistsException {
         if (compositionDto.getId() == null) {
             Composition composition = compositionMapper.mapToComposition(compositionDto);
             Composition savedComposition = compositionService.saveComposition(composition);
@@ -55,8 +55,8 @@ public class CompositionFacade {
         throw new IdFoundException();
     }
 
-    public CompositionDto updateComposition(CompositionDto compositionDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdNotFoundException {
+    public CompositionDto updateComposition(CompositionDto compositionDto) throws DrinkNotFoundException, DishNotFoundException,
+            CompositionNotFoundException, CommentNotFoundException, IdNotFoundException, DrinkExistsException {
         if (compositionDto.getId() != null) {
             Composition composition = compositionMapper.mapToComposition(compositionDto);
             Composition savedComposition = compositionService.saveComposition(composition);

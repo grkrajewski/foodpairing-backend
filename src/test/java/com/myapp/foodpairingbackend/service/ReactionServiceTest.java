@@ -1,6 +1,7 @@
 package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.*;
+import com.myapp.foodpairingbackend.exception.DrinkExistsException;
 import com.myapp.foodpairingbackend.repository.ReactionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ class ReactionServiceTest {
     private ReactionRepository reactionRepository;
 
     @Test
-    void testGetReactionsForComment() {
+    void testGetReactionsForComment() throws DrinkExistsException {
         //Given
         Dish dish = Dish.builder()
                 .id(null)
@@ -79,7 +80,7 @@ class ReactionServiceTest {
     }
 
     @Test
-    void testDeleteReaction() {
+    void testDeleteReaction() throws DrinkExistsException {
         //Given
         Dish dish = Dish.builder()
                 .id(null)

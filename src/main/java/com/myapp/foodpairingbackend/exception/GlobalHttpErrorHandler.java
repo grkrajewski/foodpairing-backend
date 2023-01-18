@@ -48,4 +48,11 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleIdFoundException(IdFoundException exception) {
         return new ResponseEntity<>("Id found. While creating a new object id is generated automatically", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(DrinkExistsException.class)
+    public ResponseEntity<Object> handleDrinkExistsException(DrinkExistsException exception) {
+        return new ResponseEntity<>("The drink you are trying to add or modify in the composition is already paired " +
+                "with existing composition.Every Composition\nshould have separate drink even if it's the same. It will " +
+                "allow to modify every drink independently for each composition.", HttpStatus.BAD_REQUEST);
+    }
 }

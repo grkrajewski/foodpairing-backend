@@ -35,13 +35,13 @@ public class CompositionController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CompositionDto> saveComposition(@RequestBody CompositionDto compositionDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdFoundException {
+            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdFoundException, DrinkExistsException {
         return ResponseEntity.ok(compositionFacade.saveComposition(compositionDto));
     }
 
     @PutMapping
     public ResponseEntity<CompositionDto> updateComposition(@RequestBody CompositionDto compositionDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdNotFoundException {
+            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdNotFoundException, DrinkExistsException {
         return ResponseEntity.ok(compositionFacade.updateComposition(compositionDto));
     }
 }

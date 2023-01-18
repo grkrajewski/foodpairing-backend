@@ -4,6 +4,7 @@ import com.myapp.foodpairingbackend.domain.entity.Comment;
 import com.myapp.foodpairingbackend.domain.entity.Composition;
 import com.myapp.foodpairingbackend.domain.entity.Dish;
 import com.myapp.foodpairingbackend.domain.entity.Drink;
+import com.myapp.foodpairingbackend.exception.DrinkExistsException;
 import com.myapp.foodpairingbackend.repository.CommentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ class CommentServiceTest {
     private CommentRepository commentRepository;
 
     @Test
-    void testGetCommentsForComposition() {
+    void testGetCommentsForComposition() throws DrinkExistsException {
         //Given
         Dish dish = Dish.builder()
                 .id(null)
@@ -73,7 +74,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void testDeleteComment() {
+    void testDeleteComment() throws DrinkExistsException {
         //Given
         Dish dish = Dish.builder()
                 .id(null)

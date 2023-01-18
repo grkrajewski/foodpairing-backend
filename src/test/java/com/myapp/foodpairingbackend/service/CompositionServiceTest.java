@@ -4,6 +4,7 @@ import com.myapp.foodpairingbackend.domain.entity.Composition;
 import com.myapp.foodpairingbackend.domain.entity.Dish;
 import com.myapp.foodpairingbackend.domain.entity.Drink;
 import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
+import com.myapp.foodpairingbackend.exception.DrinkExistsException;
 import com.myapp.foodpairingbackend.repository.CompositionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ class CompositionServiceTest {
     private CompositionRepository compositionRepository;
 
     @Test
-    void testGetComposition() throws CompositionNotFoundException {
+    void testGetComposition() throws CompositionNotFoundException, DrinkExistsException {
         //Given
         Dish dish = Dish.builder()
                 .id(null)
@@ -56,7 +57,7 @@ class CompositionServiceTest {
     }
 
     @Test
-    void testDeleteComposition() {
+    void testDeleteComposition() throws DrinkExistsException {
         //Given
         Dish dish = Dish.builder()
                 .id(null)

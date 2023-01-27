@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -49,10 +48,10 @@ class ReactionControllerTest {
     @Test
     void shouldGetReactions() throws Exception {
         //Given
-        List<ReactionDto> reactionDtoList = new ArrayList<>();
+
         ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(null).commentId(2L)
                 .build();
-        reactionDtoList.add(reactionDto);
+        List<ReactionDto> reactionDtoList = List.of(reactionDto);
         when(reactionFacade.getReactions()).thenReturn(reactionDtoList);
 
         //When & Then
@@ -70,10 +69,9 @@ class ReactionControllerTest {
     @Test
     void shouldGetReactionsForComment() throws Exception {
         //Given
-        List<ReactionDto> reactionDtoList = new ArrayList<>();
         ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(null).commentId(2L)
                 .build();
-        reactionDtoList.add(reactionDto);
+        List<ReactionDto> reactionDtoList = List.of(reactionDto);
         when(reactionFacade.getReactionsForComment(2L)).thenReturn(reactionDtoList);
 
         //When & Then
@@ -89,7 +87,7 @@ class ReactionControllerTest {
     }
 
     @Test
-    void shouldDeleteReactions() throws Exception {
+    void shouldDeleteReaction() throws Exception {
         //Given
 
         //When & Then
@@ -100,7 +98,7 @@ class ReactionControllerTest {
     }
 
     @Test
-    void shouldSaveReactions() throws Exception {
+    void shouldSaveReaction() throws Exception {
         //Given
         ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(null).commentId(2L)
                 .build();
@@ -122,7 +120,7 @@ class ReactionControllerTest {
     }
 
     @Test
-    void shouldUpdateReactions() throws Exception {
+    void shouldUpdateReaction() throws Exception {
         //Given
         ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(null).commentId(2L)
                 .build();

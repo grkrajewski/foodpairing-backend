@@ -1,6 +1,6 @@
 package com.myapp.foodpairingbackend.mapper;
 
-import com.myapp.foodpairingbackend.domain.dataprovider.CommentProvider;
+import com.myapp.foodpairingbackend.dataprovider.CommentProvider;
 import com.myapp.foodpairingbackend.domain.dto.ReactionDto;
 import com.myapp.foodpairingbackend.domain.entity.Reaction;
 import com.myapp.foodpairingbackend.exception.CommentNotFoundException;

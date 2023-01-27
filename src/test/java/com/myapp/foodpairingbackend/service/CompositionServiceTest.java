@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,16 +32,16 @@ class CompositionServiceTest {
         Dish dish = Dish.builder()
                 .id(null)
                 .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(new ArrayList<>())
+                .recipeUrl("https://test.com").compositionList(List.of())
                 .build();
 
         Drink drink = Drink.builder()
                 .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(new ArrayList<>())
+                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
                 .build();
 
         Composition composition = Composition.builder()
-                .id(null).dish(dish).drink(drink).created(new Date()).commentList(new ArrayList<>())
+                .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
                 .build();
 
         compositionService.saveComposition(composition);
@@ -62,16 +62,16 @@ class CompositionServiceTest {
         Dish dish = Dish.builder()
                 .id(null)
                 .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(new ArrayList<>())
+                .recipeUrl("https://test.com").compositionList(List.of())
                 .build();
 
         Drink drink = Drink.builder()
                 .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(new ArrayList<>())
+                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
                 .build();
 
         Composition composition = Composition.builder()
-                .id(null).dish(dish).drink(drink).created(new Date()).commentList(new ArrayList<>())
+                .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
                 .build();
 
         compositionService.saveComposition(composition);

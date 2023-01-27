@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +29,7 @@ class DishServiceTest {
         Dish dish = Dish.builder()
                 .id(null)
                 .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(new ArrayList<>())
+                .recipeUrl("https://test.com").compositionList(List.of())
                 .build();
 
         dishService.saveDish(dish);
@@ -49,7 +49,7 @@ class DishServiceTest {
         Dish dish = Dish.builder()
                 .id(null)
                 .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(new ArrayList<>())
+                .recipeUrl("https://test.com").compositionList(List.of())
                 .build();
 
         dishService.saveDish(dish);

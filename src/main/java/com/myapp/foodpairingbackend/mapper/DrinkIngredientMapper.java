@@ -1,6 +1,6 @@
 package com.myapp.foodpairingbackend.mapper;
 
-import com.myapp.foodpairingbackend.domain.dataprovider.DrinkProvider;
+import com.myapp.foodpairingbackend.dataprovider.DrinkProvider;
 import com.myapp.foodpairingbackend.domain.dto.DrinkIngredientDto;
 import com.myapp.foodpairingbackend.domain.entity.DrinkIngredient;
 import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;

@@ -52,11 +52,10 @@ class DrinkControllerTest {
     @Test
     void shouldGetDrinks() throws Exception {
         //Given
-        List<DrinkIngredientDto> drinkIngredientDtoList = new ArrayList<>();
         DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L).
                 name("test ingredient name").measure("test measure").drinkId(1L)
                 .build();
-        drinkIngredientDtoList.add(drinkIngredientDto);
+        List<DrinkIngredientDto> drinkIngredientDtoList = List.of(drinkIngredientDto);
         DrinkDto drinkDto = DrinkDto.builder().id(1L).externalSystemId("10").name("test drink name").alcoholic("test alcoholic")
                 .glass("test glass").instructions("test instructions").drinkIngredientList(drinkIngredientDtoList)
                 .build();

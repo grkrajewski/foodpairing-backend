@@ -95,7 +95,6 @@ class DishControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.readyInMinutes", Matchers.is(15)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.servings", Matchers.is(4)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.recipeUrl", Matchers.is("https://testDto.com")));
-
     }
 
     @Test

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,11 +28,9 @@ class DrinkIngredientServiceTest {
     @Test
     void testGetDrinkIngredientsForDrink() {
         //Given
-        List<DrinkIngredient> drinkIngredientList = new ArrayList<>();
-
         Drink drink = Drink.builder()
                 .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(drinkIngredientList)
+                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
                 .build();
 
         drinkService.saveDrink(drink);
@@ -64,11 +61,9 @@ class DrinkIngredientServiceTest {
     @Test
     void testDeleteDrinkIngredient() {
         //Given
-        List<DrinkIngredient> drinkIngredientList = new ArrayList<>();
-
         Drink drink = Drink.builder()
                 .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(drinkIngredientList)
+                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
                 .build();
 
         DrinkIngredient drinkIngredient1 = DrinkIngredient.builder().id(1L).name("test name ingredient 1")

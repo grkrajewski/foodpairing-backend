@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -47,11 +46,10 @@ class SpoonacularControllerTest {
     @Test
     void getSpoonacularDishes() throws Exception {
         //Given
-        List<SpoonacularDishDto> spoonacularDishDtoList = new ArrayList<>();
         SpoonacularDishDto spoonacularDishDto = SpoonacularDishDto.builder().externalSystemId(1L).name("test name")
                 .readyInMinutes(15).servings(4).recipeUrl("https://test.com")
                 .build();
-        spoonacularDishDtoList.add(spoonacularDishDto);
+        List<SpoonacularDishDto> spoonacularDishDtoList = List.of(spoonacularDishDto);
         when(spoonacularService.getSpoonacularDishes("test")).thenReturn(spoonacularDishDtoList);
 
         //When & Then

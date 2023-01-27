@@ -1,4 +1,4 @@
-package com.myapp.foodpairingbackend.domain.dataprovider;
+package com.myapp.foodpairingbackend.dataprovider;
 
 import com.myapp.foodpairingbackend.domain.dto.CompositionDto;
 import com.myapp.foodpairingbackend.domain.entity.Dish;

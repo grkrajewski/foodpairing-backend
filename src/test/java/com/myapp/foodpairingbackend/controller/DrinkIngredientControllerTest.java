@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -49,11 +48,10 @@ class DrinkIngredientControllerTest {
     @Test
     void shouldGetDrinkIngredients() throws Exception {
         //Given
-        List<DrinkIngredientDto> drinkIngredientDtoList = new ArrayList<>();
         DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L).
                 name("test ingredient name").measure("test measure").drinkId(1L)
                 .build();
-        drinkIngredientDtoList.add(drinkIngredientDto);
+        List<DrinkIngredientDto> drinkIngredientDtoList = List.of(drinkIngredientDto);
         when(drinkIngredientFacade.getDrinkIngredients()).thenReturn(drinkIngredientDtoList);
 
         //When & Then
@@ -72,11 +70,10 @@ class DrinkIngredientControllerTest {
     @Test
     void shouldGetDrinkIngredientsForDrink() throws Exception {
         //Given
-        List<DrinkIngredientDto> drinkIngredientDtoList = new ArrayList<>();
         DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L).
                 name("test ingredient name").measure("test measure").drinkId(1L)
                 .build();
-        drinkIngredientDtoList.add(drinkIngredientDto);
+        List<DrinkIngredientDto> drinkIngredientDtoList = List.of(drinkIngredientDto);
         when(drinkIngredientFacade.getDrinkIngredientsForDrink(1L)).thenReturn(drinkIngredientDtoList);
 
         //When & Then

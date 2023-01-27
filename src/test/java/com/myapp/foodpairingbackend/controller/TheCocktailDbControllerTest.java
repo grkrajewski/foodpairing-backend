@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -47,11 +46,10 @@ class TheCocktailDbControllerTest {
     @Test
     void getTheCocktailDbDrink() throws Exception {
         //Given
-        List<TheCocktailDbDrinkDto> theCocktailDbDrinkDtoList = new ArrayList<>();
         TheCocktailDbDrinkDto theCocktailDbDrinkDto = TheCocktailDbDrinkDto.builder().externalSystemId("1").name("test name")
                 .alcoholic("test alcoholic").glass("test glass").instructions("test instructions").ingredient1("test ingredient")
                 .build();
-        theCocktailDbDrinkDtoList.add(theCocktailDbDrinkDto);
+        List<TheCocktailDbDrinkDto> theCocktailDbDrinkDtoList = List.of(theCocktailDbDrinkDto);
         when(theCocktailDbService.getTheCocktailDrink()).thenReturn(theCocktailDbDrinkDtoList);
 
         //When & Then

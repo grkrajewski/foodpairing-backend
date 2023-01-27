@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,11 +49,11 @@ class CommentControllerTest {
     @Test
     void shouldGetComments() throws Exception {
         //Given
-        List<CommentDto> commentDtoList = new ArrayList<>();
+
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
                 .created(new Date()).compositionId(2L).reactionList(List.of())
                 .build();
-        commentDtoList.add(commentDto);
+        List<CommentDto> commentDtoList = List.of(commentDto);
         when(commentFacade.getComments()).thenReturn(commentDtoList);
 
         //When & Then
@@ -73,11 +72,10 @@ class CommentControllerTest {
     @Test
     void shouldGetCommentsForComposition() throws Exception {
         //Given
-        List<CommentDto> commentDtoList = new ArrayList<>();
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
                 .created(new Date()).compositionId(2L).reactionList(List.of())
                 .build();
-        commentDtoList.add(commentDto);
+        List<CommentDto> commentDtoList = List.of(commentDto);
         when(commentFacade.getCommentsForComposition(2L)).thenReturn(commentDtoList);
 
         //When & Then
@@ -94,7 +92,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void shouldDeleteComments() throws Exception {
+    void shouldDeleteComment() throws Exception {
         //Given
 
         //When & Then
@@ -105,7 +103,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void shouldSaveComments() throws Exception {
+    void shouldSaveComment() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
                 .created(null).compositionId(2L).reactionList(List.of())
@@ -129,7 +127,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void shouldUpdateComments() throws Exception {
+    void shouldUpdateComment() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
                 .created(null).compositionId(2L).reactionList(List.of())

@@ -22,14 +22,15 @@ class DrinkServiceTest {
     @Autowired
     private DrinkRepository drinkRepository;
 
+    //Given - data preparation
+    Drink drink = Drink.builder()
+            .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
+            .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+            .build();
+
     @Test
     void testGetDrink() throws DrinkNotFoundException {
         //Given
-        Drink drink = Drink.builder()
-                .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-
         drinkService.saveDrink(drink);
         Long drinkId = drink.getId();
 
@@ -38,17 +39,17 @@ class DrinkServiceTest {
 
         //Then
         assertTrue(drinkRepository.existsById(drinkId));
+        assertEquals("2", savedDrink.getExternalSystemId());
         assertEquals("test name drink", savedDrink.getName());
+        assertEquals("test alcoholic", savedDrink.getAlcoholic());
+        assertEquals("test glass", savedDrink.getGlass());
+        assertEquals("test instructions", savedDrink.getInstructions());
+        assertEquals(0, savedDrink.getDrinkIngredientList().size());
     }
 
     @Test
     void testDeleteDrink() {
         //Given
-        Drink drink = Drink.builder()
-                .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-
         drinkService.saveDrink(drink);
         Long drinkId = drink.getId();
 
@@ -57,5 +58,15 @@ class DrinkServiceTest {
 
         //Then
         assertFalse(drinkRepository.existsById(drinkId));
+    }
+
+    @Test
+    void testSaveDrink() {
+        //When
+        drinkService.saveDrink(drink);
+        Long drinkId = drink.getId();
+
+        //Then
+        assertTrue(drinkRepository.existsById(drinkId));
     }
 }

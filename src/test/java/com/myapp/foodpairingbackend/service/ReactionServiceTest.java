@@ -29,92 +29,76 @@ class ReactionServiceTest {
     @Autowired
     private ReactionRepository reactionRepository;
 
+    //Given - data preparation
+    Dish dish = Dish.builder()
+            .id(null).externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
+            .recipeUrl("https://test.com").compositionList(List.of())
+            .build();
+
+    Drink drink = Drink.builder()
+            .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
+            .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+            .build();
+
+    Composition composition = Composition.builder()
+            .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
+            .build();
+
+    Comment comment = Comment.builder()
+            .id(null).description("test comment description").created(new Date())
+            .composition(composition).reactionList(List.of())
+            .build();
+
+    Reaction reaction = Reaction.builder()
+            .id(null).description("test reaction description").created(new Date()).comment(comment)
+            .build();
+
     @Test
     void testGetReactionsForComment() throws DrinkExistsException {
         //Given
-        Dish dish = Dish.builder()
-                .id(null)
-                .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(List.of())
-                .build();
-
-        Drink drink = Drink.builder()
-                .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-
-        Composition composition = Composition.builder()
-                .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
-                .build();
-
         compositionService.saveComposition(composition);
-
-        Comment comment = Comment.builder().id(null).description("test description").created(new Date())
-                .composition(composition).reactionList(List.of())
-                .build();
-
         commentService.saveComment(comment);
-
-        Reaction reaction1 = Reaction.builder().id(1L).description("test description 1")
-                .created(new Date()).comment(comment)
-                .build();
-
-        Reaction reaction2 = Reaction.builder().id(1L).description("test description 2")
-                .created(new Date()).comment(comment)
-                .build();
-
-        Reaction savedReaction1 = reactionService.saveReaction(reaction1);
-        Reaction savedReaction2 = reactionService.saveReaction(reaction2);
-        Long savedCommentId = comment.getId();
-        Long reaction1Id = savedReaction1.getId();
-        Long reaction2Id = savedReaction2.getId();
+        reactionService.saveReaction(reaction);
+        Long commentId = comment.getId();
+        Long reactionId = reaction.getId();
 
         //When
-        List<Reaction> savedReactionList = reactionService.getReactionsForComment(savedCommentId);
+        List<Reaction> savedReactionList = reactionService.getReactionsForComment(commentId);
 
         //Then
-        assertTrue(reactionRepository.existsById(reaction1Id));
-        assertTrue(reactionRepository.existsById(reaction2Id));
-        assertEquals(2, savedReactionList.size());
+        assertTrue(reactionRepository.existsById(reactionId));
+        assertEquals(1, savedReactionList.size());
+        assertEquals("test reaction description", savedReactionList.get(0).getDescription());
+        assertNotNull(savedReactionList.get(0).getCreated());
+        assertEquals("test comment description", savedReactionList.get(0).getComment().getDescription());
     }
 
     @Test
     void testDeleteReaction() throws DrinkExistsException {
         //Given
-        Dish dish = Dish.builder()
-                .id(null)
-                .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(List.of())
-                .build();
-
-        Drink drink = Drink.builder()
-                .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-
-        Composition composition = Composition.builder()
-                .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
-                .build();
-
         compositionService.saveComposition(composition);
-
-        Comment comment = Comment.builder().id(null).description("test description").created(new Date())
-                .composition(composition).reactionList(List.of())
-                .build();
-
         commentService.saveComment(comment);
-
-        Reaction reaction1 = Reaction.builder().id(1L).description("test description 1")
-                .created(new Date()).comment(comment)
-                .build();
-
-        Reaction savedReaction1 = reactionService.saveReaction(reaction1);
-        Long reaction1Id = savedReaction1.getId();
+        reactionService.saveReaction(reaction);
+        Long reactionId = reaction.getId();
 
         //When
-        reactionService.deleteReaction(reaction1Id);
+        reactionService.deleteReaction(reactionId);
 
         //Then
-        assertFalse(reactionRepository.existsById(reaction1Id));
+        assertFalse(reactionRepository.existsById(reactionId));
+    }
+
+    @Test
+    void testSaveReaction() throws DrinkExistsException {
+        //Given
+        compositionService.saveComposition(composition);
+        commentService.saveComment(comment);
+
+        //When
+        reactionService.saveReaction(reaction);
+        Long reactionId = reaction.getId();
+
+        //Then
+        assertTrue(reactionRepository.existsById(reactionId));
     }
 }

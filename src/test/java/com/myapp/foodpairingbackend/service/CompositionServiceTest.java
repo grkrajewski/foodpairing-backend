@@ -26,24 +26,24 @@ class CompositionServiceTest {
     @Autowired
     private CompositionRepository compositionRepository;
 
+    //Given - data preparation
+    Dish dish = Dish.builder()
+            .id(null).externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
+            .recipeUrl("https://test.com").compositionList(List.of())
+            .build();
+
+    Drink drink = Drink.builder()
+            .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
+            .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+            .build();
+
+    Composition composition = Composition.builder()
+            .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
+            .build();
+
     @Test
     void testGetComposition() throws CompositionNotFoundException, DrinkExistsException {
         //Given
-        Dish dish = Dish.builder()
-                .id(null)
-                .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(List.of())
-                .build();
-
-        Drink drink = Drink.builder()
-                .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-
-        Composition composition = Composition.builder()
-                .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
-                .build();
-
         compositionService.saveComposition(composition);
         Long compositionId = composition.getId();
 
@@ -54,26 +54,13 @@ class CompositionServiceTest {
         assertTrue(compositionRepository.existsById(compositionId));
         assertEquals("test name dish", savedComposition.getDish().getName());
         assertEquals("test name drink", savedComposition.getDrink().getName());
+        assertNotNull(savedComposition.getCreated());
+        assertEquals(0, savedComposition.getCommentList().size());
     }
 
     @Test
     void testDeleteComposition() throws DrinkExistsException {
         //Given
-        Dish dish = Dish.builder()
-                .id(null)
-                .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(List.of())
-                .build();
-
-        Drink drink = Drink.builder()
-                .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-
-        Composition composition = Composition.builder()
-                .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
-                .build();
-
         compositionService.saveComposition(composition);
         Long compositionId = composition.getId();
 
@@ -82,5 +69,15 @@ class CompositionServiceTest {
 
         //Then
         assertFalse(compositionRepository.existsById(compositionId));
+    }
+
+    @Test
+    void testSaveComposition() throws DrinkExistsException {
+        //When
+        compositionService.saveComposition(composition);
+        Long compositionId = composition.getId();
+
+        //Then
+        assertTrue(compositionRepository.existsById(compositionId));
     }
 }

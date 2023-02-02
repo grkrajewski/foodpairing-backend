@@ -1,7 +1,6 @@
 package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.Dish;
-import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
 import com.myapp.foodpairingbackend.exception.DishNotFoundException;
 import com.myapp.foodpairingbackend.repository.DishRepository;
 import org.junit.jupiter.api.Test;
@@ -23,15 +22,16 @@ class DishServiceTest {
     @Autowired
     private DishRepository dishRepository;
 
-    @Test
-    void testGetDish() throws CompositionNotFoundException, DishNotFoundException {
-        //Given
-        Dish dish = Dish.builder()
-                .id(null)
-                .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(List.of())
-                .build();
+    //Given - data preparation
+    Dish dish = Dish.builder()
+            .id(null)
+            .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
+            .recipeUrl("https://test.com").compositionList(List.of())
+            .build();
 
+    @Test
+    void testGetDish() throws DishNotFoundException {
+        //Given
         dishService.saveDish(dish);
         Long dishId = dish.getId();
 
@@ -40,18 +40,17 @@ class DishServiceTest {
 
         //Then
         assertTrue(dishRepository.existsById(dishId));
+        assertEquals(1L, savedDish.getExternalSystemId());
         assertEquals("test name dish", savedDish.getName());
+        assertEquals(10, savedDish.getReadyInMinutes());
+        assertEquals(4, savedDish.getServings());
+        assertEquals("https://test.com", savedDish.getRecipeUrl());
+        assertEquals(0, savedDish.getCompositionList().size());
     }
 
     @Test
     void testDeleteDish() {
         //Given
-        Dish dish = Dish.builder()
-                .id(null)
-                .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(List.of())
-                .build();
-
         dishService.saveDish(dish);
         Long dishId = dish.getId();
 
@@ -60,5 +59,15 @@ class DishServiceTest {
 
         //Then
         assertFalse(dishRepository.existsById(dishId));
+    }
+
+    @Test
+    void testSaveDish() {
+        //When
+        dishService.saveDish(dish);
+        Long dishId = dish.getId();
+
+        //Then
+        assertTrue(dishRepository.existsById(dishId));
     }
 }

@@ -25,58 +25,59 @@ class DrinkIngredientServiceTest {
     @Autowired
     private DrinkIngredientRepository drinkIngredientRepository;
 
+    //Given - data preparation
+    Drink drink = Drink.builder()
+            .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
+            .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+            .build();
+
+    DrinkIngredient drinkIngredient = DrinkIngredient.builder()
+            .id(null).name("test name ingredient").measure("test measure").drink(drink)
+            .build();
+
     @Test
     void testGetDrinkIngredientsForDrink() {
         //Given
-        Drink drink = Drink.builder()
-                .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-
         drinkService.saveDrink(drink);
-
-        DrinkIngredient drinkIngredient1 = DrinkIngredient.builder().id(1L).name("test name ingredient 1")
-                .measure("test measure 1").drink(drink)
-                .build();
-
-        DrinkIngredient drinkIngredient2 = DrinkIngredient.builder().id(2L).name("test name ingredient 2")
-                .measure("test measure 2").drink(drink)
-                .build();
-
-        DrinkIngredient savedDrinkIngredient1 = drinkIngredientService.saveDrinkIngredient(drinkIngredient1);
-        DrinkIngredient savedDrinkIngredient2 = drinkIngredientService.saveDrinkIngredient(drinkIngredient2);
-        Long savedDrinkId = drink.getId();
-        Long drinkIngredient1Id = savedDrinkIngredient1.getId();
-        Long drinkIngredient2Id = savedDrinkIngredient2.getId();
+        drinkIngredientService.saveDrinkIngredient(drinkIngredient);
+        Long drinkId = drink.getId();
+        Long drinkIngredientId = drinkIngredient.getId();
 
         //When
-        List<DrinkIngredient> savedDrinkIngredientList = drinkIngredientService.getDrinkIngredientsForDrink(savedDrinkId);
+        List<DrinkIngredient> savedDrinkIngredientList = drinkIngredientService.getDrinkIngredientsForDrink(drinkId);
 
         //Then
-        assertTrue(drinkIngredientRepository.existsById(drinkIngredient1Id));
-        assertTrue(drinkIngredientRepository.existsById(drinkIngredient2Id));
-        assertEquals(2, savedDrinkIngredientList.size());
+        assertTrue(drinkIngredientRepository.existsById(drinkIngredientId));
+        assertEquals(1, savedDrinkIngredientList.size());
+        assertEquals("test name ingredient", savedDrinkIngredientList.get(0).getName());
+        assertEquals("test measure", savedDrinkIngredientList.get(0).getMeasure());
+        assertEquals("test name drink", savedDrinkIngredientList.get(0).getDrink().getName());
     }
 
     @Test
     void testDeleteDrinkIngredient() {
         //Given
-        Drink drink = Drink.builder()
-                .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-
-        DrinkIngredient drinkIngredient1 = DrinkIngredient.builder().id(1L).name("test name ingredient 1")
-                .measure("test measure 1").drink(drink)
-                .build();
-
-        DrinkIngredient savedDrinkIngredient1 = drinkIngredientService.saveDrinkIngredient(drinkIngredient1);
-        Long drinkIngredient1Id = savedDrinkIngredient1.getId();
+        drinkService.saveDrink(drink);
+        drinkIngredientService.saveDrinkIngredient(drinkIngredient);
+        Long drinkIngredientId = drinkIngredient.getId();
 
         //When
-        drinkIngredientService.deleteDrinkIngredient(drinkIngredient1Id);
+        drinkIngredientService.deleteDrinkIngredient(drinkIngredientId);
 
         //Then
-        assertFalse(drinkIngredientRepository.existsById(drinkIngredient1Id));
+        assertFalse(drinkIngredientRepository.existsById(drinkIngredientId));
+    }
+
+    @Test
+    void testSaveDrinkIngredient() {
+        //Given
+        drinkService.saveDrink(drink);
+
+        //When
+        drinkIngredientService.saveDrinkIngredient(drinkIngredient);
+        Long drinkIngredientId = drinkIngredient.getId();
+
+        //Then
+        assertTrue(drinkIngredientRepository.existsById(drinkIngredientId));
     }
 }

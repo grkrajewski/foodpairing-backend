@@ -40,6 +40,7 @@ public class Drink {
     @Column(name = "INSTRUCTIONS")
     private String instructions;
 
+    @NotNull
     @OneToMany(
             targetEntity = DrinkIngredient.class,
             mappedBy = "drink",

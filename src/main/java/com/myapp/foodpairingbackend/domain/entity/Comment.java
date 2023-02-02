@@ -31,6 +31,7 @@ public class Comment {
     @Column(name = "CREATED")
     private Date created;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "COMPOSITION_ID")
     private Composition composition;

@@ -21,12 +21,14 @@ public class DrinkIngredient {
     @Column(name = "ID")
     private Long id;
 
+    @NotNull
     @Column(name = "NAME")
     private String name;
 
     @Column(name = "MEASURE")
     private String measure;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "DRINK_ID")
     private Drink drink;

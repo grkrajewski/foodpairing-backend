@@ -4,6 +4,7 @@ import com.myapp.foodpairingbackend.domain.entity.Comment;
 import com.myapp.foodpairingbackend.domain.entity.Composition;
 import com.myapp.foodpairingbackend.domain.entity.Dish;
 import com.myapp.foodpairingbackend.domain.entity.Drink;
+import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
 import com.myapp.foodpairingbackend.exception.DrinkExistsException;
 import com.myapp.foodpairingbackend.repository.CommentRepository;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Transactional
 @SpringBootTest
@@ -29,81 +31,86 @@ class CommentServiceTest {
     @Autowired
     private CommentRepository commentRepository;
 
+    //Given - data preparation
+    Dish dish = Dish.builder()
+            .id(null).externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
+            .recipeUrl("https://test.com").compositionList(List.of())
+            .build();
+
+    Drink drink = Drink.builder()
+            .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
+            .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+            .build();
+
+    Composition composition = Composition.builder()
+            .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
+            .build();
+
+    Comment comment = Comment.builder().id(null).description("test description").created(new Date())
+            .composition(composition).reactionList(List.of())
+            .build();
+
     @Test
     void testGetCommentsForComposition() throws DrinkExistsException {
         //Given
-        Dish dish = Dish.builder()
-                .id(null)
-                .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(List.of())
-                .build();
-
-        Drink drink = Drink.builder()
-                .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-
-        Composition composition = Composition.builder()
-                .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
-                .build();
-
         compositionService.saveComposition(composition);
-
-        Comment comment1 = Comment.builder().id(null).description("test description 1").created(new Date())
-                .composition(composition).reactionList(List.of())
-                .build();
-
-        Comment comment2 = Comment.builder().id(null).description("test description 2").created(new Date())
-                .composition(composition).reactionList(List.of())
-                .build();
-
-        Comment savedComment1 = commentService.saveComment(comment1);
-        Comment savedComment2 = commentService.saveComment(comment2);
-        Long savedCompositionId = composition.getId();
-        Long comment1Id = savedComment1.getId();
-        Long comment2Id = savedComment2.getId();
+        commentService.saveComment(comment);
+        Long compositionId = composition.getId();
+        Long commentId = comment.getId();
 
         //When
-        List<Comment> savedCommentList = commentService.getCommentsForComposition(savedCompositionId);
+        List<Comment> savedCommentList = commentService.getCommentsForComposition(compositionId);
 
         //Then
-        assertTrue(commentRepository.existsById(comment1Id));
-        assertTrue(commentRepository.existsById(comment2Id));
-        assertEquals(2, savedCommentList.size());
+        assertTrue(commentRepository.existsById(commentId));
+        assertEquals(1, savedCommentList.size());
+        assertEquals("test description", savedCommentList.get(0).getDescription());
+        assertNotNull(savedCommentList.get(0).getCreated());
+        assertNotNull(savedCommentList.get(0).getComposition());
+        assertEquals(0, savedCommentList.get(0).getReactionList().size());
+    }
+
+    @Test
+    void testGetComment() throws DrinkExistsException, CommentNotFoundException {
+        //Given
+        compositionService.saveComposition(composition);
+        commentService.saveComment(comment);
+        Long commentId = comment.getId();
+
+        //When
+        Comment savedComment = commentService.getComment(commentId);
+
+        //Then
+        assertEquals("test description", savedComment.getDescription());
+        assertNotNull(savedComment.getCreated());
+        assertNotNull(savedComment.getComposition());
+        assertEquals(0, savedComment.getReactionList().size());
     }
 
     @Test
     void testDeleteComment() throws DrinkExistsException {
         //Given
-        Dish dish = Dish.builder()
-                .id(null)
-                .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-                .recipeUrl("https://test.com").compositionList(List.of())
-                .build();
-
-        Drink drink = Drink.builder()
-                .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-
-        Composition composition = Composition.builder()
-                .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
-                .build();
-
         compositionService.saveComposition(composition);
-
-        Comment comment1 = Comment.builder().id(null).description("test description 1").created(new Date())
-                .composition(composition).reactionList(List.of())
-                .build();
-
-        Comment savedComment1 = commentService.saveComment(comment1);
-        Long comment1Id = savedComment1.getId();
+        commentService.saveComment(comment);
+        Long commentId = comment.getId();
 
         //When
-        commentService.deleteComment(comment1Id);
+        commentService.deleteComment(commentId);
 
         //Then
-        assertFalse(commentRepository.existsById(comment1Id));
+        assertFalse(commentRepository.existsById(commentId));
     }
 
+    @Test
+    void testSaveDrink() throws DrinkExistsException {
+        //Given
+        compositionService.saveComposition(composition);
+
+        //When
+        commentService.saveComment(comment);
+        Long commentId = comment.getId();
+
+        //Then
+        assertTrue(commentRepository.existsById(commentId));
+    }
 }

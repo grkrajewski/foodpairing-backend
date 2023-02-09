@@ -23,14 +23,16 @@ class DrinkIngredientMapperTest {
     @MockBean
     private DrinkService drinkService;
 
+    //Given - data preparation
+    Drink drink = Drink.builder().id(1L).externalSystemId("10").name("test name").alcoholic("test alcoholic")
+            .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+            .build();
+
     @Test
     void testMapToDrinkIngredient() throws Exception {
         //Given
-        Drink drink = Drink.builder().id(1L).externalSystemId("10").name("test name").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-        DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L).
-                name("test name").measure("test measure").drinkId(1L)
+        DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L)
+                .name("test name").measure("test measure").drinkId(1L)
                 .build();
         when(drinkService.getDrink(drinkIngredientDto.getDrinkId())).thenReturn(drink);
 
@@ -47,11 +49,8 @@ class DrinkIngredientMapperTest {
     @Test
     void testMapToDrinkIngredientDto() throws Exception {
         //Given
-        Drink drink = Drink.builder().id(1L).externalSystemId("10").name("test name").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-        DrinkIngredient drinkIngredient = DrinkIngredient.builder().id(2L).
-                name("test name").measure("test measure").drink(drink)
+        DrinkIngredient drinkIngredient = DrinkIngredient.builder().id(2L)
+                .name("test name").measure("test measure").drink(drink)
                 .build();
 
         //When
@@ -67,11 +66,8 @@ class DrinkIngredientMapperTest {
     @Test
     void testMapToDrinkIngredientList() throws Exception {
         //Given
-        Drink drink = Drink.builder().id(1L).externalSystemId("10").name("test name").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-        DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L).
-                name("test name").measure("test measure").drinkId(1L)
+        DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L)
+                .name("test name").measure("test measure").drinkId(1L)
                 .build();
         List<DrinkIngredientDto> drinkIngredientDtoList = List.of(drinkIngredientDto);
         when(drinkService.getDrink(drinkIngredientDto.getDrinkId())).thenReturn(drink);
@@ -91,11 +87,8 @@ class DrinkIngredientMapperTest {
     @Test
     void testMapToDrinkIngredientDtoList() throws Exception {
         //Given
-        Drink drink = Drink.builder().id(1L).externalSystemId("10").name("test name").alcoholic("test alcoholic")
-                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-                .build();
-        DrinkIngredient drinkIngredient = DrinkIngredient.builder().id(2L).
-                name("test name").measure("test measure").drink(drink)
+        DrinkIngredient drinkIngredient = DrinkIngredient.builder().id(2L)
+                .name("test name").measure("test measure").drink(drink)
                 .build();
         List<DrinkIngredient> drinkIngredientList = List.of(drinkIngredient);
 

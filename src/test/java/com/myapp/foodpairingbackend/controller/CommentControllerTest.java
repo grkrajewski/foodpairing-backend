@@ -49,7 +49,6 @@ class CommentControllerTest {
     @Test
     void shouldGetComments() throws Exception {
         //Given
-
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
                 .created(new Date()).compositionId(2L).reactionList(List.of())
                 .build();

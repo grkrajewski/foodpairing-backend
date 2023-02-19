@@ -102,7 +102,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void testSaveDrink() throws DrinkExistsException {
+    void testSaveComment() throws DrinkExistsException {
         //Given
         compositionService.saveComposition(composition);
 

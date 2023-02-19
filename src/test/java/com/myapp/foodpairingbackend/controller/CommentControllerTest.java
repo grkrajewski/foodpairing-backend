@@ -1,6 +1,7 @@
 package com.myapp.foodpairingbackend.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.myapp.foodpairingbackend.domain.dto.CommentDto;
 import com.myapp.foodpairingbackend.facade.CommentFacade;
 import org.hamcrest.Matchers;
@@ -64,6 +65,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].description", Matchers.is("test description")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].compositionId", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].reactionList", Matchers.hasSize(0)));
     }
@@ -86,6 +88,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].description", Matchers.is("test description")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].compositionId", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].reactionList", Matchers.hasSize(0)));
     }
@@ -105,10 +108,12 @@ class CommentControllerTest {
     void shouldSaveComment() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
-                .created(null).compositionId(2L).reactionList(List.of())
+                .created(new Date()).compositionId(2L).reactionList(List.of())
                 .build();
         when(commentFacade.saveComment(any(CommentDto.class))).thenReturn(commentDto);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .create();
         String jsonContent = gson.toJson(commentDto);
 
         //When & Then
@@ -121,6 +126,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.compositionId", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.reactionList", Matchers.hasSize(0)));
     }
@@ -129,10 +135,12 @@ class CommentControllerTest {
     void shouldUpdateComment() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
-                .created(null).compositionId(2L).reactionList(List.of())
+                .created(new Date()).compositionId(2L).reactionList(List.of())
                 .build();
         when(commentFacade.updateComment(any(CommentDto.class))).thenReturn(commentDto);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .create();
         String jsonContent = gson.toJson(commentDto);
 
         //When & Then
@@ -145,6 +153,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.compositionId", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.reactionList", Matchers.hasSize(0)));
     }

@@ -1,6 +1,7 @@
 package com.myapp.foodpairingbackend.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.myapp.foodpairingbackend.domain.dto.ReactionDto;
 import com.myapp.foodpairingbackend.facade.ReactionFacade;
 import org.hamcrest.Matchers;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -49,7 +51,7 @@ class ReactionControllerTest {
     void shouldGetReactions() throws Exception {
         //Given
 
-        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(null).commentId(2L)
+        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
                 .build();
         List<ReactionDto> reactionDtoList = List.of(reactionDto);
         when(reactionFacade.getReactions()).thenReturn(reactionDtoList);
@@ -63,13 +65,14 @@ class ReactionControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].description", Matchers.is("test description")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].commentId", Matchers.is(2)));
     }
 
     @Test
     void shouldGetReactionsForComment() throws Exception {
         //Given
-        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(null).commentId(2L)
+        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
                 .build();
         List<ReactionDto> reactionDtoList = List.of(reactionDto);
         when(reactionFacade.getReactionsForComment(2L)).thenReturn(reactionDtoList);
@@ -83,6 +86,7 @@ class ReactionControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].description", Matchers.is("test description")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].commentId", Matchers.is(2)));
     }
 
@@ -100,10 +104,12 @@ class ReactionControllerTest {
     @Test
     void shouldSaveReaction() throws Exception {
         //Given
-        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(null).commentId(2L)
+        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
                 .build();
         when(reactionFacade.saveReaction(any(ReactionDto.class))).thenReturn(reactionDto);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .create();
         String jsonContent = gson.toJson(reactionDto);
 
         //When & Then
@@ -116,16 +122,19 @@ class ReactionControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commentId", Matchers.is(2)));
     }
 
     @Test
     void shouldUpdateReaction() throws Exception {
         //Given
-        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(null).commentId(2L)
+        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
                 .build();
         when(reactionFacade.updateReaction(any(ReactionDto.class))).thenReturn(reactionDto);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .create();
         String jsonContent = gson.toJson(reactionDto);
 
         //When & Then
@@ -138,6 +147,7 @@ class ReactionControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commentId", Matchers.is(2)));
     }
 }

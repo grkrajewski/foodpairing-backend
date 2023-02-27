@@ -13,4 +13,6 @@ public interface ReactionRepository extends CrudRepository<Reaction, Long> {
 
     @Override
     List<Reaction> findAll();
+
+    List<Reaction> findByCommentId(Long id);
 }

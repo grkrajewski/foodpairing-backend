@@ -28,12 +28,9 @@ public class CompositionService {
     }
 
     public Composition saveComposition(final Composition composition) throws DrinkExistsException {
-        List<Composition> compositionList = compositionRepository.findAll();
-        for (Composition existingComposition : compositionList) {
-            if (existingComposition.getDrink().getId().equals(composition.getDrink().getId())
-                    && !existingComposition.getId().equals(composition.getId())) {
-                throw new DrinkExistsException();
-            }
+        Composition existingComposition = compositionRepository.findByDrinkId(composition.getDrink().getId());
+        if (existingComposition != null) {
+            throw new DrinkExistsException();
         }
         return compositionRepository.save(composition);
     }

@@ -13,4 +13,6 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
 
     @Override
     List<Comment> findAll();
+
+    List<Comment> findByCompositionId(Long id);
 }

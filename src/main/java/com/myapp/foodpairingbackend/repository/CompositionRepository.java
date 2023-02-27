@@ -13,4 +13,6 @@ public interface CompositionRepository extends CrudRepository<Composition, Long>
 
     @Override
     List<Composition> findAll();
+
+    Composition findByDrinkId(Long id);
 }

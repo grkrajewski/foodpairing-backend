@@ -5,7 +5,6 @@ import com.myapp.foodpairingbackend.repository.DrinkIngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,14 +18,7 @@ public class DrinkIngredientService {
     }
 
     public List<DrinkIngredient> getDrinkIngredientsForDrink(final Long drinkId) {
-        List<DrinkIngredient> allDrinkIngredientList = drinkIngredientRepository.findAll();
-        List<DrinkIngredient> filteredDrinkIngredientList = new ArrayList<>();
-        for (DrinkIngredient ingredient : allDrinkIngredientList) {
-            if (ingredient.getDrink().getId().equals(drinkId)) {
-                filteredDrinkIngredientList.add(ingredient);
-            }
-        }
-        return filteredDrinkIngredientList;
+        return drinkIngredientRepository.findByDrinkId(drinkId);
     }
 
     public void deleteDrinkIngredient(final Long drinkIngredientId) {

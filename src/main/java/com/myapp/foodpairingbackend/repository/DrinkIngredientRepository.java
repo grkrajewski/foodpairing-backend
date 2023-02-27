@@ -13,4 +13,6 @@ public interface DrinkIngredientRepository extends CrudRepository<DrinkIngredien
 
     @Override
     List<DrinkIngredient> findAll();
+
+    List<DrinkIngredient> findByDrinkId(Long id);
 }

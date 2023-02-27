@@ -5,7 +5,6 @@ import com.myapp.foodpairingbackend.repository.ReactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,14 +18,7 @@ public class ReactionService {
     }
 
     public List<Reaction> getReactionsForComment(final Long commentId) {
-        List<Reaction> allReactionList = reactionRepository.findAll();
-        List<Reaction> filteredReactionList = new ArrayList<>();
-        for (Reaction reaction : allReactionList) {
-            if (reaction.getComment().getId().equals(commentId)) {
-                filteredReactionList.add(reaction);
-            }
-        }
-        return filteredReactionList;
+        return reactionRepository.findByCommentId(commentId);
     }
 
     public void deleteReaction(final Long reactionId) {

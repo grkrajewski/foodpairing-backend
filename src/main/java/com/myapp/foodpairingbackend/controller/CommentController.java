@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -25,21 +27,28 @@ public class CommentController {
         return ResponseEntity.ok(commentFacade.getComments());
     }
 
-    @GetMapping(value = "{compositionId}")
+    @GetMapping(value = "for-composition/{compositionId}")
     public ResponseEntity<List<CommentDto>> getCommentsForComposition(@PathVariable Long compositionId) {
         return ResponseEntity.ok(commentFacade.getCommentsForComposition(compositionId));
+    }
+
+    @GetMapping(value = "{commentId}")
+    public ResponseEntity<CommentDto> getComment(@PathVariable Long commentId) throws CommentNotFoundException {
+        return ResponseEntity.ok(commentFacade.getComment(commentId));
     }
 
     @DeleteMapping(value = "{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
         commentFacade.deleteComment(commentId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentDto> saveComment(@RequestBody CommentDto commentDto) throws CompositionNotFoundException,
             CommentNotFoundException, IdFoundException {
-        return ResponseEntity.ok(commentFacade.saveComment(commentDto));
+        CommentDto savedCommentDto = commentFacade.saveComment(commentDto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedCommentDto.getId()).toUri();
+        return ResponseEntity.created(location).body(savedCommentDto);
     }
 
     @PutMapping

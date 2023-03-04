@@ -80,7 +80,7 @@ class ReactionControllerTest {
         //When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/foodpairing/v1/reactions/2")
+                        .get("/foodpairing/v1/reactions/for-comment/2")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
@@ -98,7 +98,7 @@ class ReactionControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders
                         .delete("/foodpairing/v1/reactions/1"))
-                .andExpect(MockMvcResultMatchers.status().is(200));
+                .andExpect(MockMvcResultMatchers.status().is(204));
     }
 
     @Test
@@ -119,7 +119,8 @@ class ReactionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(jsonContent))
-                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.status().is(201))
+                .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/foodpairing/v1/reactions/1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))

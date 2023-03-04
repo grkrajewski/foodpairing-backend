@@ -105,7 +105,7 @@ class DishControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders
                         .delete("/foodpairing/v1/dishes/1"))
-                .andExpect(MockMvcResultMatchers.status().is(200));
+                .andExpect(MockMvcResultMatchers.status().is(204));
     }
 
     @Test
@@ -124,7 +124,8 @@ class DishControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(jsonContent))
-                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.status().is(201))
+                .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/foodpairing/v1/dishes/1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.externalSystemId", Matchers.is(10)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("test name dto")))

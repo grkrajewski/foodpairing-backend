@@ -100,7 +100,7 @@ class CompositionControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders
                         .delete("/foodpairing/v1/compositions/1"))
-                .andExpect(MockMvcResultMatchers.status().is(200));
+                .andExpect(MockMvcResultMatchers.status().is(204));
     }
 
     @Test
@@ -122,7 +122,8 @@ class CompositionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(jsonContent))
-                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.status().is(201))
+                .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/foodpairing/v1/compositions/3"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.dishId", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.drinkId", Matchers.is(2)))

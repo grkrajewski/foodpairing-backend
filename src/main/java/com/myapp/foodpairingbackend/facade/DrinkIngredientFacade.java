@@ -2,6 +2,7 @@ package com.myapp.foodpairingbackend.facade;
 
 import com.myapp.foodpairingbackend.domain.dto.DrinkIngredientDto;
 import com.myapp.foodpairingbackend.domain.entity.DrinkIngredient;
+import com.myapp.foodpairingbackend.exception.DrinkIngredientNotFoundException;
 import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdFoundException;
 import com.myapp.foodpairingbackend.exception.IdNotFoundException;
@@ -27,6 +28,11 @@ public class DrinkIngredientFacade {
     public List<DrinkIngredientDto> getDrinkIngredientsForDrink(Long drinkId) {
         List<DrinkIngredient> drinkIngredientList = drinkIngredientService.getDrinkIngredientsForDrink(drinkId);
         return drinkIngredientMapper.mapToDrinkIngredientDtoList(drinkIngredientList);
+    }
+
+    public DrinkIngredientDto getDrinkIngredient(Long drinkIngredientId) throws DrinkIngredientNotFoundException {
+        DrinkIngredient drinkIngredient = drinkIngredientService.getDrinkIngredient(drinkIngredientId);
+        return drinkIngredientMapper.mapToDrinkIngredientDto(drinkIngredient);
     }
 
     public void deleteDrinkIngredient(Long drinkIngredientId) {

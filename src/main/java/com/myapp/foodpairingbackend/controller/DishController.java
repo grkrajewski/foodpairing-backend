@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -30,13 +32,15 @@ public class DishController {
     @DeleteMapping(value = "{dishId}")
     public ResponseEntity<Void> deleteDish(@PathVariable Long dishId) {
         dishFacade.deleteDish(dishId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DishDto> saveDishInDb(@RequestBody DishDto dishDto) throws DrinkNotFoundException,
             DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdFoundException {
-        return ResponseEntity.ok(dishFacade.saveDishInDb(dishDto));
+        DishDto savedDishDto = dishFacade.saveDishInDb(dishDto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedDishDto.getId()).toUri();
+        return ResponseEntity.created(location).body(savedDishDto);
     }
 
     @PutMapping

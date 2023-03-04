@@ -30,6 +30,11 @@ public class CommentFacade {
         return commentMapper.mapToCommentDtoList(commentList);
     }
 
+    public CommentDto getComment(Long commentId) throws CommentNotFoundException {
+        Comment comment = commentService.getComment(commentId);
+        return commentMapper.mapToCommentDto(comment);
+    }
+
     public void deleteComment(Long commentId) {
         commentService.deleteComment(commentId);
     }

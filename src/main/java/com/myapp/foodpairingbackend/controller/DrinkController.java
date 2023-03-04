@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -32,12 +34,14 @@ public class DrinkController {
     @DeleteMapping(value = "{drinkId}")
     public ResponseEntity<Void> deleteDrink(@PathVariable Long drinkId) {
         drinkFacade.deleteDrink(drinkId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DrinkDto> saveDrinkInDb(@RequestBody DrinkDto drinkDto) throws DrinkNotFoundException, IdFoundException {
-        return ResponseEntity.ok(drinkFacade.saveDrinkInDb(drinkDto));
+        DrinkDto savedDrinkDto = drinkFacade.saveDrinkInDb(drinkDto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedDrinkDto.getId()).toUri();
+        return ResponseEntity.created(location).body(savedDrinkDto);
     }
 
     @PutMapping

@@ -79,7 +79,7 @@ class DrinkIngredientControllerTest {
         //When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/foodpairing/v1/drinkingredients/1")
+                        .get("/foodpairing/v1/drinkingredients/for-drink/1")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
@@ -97,7 +97,7 @@ class DrinkIngredientControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders
                         .delete("/foodpairing/v1/drinkingredients/1"))
-                .andExpect(MockMvcResultMatchers.status().is(200));
+                .andExpect(MockMvcResultMatchers.status().is(204));
     }
 
     @Test
@@ -117,7 +117,8 @@ class DrinkIngredientControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(jsonContent))
-                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.status().is(201))
+                .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/foodpairing/v1/drinkingredients/2"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("test ingredient name")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.measure", Matchers.is("test measure")))

@@ -82,7 +82,7 @@ class CommentControllerTest {
         //When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/foodpairing/v1/comments/2")
+                        .get("/foodpairing/v1/comments/for-composition/2")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
@@ -101,7 +101,7 @@ class CommentControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders
                         .delete("/foodpairing/v1/comments/1"))
-                .andExpect(MockMvcResultMatchers.status().is(200));
+                .andExpect(MockMvcResultMatchers.status().is(204));
     }
 
     @Test
@@ -123,7 +123,8 @@ class CommentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(jsonContent))
-                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.status().is(201))
+                .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/foodpairing/v1/comments/1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))

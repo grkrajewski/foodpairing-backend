@@ -5,6 +5,7 @@ import com.myapp.foodpairingbackend.domain.entity.Reaction;
 import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdFoundException;
 import com.myapp.foodpairingbackend.exception.IdNotFoundException;
+import com.myapp.foodpairingbackend.exception.ReactionNotFoundException;
 import com.myapp.foodpairingbackend.mapper.ReactionMapper;
 import com.myapp.foodpairingbackend.service.ReactionService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,11 @@ public class ReactionFacade {
     public List<ReactionDto> getReactionsForComment(Long commentId) {
         List<Reaction> reactionList = reactionService.getReactionsForComment(commentId);
         return reactionMapper.mapToReactionDtoList(reactionList);
+    }
+
+    public ReactionDto getReaction(Long reactionId) throws ReactionNotFoundException {
+        Reaction reaction = reactionService.getReaction(reactionId);
+        return reactionMapper.mapToReactionDto(reaction);
     }
 
     public void deleteReaction(Long reactionId) {

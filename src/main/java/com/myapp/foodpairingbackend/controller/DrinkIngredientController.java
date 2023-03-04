@@ -1,6 +1,7 @@
 package com.myapp.foodpairingbackend.controller;
 
 import com.myapp.foodpairingbackend.domain.dto.DrinkIngredientDto;
+import com.myapp.foodpairingbackend.exception.DrinkIngredientNotFoundException;
 import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdFoundException;
 import com.myapp.foodpairingbackend.exception.IdNotFoundException;
@@ -9,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,21 +27,28 @@ public class DrinkIngredientController {
         return ResponseEntity.ok(drinkIngredientFacade.getDrinkIngredients());
     }
 
-    @GetMapping(value = "{drinkId}")
+    @GetMapping(value = "for-drink/{drinkId}")
     public ResponseEntity<List<DrinkIngredientDto>> getDrinkIngredientsForDrink(@PathVariable Long drinkId) {
         return ResponseEntity.ok(drinkIngredientFacade.getDrinkIngredientsForDrink(drinkId));
+    }
+
+    @GetMapping("{drinkIngredientId}")
+    public DrinkIngredientDto getDrinkIngredient(@PathVariable Long drinkIngredientId) throws DrinkIngredientNotFoundException {
+        return drinkIngredientFacade.getDrinkIngredient(drinkIngredientId);
     }
 
     @DeleteMapping(value = "{drinkIngredientId}")
     public ResponseEntity<Void> deleteDrinkIngredient(@PathVariable Long drinkIngredientId) {
         drinkIngredientFacade.deleteDrinkIngredient(drinkIngredientId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DrinkIngredientDto> saveDrinkIngredient(@RequestBody DrinkIngredientDto drinkIngredientDto)
             throws DrinkNotFoundException, IdFoundException {
-        return ResponseEntity.ok(drinkIngredientFacade.saveDrinkIngredient(drinkIngredientDto));
+        DrinkIngredientDto savedDrinkIngredientDto = drinkIngredientFacade.saveDrinkIngredient(drinkIngredientDto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedDrinkIngredientDto.getId()).toUri();
+        return ResponseEntity.created(location).body(savedDrinkIngredientDto);
     }
 
     @PutMapping

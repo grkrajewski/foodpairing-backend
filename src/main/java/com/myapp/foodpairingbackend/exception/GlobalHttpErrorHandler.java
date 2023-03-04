@@ -11,32 +11,32 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DishNotFoundException.class)
     public ResponseEntity<Object> handleDishNotFoundException(DishNotFoundException exception) {
-        return new ResponseEntity<>("Dish with given id doesn't exist", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Dish with given id doesn't exist", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DrinkNotFoundException.class)
     public ResponseEntity<Object> handleDrinkNotFoundException(DrinkNotFoundException exception) {
-        return new ResponseEntity<>("Drink with given id doesn't exist", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Drink with given id doesn't exist", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DrinkIngredientNotFoundException.class)
     public ResponseEntity<Object> handleDrinkIngredientNotFoundException(DrinkIngredientNotFoundException exception) {
-        return new ResponseEntity<>("Drink ingredient with given id doesn't exist", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Drink ingredient with given id doesn't exist", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CompositionNotFoundException.class)
     public ResponseEntity<Object> handleCompositionNotFoundException(CompositionNotFoundException exception) {
-        return new ResponseEntity<>("Composition with given id doesn't exist", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Composition with given id doesn't exist", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CommentNotFoundException.class)
     public ResponseEntity<Object> handleCommentNotFoundException(CommentNotFoundException exception) {
-        return new ResponseEntity<>("Comment with given id doesn't exist", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Comment with given id doesn't exist", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ReactionNotFoundException.class)
     public ResponseEntity<Object> handleReactionNotFoundException(ReactionNotFoundException exception) {
-        return new ResponseEntity<>("Rating with given id doesn't exist", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Rating with given id doesn't exist", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(IdNotFoundException.class)
@@ -52,7 +52,7 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DrinkExistsException.class)
     public ResponseEntity<Object> handleDrinkExistsException(DrinkExistsException exception) {
         return new ResponseEntity<>("The drink you are trying to add or modify in the composition is already paired " +
-                "with existing composition.Every Composition\nshould have separate drink even if it's the same. It will " +
+                "with existing composition. Every Composition\nshould have separate drink even if it's the same. It will " +
                 "allow to modify every drink independently for each composition.", HttpStatus.BAD_REQUEST);
     }
 }

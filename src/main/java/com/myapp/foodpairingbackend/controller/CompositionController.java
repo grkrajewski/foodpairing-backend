@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -30,13 +32,15 @@ public class CompositionController {
     @DeleteMapping(value = "{compositionId}")
     public ResponseEntity<Void> deleteComposition(@PathVariable Long compositionId) {
         compositionFacade.deleteComposition(compositionId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CompositionDto> saveComposition(@RequestBody CompositionDto compositionDto) throws DrinkNotFoundException,
             DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdFoundException, DrinkExistsException {
-        return ResponseEntity.ok(compositionFacade.saveComposition(compositionDto));
+        CompositionDto savedCompositionDto = compositionFacade.saveComposition(compositionDto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedCompositionDto.getId()).toUri();
+        return ResponseEntity.created(location).body(savedCompositionDto);
     }
 
     @PutMapping

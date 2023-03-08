@@ -29,7 +29,7 @@ class SpoonacularControllerTest {
     private SpoonacularService spoonacularService;
 
     @Test
-    void getEmptySpoonacularDishes() throws Exception {
+    void testShouldGetEmptySpoonacularDishes() throws Exception {
         //Given
         when(spoonacularService.getSpoonacularDishes("test")).thenReturn(List.of());
 
@@ -44,7 +44,7 @@ class SpoonacularControllerTest {
     }
 
     @Test
-    void getSpoonacularDishes() throws Exception {
+    void testShouldGetSpoonacularDishes() throws Exception {
         //Given
         SpoonacularDishDto spoonacularDishDto = SpoonacularDishDto.builder().externalSystemId(1L).name("test name")
                 .readyInMinutes(15).servings(4).recipeUrl("https://test.com")

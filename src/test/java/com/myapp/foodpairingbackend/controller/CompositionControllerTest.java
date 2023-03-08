@@ -33,7 +33,7 @@ class CompositionControllerTest {
     private CompositionFacade compositionFacade;
 
     @Test
-    void shouldGetEmptyCompositions() throws Exception {
+    void testShouldGetEmptyCompositions() throws Exception {
         //Given
         when(compositionFacade.getCompositions()).thenReturn(List.of());
 
@@ -48,7 +48,7 @@ class CompositionControllerTest {
     }
 
     @Test
-    void shouldGetCompositions() throws Exception {
+    void testShouldGetCompositions() throws Exception {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(1L)
                 .drinkId(2L).created(new Date()).commentList(List.of())
@@ -71,7 +71,7 @@ class CompositionControllerTest {
     }
 
     @Test
-    void shouldGetComposition() throws Exception {
+    void testShouldGetComposition() throws Exception {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(1L)
                 .drinkId(2L).created(new Date()).commentList(List.of())
@@ -93,7 +93,7 @@ class CompositionControllerTest {
     }
 
     @Test
-    void shouldDeleteComposition() throws Exception {
+    void testShouldDeleteComposition() throws Exception {
         //Given
 
         //When & Then
@@ -104,7 +104,7 @@ class CompositionControllerTest {
     }
 
     @Test
-    void shouldSaveComposition() throws Exception {
+    void testShouldSaveComposition() throws Exception {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(1L)
                 .drinkId(2L).created(new Date()).commentList(List.of())
@@ -132,7 +132,7 @@ class CompositionControllerTest {
     }
 
     @Test
-    void shouldUpdateComposition() throws Exception {
+    void testShouldUpdateComposition() throws Exception {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(1L)
                 .drinkId(2L).created(new Date()).commentList(List.of())

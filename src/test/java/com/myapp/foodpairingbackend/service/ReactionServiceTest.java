@@ -2,6 +2,7 @@ package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.*;
 import com.myapp.foodpairingbackend.exception.DrinkExistsException;
+import com.myapp.foodpairingbackend.exception.ReactionNotFoundException;
 import com.myapp.foodpairingbackend.repository.ReactionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,24 @@ class ReactionServiceTest {
         assertEquals("test reaction description", savedReactionList.get(0).getDescription());
         assertNotNull(savedReactionList.get(0).getCreated());
         assertEquals("test comment description", savedReactionList.get(0).getComment().getDescription());
+    }
+
+    @Test
+    void testGetReaction() throws DrinkExistsException, ReactionNotFoundException {
+        //Given
+        compositionService.saveComposition(composition);
+        commentService.saveComment(comment);
+        reactionService.saveReaction(reaction);
+        Long reactionId = reaction.getId();
+
+        //When
+        Reaction savedReaction = reactionService.getReaction(reactionId);
+
+        //Then
+        assertTrue(reactionRepository.existsById(reactionId));
+        assertEquals("test reaction description", savedReaction.getDescription());
+        assertNotNull(savedReaction.getCreated());
+        assertNotNull(savedReaction.getComment());
     }
 
     @Test

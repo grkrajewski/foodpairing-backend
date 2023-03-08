@@ -32,7 +32,7 @@ class DishControllerTest {
     private DishFacade dishFacade;
 
     @Test
-    void shouldGetEmptyDishes() throws Exception {
+    void testShouldGetEmptyDishes() throws Exception {
         //Given
         when(dishFacade.getDishes()).thenReturn(List.of());
 
@@ -47,7 +47,7 @@ class DishControllerTest {
     }
 
     @Test
-    void shouldGetDishes() throws Exception {
+    void testShouldGetDishes() throws Exception {
         //Given
         DishDto dishDto = DishDto.builder().id(1L).externalSystemId(10L).name("test name").readyInMinutes(15)
                 .servings(4).recipeUrl("https://test.com").compositionList(List.of())
@@ -72,7 +72,7 @@ class DishControllerTest {
     }
 
     @Test
-    void shouldGetDish() throws Exception {
+    void testShouldGetDish() throws Exception {
         //Given
         Dish dish = Dish.builder()
                 .id(1L).externalSystemId(10L).name("test name").readyInMinutes(15)
@@ -98,7 +98,7 @@ class DishControllerTest {
     }
 
     @Test
-    void shouldDeleteDish() throws Exception {
+    void testShouldDeleteDish() throws Exception {
         //Given
 
         //When & Then
@@ -109,7 +109,7 @@ class DishControllerTest {
     }
 
     @Test
-    void shouldSaveDish() throws Exception {
+    void testShouldSaveDish() throws Exception {
         DishDto dishDto = DishDto.builder().id(1L).externalSystemId(10L).name("test name dto").readyInMinutes(15)
                 .servings(4).recipeUrl("https://testDto.com").compositionList(List.of())
                 .build();
@@ -135,7 +135,7 @@ class DishControllerTest {
     }
 
     @Test
-    void shouldUpdateDish() throws Exception {
+    void testShouldUpdateDish() throws Exception {
         DishDto dishDto = DishDto.builder().id(1L).externalSystemId(10L).name("test name dto").readyInMinutes(15)
                 .servings(4).recipeUrl("https://testDto.com").compositionList(List.of())
                 .build();

@@ -33,7 +33,7 @@ class CommentControllerTest {
     private CommentFacade commentFacade;
 
     @Test
-    void shouldGetEmptyCompositions() throws Exception {
+    void testShouldGetEmptyComments() throws Exception {
         //Given
         when(commentFacade.getComments()).thenReturn(List.of());
 
@@ -48,7 +48,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void shouldGetComments() throws Exception {
+    void testShouldGetComments() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
                 .created(new Date()).compositionId(2L).reactionList(List.of())
@@ -71,7 +71,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void shouldGetCommentsForComposition() throws Exception {
+    void testShouldGetCommentsForComposition() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
                 .created(new Date()).compositionId(2L).reactionList(List.of())
@@ -94,7 +94,29 @@ class CommentControllerTest {
     }
 
     @Test
-    void shouldDeleteComment() throws Exception {
+    void testShouldGetComment() throws Exception {
+        //Given
+        CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
+                .created(new Date()).compositionId(2L).reactionList(List.of())
+                .build();
+        when(commentFacade.getComment(commentDto.getId())).thenReturn(commentDto);
+
+        //When & Then
+        mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get("/foodpairing/v1/comments/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.compositionId", Matchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.reactionList", Matchers.hasSize(0)));
+    }
+
+    @Test
+    void testShouldDeleteComment() throws Exception {
         //Given
 
         //When & Then
@@ -105,7 +127,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void shouldSaveComment() throws Exception {
+    void testShouldSaveComment() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
                 .created(new Date()).compositionId(2L).reactionList(List.of())
@@ -133,7 +155,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void shouldUpdateComment() throws Exception {
+    void testShouldUpdateComment() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
                 .created(new Date()).compositionId(2L).reactionList(List.of())

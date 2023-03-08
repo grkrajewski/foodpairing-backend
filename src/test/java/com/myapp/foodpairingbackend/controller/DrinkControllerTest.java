@@ -35,7 +35,7 @@ class DrinkControllerTest {
     private DrinkFacade drinkFacade;
 
     @Test
-    void shouldGetEmptyDrinks() throws Exception {
+    void testShouldGetEmptyDrinks() throws Exception {
         //Given
         when(drinkFacade.getDrinks()).thenReturn(List.of());
 
@@ -50,7 +50,7 @@ class DrinkControllerTest {
     }
 
     @Test
-    void shouldGetDrinks() throws Exception {
+    void testShouldGetDrinks() throws Exception {
         //Given
         DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L).
                 name("test ingredient name").measure("test measure").drinkId(1L)
@@ -83,7 +83,7 @@ class DrinkControllerTest {
     }
 
     @Test
-    void shouldGetDrink() throws Exception {
+    void testShouldGetDrink() throws Exception {
         //Given
         List<DrinkIngredient> drinkIngredientList = new ArrayList<>();
         Drink drink = Drink.builder().id(1L).externalSystemId("10").name("test drink name").alcoholic("test alcoholic")
@@ -125,7 +125,7 @@ class DrinkControllerTest {
     }
 
     @Test
-    void shouldDeleteDrink() throws Exception {
+    void testShouldDeleteDrink() throws Exception {
         //Given
 
         //When & Then
@@ -136,7 +136,7 @@ class DrinkControllerTest {
     }
 
     @Test
-    void shouldSaveDrink() throws Exception {
+    void testShouldSaveDrink() throws Exception {
         //Given
         List<DrinkIngredientDto> drinkIngredientDtoList = new ArrayList<>();
         DrinkDto drinkDto = DrinkDto.builder().id(1L).externalSystemId("10").name("test dto drink name").alcoholic("test dto alcoholic")
@@ -173,7 +173,7 @@ class DrinkControllerTest {
     }
 
     @Test
-    void shouldUpdateDrink() throws Exception {
+    void testShouldUpdateDrink() throws Exception {
         //Given
         List<DrinkIngredientDto> drinkIngredientDtoList = new ArrayList<>();
         DrinkDto drinkDto = DrinkDto.builder().id(1L).externalSystemId("10").name("test dto drink name").alcoholic("test dto alcoholic")

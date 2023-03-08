@@ -31,7 +31,7 @@ class DrinkIngredientControllerTest {
     private DrinkIngredientFacade drinkIngredientFacade;
 
     @Test
-    void shouldGetEmptyDrinkIngredients() throws Exception {
+    void testShouldGetEmptyDrinkIngredients() throws Exception {
         //Given
         when(drinkIngredientFacade.getDrinkIngredients()).thenReturn(List.of());
 
@@ -46,7 +46,7 @@ class DrinkIngredientControllerTest {
     }
 
     @Test
-    void shouldGetDrinkIngredients() throws Exception {
+    void testShouldGetDrinkIngredients() throws Exception {
         //Given
         DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L).
                 name("test ingredient name").measure("test measure").drinkId(1L)
@@ -68,7 +68,7 @@ class DrinkIngredientControllerTest {
     }
 
     @Test
-    void shouldGetDrinkIngredientsForDrink() throws Exception {
+    void testShouldGetDrinkIngredientsForDrink() throws Exception {
         //Given
         DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L).
                 name("test ingredient name").measure("test measure").drinkId(1L)
@@ -90,7 +90,28 @@ class DrinkIngredientControllerTest {
     }
 
     @Test
-    void shouldDeleteDrinkIngredient() throws Exception {
+    void shouldGetDrinkIngredient() throws Exception {
+        //Given
+        DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L).
+                name("test ingredient name").measure("test measure").drinkId(1L)
+                .build();
+        when(drinkIngredientFacade.getDrinkIngredient(drinkIngredientDto.getId())).thenReturn(drinkIngredientDto);
+
+        //When & Then
+        mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get("/foodpairing/v1/drinkingredients/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("test ingredient name")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.measure", Matchers.is("test measure")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.drinkId", Matchers.is(1)));
+    }
+
+    @Test
+    void testShouldDeleteDrinkIngredient() throws Exception {
         //Given
 
         //When & Then
@@ -101,7 +122,7 @@ class DrinkIngredientControllerTest {
     }
 
     @Test
-    void shouldSaveDrinkIngredient() throws Exception {
+    void testShouldSaveDrinkIngredient() throws Exception {
         //Given
         DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L).
                 name("test ingredient name").measure("test measure").drinkId(1L)
@@ -126,7 +147,7 @@ class DrinkIngredientControllerTest {
     }
 
     @Test
-    void shouldUpdateDrinkIngredient() throws Exception {
+    void testShouldUpdateDrinkIngredient() throws Exception {
         //Given
         DrinkIngredientDto drinkIngredientDto = DrinkIngredientDto.builder().id(2L).
                 name("test ingredient name").measure("test measure").drinkId(1L)

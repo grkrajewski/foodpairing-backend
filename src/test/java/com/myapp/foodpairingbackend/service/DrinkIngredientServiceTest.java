@@ -2,6 +2,7 @@ package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.Drink;
 import com.myapp.foodpairingbackend.domain.entity.DrinkIngredient;
+import com.myapp.foodpairingbackend.exception.DrinkIngredientNotFoundException;
 import com.myapp.foodpairingbackend.repository.DrinkIngredientRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,23 @@ class DrinkIngredientServiceTest {
         assertEquals("test name ingredient", savedDrinkIngredientList.get(0).getName());
         assertEquals("test measure", savedDrinkIngredientList.get(0).getMeasure());
         assertEquals("test name drink", savedDrinkIngredientList.get(0).getDrink().getName());
+    }
+
+    @Test
+    void testGetDrinkIngredient() throws DrinkIngredientNotFoundException {
+        //Given
+        drinkService.saveDrink(drink);
+        drinkIngredientService.saveDrinkIngredient(drinkIngredient);
+        Long drinkIngredientId = drinkIngredient.getId();
+
+        //When
+        DrinkIngredient savedDrinkIngredient = drinkIngredientService.getDrinkIngredient(drinkIngredientId);
+
+        //Then
+        assertTrue(drinkIngredientRepository.existsById(drinkIngredientId));
+        assertEquals("test name ingredient", savedDrinkIngredient.getName());
+        assertEquals("test measure", savedDrinkIngredient.getMeasure());
+        assertEquals("test name drink", savedDrinkIngredient.getDrink().getName());
     }
 
     @Test

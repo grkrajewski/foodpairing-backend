@@ -29,7 +29,7 @@ class TheCocktailDbControllerTest {
     private TheCocktailDbService theCocktailDbService;
 
     @Test
-    void getEmptyTheCocktailDbDrink() throws Exception {
+    void testShouldGetEmptyTheCocktailDbDrink() throws Exception {
         //Given
         when(theCocktailDbService.getTheCocktailDrink()).thenReturn(List.of());
 
@@ -44,7 +44,7 @@ class TheCocktailDbControllerTest {
     }
 
     @Test
-    void getTheCocktailDbDrink() throws Exception {
+    void testShouldGetTheCocktailDbDrink() throws Exception {
         //Given
         TheCocktailDbDrinkDto theCocktailDbDrinkDto = TheCocktailDbDrinkDto.builder().externalSystemId("1").name("test name")
                 .alcoholic("test alcoholic").glass("test glass").instructions("test instructions").ingredient1("test ingredient")

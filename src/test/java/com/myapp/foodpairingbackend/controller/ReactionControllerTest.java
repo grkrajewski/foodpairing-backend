@@ -33,7 +33,7 @@ class ReactionControllerTest {
     private ReactionFacade reactionFacade;
 
     @Test
-    void shouldGetEmptyReactions() throws Exception {
+    void testShouldGetEmptyReactions() throws Exception {
         //Given
         when(reactionFacade.getReactions()).thenReturn(List.of());
 
@@ -48,9 +48,8 @@ class ReactionControllerTest {
     }
 
     @Test
-    void shouldGetReactions() throws Exception {
+    void testShouldGetReactions() throws Exception {
         //Given
-
         ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
                 .build();
         List<ReactionDto> reactionDtoList = List.of(reactionDto);
@@ -70,7 +69,7 @@ class ReactionControllerTest {
     }
 
     @Test
-    void shouldGetReactionsForComment() throws Exception {
+    void testShouldGetReactionsForComment() throws Exception {
         //Given
         ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
                 .build();
@@ -91,7 +90,27 @@ class ReactionControllerTest {
     }
 
     @Test
-    void shouldDeleteReaction() throws Exception {
+    void testShouldGetReaction() throws Exception {
+        //Given
+        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
+                .build();
+        when(reactionFacade.getReaction(reactionDto.getId())).thenReturn(reactionDto);
+
+        //When & Then
+        mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get("/foodpairing/v1/reactions/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.commentId", Matchers.is(2)));
+    }
+
+    @Test
+    void testShouldDeleteReaction() throws Exception {
         //Given
 
         //When & Then
@@ -102,7 +121,7 @@ class ReactionControllerTest {
     }
 
     @Test
-    void shouldSaveReaction() throws Exception {
+    void testShouldSaveReaction() throws Exception {
         //Given
         ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
                 .build();
@@ -128,7 +147,7 @@ class ReactionControllerTest {
     }
 
     @Test
-    void shouldUpdateReaction() throws Exception {
+    void testShouldUpdateReaction() throws Exception {
         //Given
         ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
                 .build();

@@ -9,6 +9,7 @@ import com.myapp.foodpairingbackend.mapper.CompositionMapper;
 import com.myapp.foodpairingbackend.service.CompositionService;
 import com.myapp.foodpairingbackend.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,8 +36,12 @@ public class CompositionFacade {
         return compositionMapper.mapToCompositionDto(composition);
     }
 
-    public void deleteComposition(Long compositionId) {
-        compositionService.deleteComposition(compositionId);
+    public void deleteComposition(Long compositionId) throws CompositionNotFoundException {
+        try {
+            compositionService.deleteComposition(compositionId);
+        } catch (DataAccessException e) {
+            throw new CompositionNotFoundException();
+        }
     }
 
     public CompositionDto saveComposition(CompositionDto compositionDto) throws DrinkNotFoundException, DishNotFoundException,
@@ -57,7 +62,7 @@ public class CompositionFacade {
 
     public CompositionDto updateComposition(CompositionDto compositionDto) throws DrinkNotFoundException, DishNotFoundException,
             CompositionNotFoundException, CommentNotFoundException, IdNotFoundException, DrinkExistsException {
-        if (compositionDto.getId() != null) {
+        if (compositionDto.getId() != null && compositionService.getComposition(compositionDto.getId()) != null) {
             Composition composition = compositionMapper.mapToComposition(compositionDto);
             Composition savedComposition = compositionService.saveComposition(composition);
             return compositionMapper.mapToCompositionDto(savedComposition);
@@ -65,6 +70,3 @@ public class CompositionFacade {
         throw new IdNotFoundException();
     }
 }
-
-
-

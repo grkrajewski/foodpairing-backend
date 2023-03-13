@@ -49,6 +49,26 @@ class DishServiceTest {
     }
 
     @Test
+    void testGetDishByExternalSystemId() {
+        //Given
+        dishService.saveDish(dish);
+        Long dishId = dish.getId();
+        Long externalSystemId = dish.getExternalSystemId();
+
+        //When
+        Dish savedDish = dishService.getDishByExternalSystemId(externalSystemId);
+
+        //Then
+        assertTrue(dishRepository.existsById(dishId));
+        assertEquals(1L, savedDish.getExternalSystemId());
+        assertEquals("test name dish", savedDish.getName());
+        assertEquals(10, savedDish.getReadyInMinutes());
+        assertEquals(4, savedDish.getServings());
+        assertEquals("https://test.com", savedDish.getRecipeUrl());
+        assertEquals(0, savedDish.getCompositionList().size());
+    }
+
+    @Test
     void testDeleteDish() {
         //Given
         dishService.saveDish(dish);

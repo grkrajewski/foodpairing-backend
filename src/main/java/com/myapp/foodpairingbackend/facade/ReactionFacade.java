@@ -9,6 +9,7 @@ import com.myapp.foodpairingbackend.exception.ReactionNotFoundException;
 import com.myapp.foodpairingbackend.mapper.ReactionMapper;
 import com.myapp.foodpairingbackend.service.ReactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,8 +36,12 @@ public class ReactionFacade {
         return reactionMapper.mapToReactionDto(reaction);
     }
 
-    public void deleteReaction(Long reactionId) {
-        reactionService.deleteReaction(reactionId);
+    public void deleteReaction(Long reactionId) throws ReactionNotFoundException {
+        try {
+            reactionService.deleteReaction(reactionId);
+        } catch (DataAccessException e) {
+            throw new ReactionNotFoundException();
+        }
     }
 
     public ReactionDto saveReaction(ReactionDto reactionDto) throws CommentNotFoundException, IdFoundException {
@@ -48,8 +53,9 @@ public class ReactionFacade {
         throw new IdFoundException();
     }
 
-    public ReactionDto updateReaction(ReactionDto reactionDto) throws CommentNotFoundException, IdNotFoundException {
-        if (reactionDto.getId() != null) {
+    public ReactionDto updateReaction(ReactionDto reactionDto) throws CommentNotFoundException, IdNotFoundException,
+            ReactionNotFoundException {
+        if (reactionDto.getId() != null && reactionService.getReaction(reactionDto.getId()) != null) {
             Reaction reaction = reactionMapper.mapToReaction(reactionDto);
             Reaction savedReaction = reactionService.saveReaction(reaction);
             return reactionMapper.mapToReactionDto(savedReaction);

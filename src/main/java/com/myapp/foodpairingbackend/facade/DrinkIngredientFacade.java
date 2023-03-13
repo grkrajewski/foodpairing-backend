@@ -9,6 +9,7 @@ import com.myapp.foodpairingbackend.exception.IdNotFoundException;
 import com.myapp.foodpairingbackend.mapper.DrinkIngredientMapper;
 import com.myapp.foodpairingbackend.service.DrinkIngredientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,8 +36,12 @@ public class DrinkIngredientFacade {
         return drinkIngredientMapper.mapToDrinkIngredientDto(drinkIngredient);
     }
 
-    public void deleteDrinkIngredient(Long drinkIngredientId) {
-        drinkIngredientService.deleteDrinkIngredient(drinkIngredientId);
+    public void deleteDrinkIngredient(Long drinkIngredientId) throws DrinkIngredientNotFoundException {
+        try {
+            drinkIngredientService.deleteDrinkIngredient(drinkIngredientId);
+        } catch (DataAccessException e) {
+            throw new DrinkIngredientNotFoundException();
+        }
     }
 
     public DrinkIngredientDto saveDrinkIngredient(DrinkIngredientDto drinkIngredientDto) throws DrinkNotFoundException, IdFoundException {
@@ -48,8 +53,9 @@ public class DrinkIngredientFacade {
         throw new IdFoundException();
     }
 
-    public DrinkIngredientDto updateDrinkIngredient(DrinkIngredientDto drinkIngredientDto) throws DrinkNotFoundException, IdNotFoundException {
-        if (drinkIngredientDto.getId() != null) {
+    public DrinkIngredientDto updateDrinkIngredient(DrinkIngredientDto drinkIngredientDto) throws DrinkNotFoundException,
+            IdNotFoundException, DrinkIngredientNotFoundException {
+        if (drinkIngredientDto.getId() != null && drinkIngredientService.getDrinkIngredient(drinkIngredientDto.getId()) != null) {
             DrinkIngredient drinkIngredient = drinkIngredientMapper.mapToDrinkIngredient(drinkIngredientDto);
             DrinkIngredient savedDrinkIngredient = drinkIngredientService.saveDrinkIngredient(drinkIngredient);
             return drinkIngredientMapper.mapToDrinkIngredientDto(savedDrinkIngredient);

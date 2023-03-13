@@ -30,7 +30,7 @@ public class CompositionController {
     }
 
     @DeleteMapping(value = "{compositionId}")
-    public ResponseEntity<Void> deleteComposition(@PathVariable Long compositionId) {
+    public ResponseEntity<Void> deleteComposition(@PathVariable Long compositionId) throws CompositionNotFoundException {
         compositionFacade.deleteComposition(compositionId);
         return ResponseEntity.noContent().build();
     }

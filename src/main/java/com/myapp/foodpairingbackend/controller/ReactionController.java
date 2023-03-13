@@ -38,7 +38,7 @@ public class ReactionController {
     }
 
     @DeleteMapping(value = "{reactionId}")
-    public ResponseEntity<Void> deleteReaction(@PathVariable Long reactionId) {
+    public ResponseEntity<Void> deleteReaction(@PathVariable Long reactionId) throws ReactionNotFoundException {
         reactionFacade.deleteReaction(reactionId);
         return ResponseEntity.noContent().build();
     }
@@ -53,7 +53,7 @@ public class ReactionController {
 
     @PutMapping
     public ResponseEntity<ReactionDto> updateReaction(@RequestBody ReactionDto reactionDto) throws CommentNotFoundException,
-            IdNotFoundException {
+            IdNotFoundException, ReactionNotFoundException {
         return ResponseEntity.ok(reactionFacade.updateReaction(reactionDto));
     }
 }

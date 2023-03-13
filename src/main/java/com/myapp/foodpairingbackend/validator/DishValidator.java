@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @Getter
 @RequiredArgsConstructor
@@ -16,12 +14,9 @@ public class DishValidator {
     private final DishService dishService;
 
     public boolean validateDish(Dish dish) {
-        List<Dish> dbDishList = dishService.getDishes();
         boolean isDishNew = true;
-        for (Dish dishInDb : dbDishList) {
-            if (dish.equals(dishInDb)) {
-                isDishNew = false;
-            }
+        if (dishService.getDishByExternalSystemId(dish.getExternalSystemId()) != null) {
+            isDishNew = false;
         }
         return isDishNew;
     }

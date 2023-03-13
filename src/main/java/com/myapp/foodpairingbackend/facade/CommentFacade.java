@@ -9,6 +9,7 @@ import com.myapp.foodpairingbackend.exception.IdNotFoundException;
 import com.myapp.foodpairingbackend.mapper.CommentMapper;
 import com.myapp.foodpairingbackend.service.CommentService;
 import lombok.RequiredArgsConstructor;;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,8 +36,12 @@ public class CommentFacade {
         return commentMapper.mapToCommentDto(comment);
     }
 
-    public void deleteComment(Long commentId) {
-        commentService.deleteComment(commentId);
+    public void deleteComment(Long commentId) throws CommentNotFoundException {
+        try {
+            commentService.deleteComment(commentId);
+        } catch (DataAccessException e) {
+            throw new CommentNotFoundException();
+        }
     }
 
     public CommentDto saveComment(CommentDto commentDto) throws CompositionNotFoundException, CommentNotFoundException,
@@ -51,7 +56,7 @@ public class CommentFacade {
 
     public CommentDto updateComment(CommentDto commentDto) throws CompositionNotFoundException, CommentNotFoundException,
             IdNotFoundException {
-        if (commentDto.getId() != null) {
+        if (commentDto.getId() != null && commentService.getComment(commentDto.getId()) != null) {
             Comment comment = commentMapper.mapToComment(commentDto);
             Comment savedComment = commentService.saveComment(comment);
             return commentMapper.mapToCommentDto(savedComment);

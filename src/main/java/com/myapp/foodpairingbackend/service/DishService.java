@@ -22,6 +22,10 @@ public class DishService {
         return dishRepository.findById(dishId).orElseThrow(DishNotFoundException::new);
     }
 
+    public Dish getDishByExternalSystemId(final Long dishExternalId) {
+        return dishRepository.findByExternalSystemId(dishExternalId);
+    }
+
     public void deleteDish(final Long dishId) {
         dishRepository.deleteById(dishId);
     }

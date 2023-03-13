@@ -38,7 +38,7 @@ public class CommentController {
     }
 
     @DeleteMapping(value = "{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) throws CommentNotFoundException {
         commentFacade.deleteComment(commentId);
         return ResponseEntity.noContent().build();
     }

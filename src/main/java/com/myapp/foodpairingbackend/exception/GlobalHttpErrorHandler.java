@@ -36,7 +36,7 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ReactionNotFoundException.class)
     public ResponseEntity<Object> handleReactionNotFoundException(ReactionNotFoundException exception) {
-        return new ResponseEntity<>("Rating with given id doesn't exist", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Reaction with given id doesn't exist", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(IdNotFoundException.class)
@@ -54,5 +54,10 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>("The drink you are trying to add or modify in the composition is already paired " +
                 "with existing composition. Every Composition\nshould have separate drink even if it's the same. It will " +
                 "allow to modify every drink independently for each composition.", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DishExistsException.class)
+    public ResponseEntity<Object> handlerDishExistsException(DishExistsException dishExistsException) {
+        return new ResponseEntity<>("Dish with given external system id already exists", HttpStatus.BAD_REQUEST);
     }
 }

@@ -32,7 +32,7 @@ public class DrinkController {
     }
 
     @DeleteMapping(value = "{drinkId}")
-    public ResponseEntity<Void> deleteDrink(@PathVariable Long drinkId) {
+    public ResponseEntity<Void> deleteDrink(@PathVariable Long drinkId) throws DrinkNotFoundException {
         drinkFacade.deleteDrink(drinkId);
         return ResponseEntity.noContent().build();
     }

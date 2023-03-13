@@ -8,6 +8,7 @@ import com.myapp.foodpairingbackend.exception.IdNotFoundException;
 import com.myapp.foodpairingbackend.mapper.DrinkMapper;
 import com.myapp.foodpairingbackend.service.DrinkService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -29,8 +30,12 @@ public class DrinkFacade {
         return drinkMapper.mapToDrinkDto(drink);
     }
 
-    public void deleteDrink(Long drinkId) {
-        drinkService.deleteDrink(drinkId);
+    public void deleteDrink(Long drinkId) throws DrinkNotFoundException {
+        try {
+            drinkService.deleteDrink(drinkId);
+        } catch (DataAccessException e) {
+            throw new DrinkNotFoundException();
+        }
     }
 
     public DrinkDto saveDrinkInDb(DrinkDto drinkDto) throws DrinkNotFoundException, IdFoundException {
@@ -43,7 +48,7 @@ public class DrinkFacade {
     }
 
     public DrinkDto updateDrink(DrinkDto drinkDto) throws DrinkNotFoundException, IdNotFoundException {
-        if (drinkDto.getId() != null) {
+        if (drinkDto.getId() != null && drinkService.getDrink(drinkDto.getId()) != null) {
             Drink drink = drinkMapper.mapToDrink(drinkDto);
             Drink savedDrink = drinkService.saveDrink(drink);
             return drinkMapper.mapToDrinkDto(savedDrink);

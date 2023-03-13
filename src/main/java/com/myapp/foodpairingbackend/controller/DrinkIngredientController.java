@@ -38,7 +38,7 @@ public class DrinkIngredientController {
     }
 
     @DeleteMapping(value = "{drinkIngredientId}")
-    public ResponseEntity<Void> deleteDrinkIngredient(@PathVariable Long drinkIngredientId) {
+    public ResponseEntity<Void> deleteDrinkIngredient(@PathVariable Long drinkIngredientId) throws DrinkIngredientNotFoundException {
         drinkIngredientFacade.deleteDrinkIngredient(drinkIngredientId);
         return ResponseEntity.noContent().build();
     }
@@ -53,7 +53,7 @@ public class DrinkIngredientController {
 
     @PutMapping
     public ResponseEntity<DrinkIngredientDto> updateDrinkIngredient(@RequestBody DrinkIngredientDto drinkIngredientDto)
-            throws DrinkNotFoundException, IdNotFoundException {
+            throws DrinkNotFoundException, IdNotFoundException, DrinkIngredientNotFoundException {
         return ResponseEntity.ok(drinkIngredientFacade.updateDrinkIngredient(drinkIngredientDto));
     }
 }

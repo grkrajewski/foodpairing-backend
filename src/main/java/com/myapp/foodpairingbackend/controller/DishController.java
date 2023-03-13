@@ -30,14 +30,14 @@ public class DishController {
     }
 
     @DeleteMapping(value = "{dishId}")
-    public ResponseEntity<Void> deleteDish(@PathVariable Long dishId) {
+    public ResponseEntity<Void> deleteDish(@PathVariable Long dishId) throws DishNotFoundException {
         dishFacade.deleteDish(dishId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DishDto> saveDishInDb(@RequestBody DishDto dishDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdFoundException {
+            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdFoundException, DishExistsException {
         DishDto savedDishDto = dishFacade.saveDishInDb(dishDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedDishDto.getId()).toUri();
         return ResponseEntity.created(location).body(savedDishDto);

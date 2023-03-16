@@ -1,8 +1,8 @@
 package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.Composition;
-import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
-import com.myapp.foodpairingbackend.exception.DrinkExistsException;
+import com.myapp.foodpairingbackend.exception.ComponentExistsException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.repository.CompositionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,18 +19,18 @@ public class CompositionService {
         return compositionRepository.findAll();
     }
 
-    public Composition getComposition(final Long compositionId) throws CompositionNotFoundException {
-        return compositionRepository.findById(compositionId).orElseThrow(CompositionNotFoundException::new);
+    public Composition getComposition(final Long compositionId) throws ComponentNotFoundException {
+        return compositionRepository.findById(compositionId).orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.COMPOSITION));
     }
 
     public void deleteComposition(final Long compositionId) {
         compositionRepository.deleteById(compositionId);
     }
 
-    public Composition saveComposition(final Composition composition) throws DrinkExistsException {
+    public Composition saveComposition(final Composition composition) throws ComponentExistsException {
         Composition existingComposition = compositionRepository.findByDrinkId(composition.getDrink().getId());
         if (existingComposition != null) {
-            throw new DrinkExistsException();
+            throw new ComponentExistsException(ComponentExistsException.DRINK_EXISTS);
         }
         return compositionRepository.save(composition);
     }

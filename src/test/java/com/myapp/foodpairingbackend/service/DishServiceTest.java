@@ -1,7 +1,7 @@
 package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.Dish;
-import com.myapp.foodpairingbackend.exception.DishNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.repository.DishRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ class DishServiceTest {
             .build();
 
     @Test
-    void testGetDish() throws DishNotFoundException {
+    void testGetDish() throws ComponentNotFoundException {
         //Given
         dishService.saveDish(dish);
         Long dishId = dish.getId();

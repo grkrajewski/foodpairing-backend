@@ -31,21 +31,21 @@ public class CompositionFacade {
         return compositionMapper.mapToCompositionDtoList(compositionList);
     }
 
-    public CompositionDto getComposition(Long compositionId) throws CompositionNotFoundException {
+    public CompositionDto getComposition(Long compositionId) throws ComponentNotFoundException {
         Composition composition = compositionService.getComposition(compositionId);
         return compositionMapper.mapToCompositionDto(composition);
     }
 
-    public void deleteComposition(Long compositionId) throws CompositionNotFoundException {
+    public void deleteComposition(Long compositionId) throws ComponentNotFoundException {
         try {
             compositionService.deleteComposition(compositionId);
         } catch (DataAccessException e) {
-            throw new CompositionNotFoundException();
+            throw new ComponentNotFoundException(ComponentNotFoundException.COMPOSITION);
         }
     }
 
-    public CompositionDto saveComposition(CompositionDto compositionDto) throws DrinkNotFoundException, DishNotFoundException,
-            CompositionNotFoundException, CommentNotFoundException, IdFoundException, DrinkExistsException {
+    public CompositionDto saveComposition(CompositionDto compositionDto) throws ComponentNotFoundException, IdException,
+            ComponentExistsException {
         if (compositionDto.getId() == null) {
             Composition composition = compositionMapper.mapToComposition(compositionDto);
             Composition savedComposition = compositionService.saveComposition(composition);
@@ -57,16 +57,16 @@ public class CompositionFacade {
             emailService.send(mail);
             return compositionMapper.mapToCompositionDto(savedComposition);
         }
-        throw new IdFoundException();
+        throw new IdException(IdException.ID_FOUND);
     }
 
-    public CompositionDto updateComposition(CompositionDto compositionDto) throws DrinkNotFoundException, DishNotFoundException,
-            CompositionNotFoundException, CommentNotFoundException, IdNotFoundException, DrinkExistsException {
+    public CompositionDto updateComposition(CompositionDto compositionDto) throws ComponentNotFoundException, IdException,
+            ComponentExistsException {
         if (compositionDto.getId() != null && compositionService.getComposition(compositionDto.getId()) != null) {
             Composition composition = compositionMapper.mapToComposition(compositionDto);
             Composition savedComposition = compositionService.saveComposition(composition);
             return compositionMapper.mapToCompositionDto(savedComposition);
         }
-        throw new IdNotFoundException();
+        throw new IdException(IdException.ID_NOT_FOUND);
     }
 }

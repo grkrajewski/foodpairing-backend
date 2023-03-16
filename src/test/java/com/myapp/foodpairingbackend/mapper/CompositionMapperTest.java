@@ -58,7 +58,7 @@ class CompositionMapperTest {
     }
 
     @Test
-    void testMapToCompositionDto() throws Exception {
+    void testMapToCompositionDto() {
         //Given
         Composition composition = Composition.builder().id(3L).dish(dish)
                 .drink(drink).created(new Date()).commentList(List.of())
@@ -98,7 +98,7 @@ class CompositionMapperTest {
     }
 
     @Test
-    void testMapToCompositionDtoList() throws Exception {
+    void testMapToCompositionDtoList() {
         //Given
         Composition composition = Composition.builder().id(3L).dish(dish)
                 .drink(drink).created(new Date()).commentList(List.of())

@@ -2,10 +2,8 @@ package com.myapp.foodpairingbackend.facade;
 
 import com.myapp.foodpairingbackend.domain.dto.DrinkIngredientDto;
 import com.myapp.foodpairingbackend.domain.entity.DrinkIngredient;
-import com.myapp.foodpairingbackend.exception.DrinkIngredientNotFoundException;
-import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
-import com.myapp.foodpairingbackend.exception.IdFoundException;
-import com.myapp.foodpairingbackend.exception.IdNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.mapper.DrinkIngredientMapper;
 import com.myapp.foodpairingbackend.service.DrinkIngredientService;
 import lombok.RequiredArgsConstructor;
@@ -31,35 +29,36 @@ public class DrinkIngredientFacade {
         return drinkIngredientMapper.mapToDrinkIngredientDtoList(drinkIngredientList);
     }
 
-    public DrinkIngredientDto getDrinkIngredient(Long drinkIngredientId) throws DrinkIngredientNotFoundException {
+    public DrinkIngredientDto getDrinkIngredient(Long drinkIngredientId) throws ComponentNotFoundException {
         DrinkIngredient drinkIngredient = drinkIngredientService.getDrinkIngredient(drinkIngredientId);
         return drinkIngredientMapper.mapToDrinkIngredientDto(drinkIngredient);
     }
 
-    public void deleteDrinkIngredient(Long drinkIngredientId) throws DrinkIngredientNotFoundException {
+    public void deleteDrinkIngredient(Long drinkIngredientId) throws ComponentNotFoundException {
         try {
             drinkIngredientService.deleteDrinkIngredient(drinkIngredientId);
         } catch (DataAccessException e) {
-            throw new DrinkIngredientNotFoundException();
+            throw new ComponentNotFoundException(ComponentNotFoundException.DRINK_INGREDIENT);
         }
     }
 
-    public DrinkIngredientDto saveDrinkIngredient(DrinkIngredientDto drinkIngredientDto) throws DrinkNotFoundException, IdFoundException {
+    public DrinkIngredientDto saveDrinkIngredient(DrinkIngredientDto drinkIngredientDto) throws ComponentNotFoundException,
+            IdException {
         if (drinkIngredientDto.getId() == null) {
             DrinkIngredient drinkIngredient = drinkIngredientMapper.mapToDrinkIngredient(drinkIngredientDto);
             DrinkIngredient savedDrinkIngredient = drinkIngredientService.saveDrinkIngredient(drinkIngredient);
             return drinkIngredientMapper.mapToDrinkIngredientDto(savedDrinkIngredient);
         }
-        throw new IdFoundException();
+        throw new IdException(IdException.ID_FOUND);
     }
 
-    public DrinkIngredientDto updateDrinkIngredient(DrinkIngredientDto drinkIngredientDto) throws DrinkNotFoundException,
-            IdNotFoundException, DrinkIngredientNotFoundException {
+    public DrinkIngredientDto updateDrinkIngredient(DrinkIngredientDto drinkIngredientDto) throws ComponentNotFoundException,
+            IdException, ComponentNotFoundException {
         if (drinkIngredientDto.getId() != null && drinkIngredientService.getDrinkIngredient(drinkIngredientDto.getId()) != null) {
             DrinkIngredient drinkIngredient = drinkIngredientMapper.mapToDrinkIngredient(drinkIngredientDto);
             DrinkIngredient savedDrinkIngredient = drinkIngredientService.saveDrinkIngredient(drinkIngredient);
             return drinkIngredientMapper.mapToDrinkIngredientDto(savedDrinkIngredient);
         }
-        throw new IdNotFoundException();
+        throw new IdException(IdException.ID_NOT_FOUND);
     }
 }

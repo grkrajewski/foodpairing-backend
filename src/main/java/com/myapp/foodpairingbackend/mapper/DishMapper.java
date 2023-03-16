@@ -2,10 +2,7 @@ package com.myapp.foodpairingbackend.mapper;
 
 import com.myapp.foodpairingbackend.domain.dto.DishDto;
 import com.myapp.foodpairingbackend.domain.entity.Dish;
-import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
-import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
-import com.myapp.foodpairingbackend.exception.DishNotFoundException;
-import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +15,7 @@ public class DishMapper {
 
     private final CompositionMapper compositionMapper;
 
-    public Dish mapToDish(final DishDto dishDto) throws DrinkNotFoundException, DishNotFoundException,
-            CompositionNotFoundException, CommentNotFoundException {
+    public Dish mapToDish(final DishDto dishDto) throws ComponentNotFoundException {
         Dish dish = Dish.builder()
                 .id(dishDto.getId())
                 .externalSystemId(dishDto.getExternalSystemId())

@@ -25,27 +25,27 @@ public class CompositionController {
     }
 
     @GetMapping(value = "{compositionId}")
-    public ResponseEntity<CompositionDto> getComposition(@PathVariable Long compositionId) throws CompositionNotFoundException {
+    public ResponseEntity<CompositionDto> getComposition(@PathVariable Long compositionId) throws ComponentNotFoundException {
         return ResponseEntity.ok(compositionFacade.getComposition(compositionId));
     }
 
     @DeleteMapping(value = "{compositionId}")
-    public ResponseEntity<Void> deleteComposition(@PathVariable Long compositionId) throws CompositionNotFoundException {
+    public ResponseEntity<Void> deleteComposition(@PathVariable Long compositionId) throws ComponentNotFoundException {
         compositionFacade.deleteComposition(compositionId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CompositionDto> saveComposition(@RequestBody CompositionDto compositionDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdFoundException, DrinkExistsException {
+    public ResponseEntity<CompositionDto> saveComposition(@RequestBody CompositionDto compositionDto) throws ComponentNotFoundException,
+            IdException, ComponentExistsException {
         CompositionDto savedCompositionDto = compositionFacade.saveComposition(compositionDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedCompositionDto.getId()).toUri();
         return ResponseEntity.created(location).body(savedCompositionDto);
     }
 
     @PutMapping
-    public ResponseEntity<CompositionDto> updateComposition(@RequestBody CompositionDto compositionDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdNotFoundException, DrinkExistsException {
+    public ResponseEntity<CompositionDto> updateComposition(@RequestBody CompositionDto compositionDto) throws ComponentNotFoundException,
+            IdException, ComponentExistsException {
         return ResponseEntity.ok(compositionFacade.updateComposition(compositionDto));
     }
 }

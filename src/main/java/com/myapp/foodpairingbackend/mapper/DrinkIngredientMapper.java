@@ -3,7 +3,7 @@ package com.myapp.foodpairingbackend.mapper;
 import com.myapp.foodpairingbackend.dataprovider.DrinkProvider;
 import com.myapp.foodpairingbackend.domain.dto.DrinkIngredientDto;
 import com.myapp.foodpairingbackend.domain.entity.DrinkIngredient;
-import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class DrinkIngredientMapper {
 
     private final DrinkProvider drinkProvider;
 
-    public DrinkIngredient mapToDrinkIngredient(final DrinkIngredientDto drinkIngredientDto) throws DrinkNotFoundException {
+    public DrinkIngredient mapToDrinkIngredient(final DrinkIngredientDto drinkIngredientDto) throws ComponentNotFoundException {
         DrinkIngredient drinkIngredient = DrinkIngredient.builder()
                 .id(drinkIngredientDto.getId())
                 .name(drinkIngredientDto.getName())
@@ -37,7 +37,7 @@ public class DrinkIngredientMapper {
         return drinkIngredientDto;
     }
 
-    public List<DrinkIngredient> mapToDrinkIngredientList(final List<DrinkIngredientDto> drinkIngredientDtoList) throws DrinkNotFoundException {
+    public List<DrinkIngredient> mapToDrinkIngredientList(final List<DrinkIngredientDto> drinkIngredientDtoList) throws ComponentNotFoundException {
         List<DrinkIngredient> drinkIngredientList = new ArrayList<>();
         for (DrinkIngredientDto drinkIngredientDto : drinkIngredientDtoList) {
             DrinkIngredient drinkIngredient = mapToDrinkIngredient(drinkIngredientDto);

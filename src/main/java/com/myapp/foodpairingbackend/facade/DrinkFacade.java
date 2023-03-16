@@ -2,9 +2,8 @@ package com.myapp.foodpairingbackend.facade;
 
 import com.myapp.foodpairingbackend.domain.dto.DrinkDto;
 import com.myapp.foodpairingbackend.domain.entity.Drink;
-import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
-import com.myapp.foodpairingbackend.exception.IdFoundException;
-import com.myapp.foodpairingbackend.exception.IdNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.mapper.DrinkMapper;
 import com.myapp.foodpairingbackend.service.DrinkService;
 import lombok.RequiredArgsConstructor;
@@ -25,34 +24,34 @@ public class DrinkFacade {
         return drinkMapper.mapToDrinkDtoList(drinkList);
     }
 
-    public DrinkDto getDrink(Long drinkId) throws DrinkNotFoundException {
+    public DrinkDto getDrink(Long drinkId) throws ComponentNotFoundException {
         Drink drink = drinkService.getDrink(drinkId);
         return drinkMapper.mapToDrinkDto(drink);
     }
 
-    public void deleteDrink(Long drinkId) throws DrinkNotFoundException {
+    public void deleteDrink(Long drinkId) throws ComponentNotFoundException {
         try {
             drinkService.deleteDrink(drinkId);
         } catch (DataAccessException e) {
-            throw new DrinkNotFoundException();
+            throw new ComponentNotFoundException(ComponentNotFoundException.DRINK);
         }
     }
 
-    public DrinkDto saveDrinkInDb(DrinkDto drinkDto) throws DrinkNotFoundException, IdFoundException {
+    public DrinkDto saveDrinkInDb(DrinkDto drinkDto) throws ComponentNotFoundException, IdException {
         if (drinkDto.getId() == null) {
             Drink drink = drinkMapper.mapToDrink(drinkDto);
             Drink savedDrink = drinkService.saveDrink(drink);
             return drinkMapper.mapToDrinkDto(savedDrink);
         }
-        throw new IdFoundException();
+        throw new IdException(IdException.ID_FOUND);
     }
 
-    public DrinkDto updateDrink(DrinkDto drinkDto) throws DrinkNotFoundException, IdNotFoundException {
+    public DrinkDto updateDrink(DrinkDto drinkDto) throws ComponentNotFoundException, IdException {
         if (drinkDto.getId() != null && drinkService.getDrink(drinkDto.getId()) != null) {
             Drink drink = drinkMapper.mapToDrink(drinkDto);
             Drink savedDrink = drinkService.saveDrink(drink);
             return drinkMapper.mapToDrinkDto(savedDrink);
         }
-        throw new IdNotFoundException();
+        throw new IdException(IdException.ID_NOT_FOUND);
     }
 }

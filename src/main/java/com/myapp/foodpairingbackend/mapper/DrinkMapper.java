@@ -2,7 +2,7 @@ package com.myapp.foodpairingbackend.mapper;
 
 import com.myapp.foodpairingbackend.domain.dto.DrinkDto;
 import com.myapp.foodpairingbackend.domain.entity.Drink;
-import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ public class DrinkMapper {
 
     private final DrinkIngredientMapper drinkIngredientMapper;
 
-    public Drink mapToDrink(final DrinkDto drinkDto) throws DrinkNotFoundException {
+    public Drink mapToDrink(final DrinkDto drinkDto) throws ComponentNotFoundException {
         Drink drink = Drink.builder()
                 .id(drinkDto.getId())
                 .externalSystemId(drinkDto.getExternalSystemId())

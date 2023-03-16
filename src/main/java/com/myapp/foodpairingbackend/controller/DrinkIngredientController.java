@@ -1,10 +1,8 @@
 package com.myapp.foodpairingbackend.controller;
 
 import com.myapp.foodpairingbackend.domain.dto.DrinkIngredientDto;
-import com.myapp.foodpairingbackend.exception.DrinkIngredientNotFoundException;
-import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
-import com.myapp.foodpairingbackend.exception.IdFoundException;
-import com.myapp.foodpairingbackend.exception.IdNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.facade.DrinkIngredientFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -33,19 +31,19 @@ public class DrinkIngredientController {
     }
 
     @GetMapping("{drinkIngredientId}")
-    public DrinkIngredientDto getDrinkIngredient(@PathVariable Long drinkIngredientId) throws DrinkIngredientNotFoundException {
+    public DrinkIngredientDto getDrinkIngredient(@PathVariable Long drinkIngredientId) throws ComponentNotFoundException {
         return drinkIngredientFacade.getDrinkIngredient(drinkIngredientId);
     }
 
     @DeleteMapping(value = "{drinkIngredientId}")
-    public ResponseEntity<Void> deleteDrinkIngredient(@PathVariable Long drinkIngredientId) throws DrinkIngredientNotFoundException {
+    public ResponseEntity<Void> deleteDrinkIngredient(@PathVariable Long drinkIngredientId) throws ComponentNotFoundException {
         drinkIngredientFacade.deleteDrinkIngredient(drinkIngredientId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DrinkIngredientDto> saveDrinkIngredient(@RequestBody DrinkIngredientDto drinkIngredientDto)
-            throws DrinkNotFoundException, IdFoundException {
+            throws ComponentNotFoundException, IdException {
         DrinkIngredientDto savedDrinkIngredientDto = drinkIngredientFacade.saveDrinkIngredient(drinkIngredientDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedDrinkIngredientDto.getId()).toUri();
         return ResponseEntity.created(location).body(savedDrinkIngredientDto);
@@ -53,7 +51,7 @@ public class DrinkIngredientController {
 
     @PutMapping
     public ResponseEntity<DrinkIngredientDto> updateDrinkIngredient(@RequestBody DrinkIngredientDto drinkIngredientDto)
-            throws DrinkNotFoundException, IdNotFoundException, DrinkIngredientNotFoundException {
+            throws ComponentNotFoundException, IdException {
         return ResponseEntity.ok(drinkIngredientFacade.updateDrinkIngredient(drinkIngredientDto));
     }
 }

@@ -47,7 +47,7 @@ class DrinkIngredientMapperTest {
     }
 
     @Test
-    void testMapToDrinkIngredientDto() throws Exception {
+    void testMapToDrinkIngredientDto() {
         //Given
         DrinkIngredient drinkIngredient = DrinkIngredient.builder().id(2L)
                 .name("test name").measure("test measure").drink(drink)
@@ -85,7 +85,7 @@ class DrinkIngredientMapperTest {
     }
 
     @Test
-    void testMapToDrinkIngredientDtoList() throws Exception {
+    void testMapToDrinkIngredientDtoList() {
         //Given
         DrinkIngredient drinkIngredient = DrinkIngredient.builder().id(2L)
                 .name("test name").measure("test measure").drink(drink)

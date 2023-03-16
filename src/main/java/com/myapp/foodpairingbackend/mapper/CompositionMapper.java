@@ -4,10 +4,7 @@ import com.myapp.foodpairingbackend.dataprovider.DishProvider;
 import com.myapp.foodpairingbackend.dataprovider.DrinkProvider;
 import com.myapp.foodpairingbackend.domain.dto.CompositionDto;
 import com.myapp.foodpairingbackend.domain.entity.Composition;
-import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
-import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
-import com.myapp.foodpairingbackend.exception.DishNotFoundException;
-import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +20,7 @@ public class CompositionMapper {
     private final DrinkProvider drinkProvider;
     private final CommentMapper commentMapper;
 
-    public Composition mapToComposition(final CompositionDto compositionDto) throws DishNotFoundException,
-            DrinkNotFoundException, CompositionNotFoundException, CommentNotFoundException {
+    public Composition mapToComposition(final CompositionDto compositionDto) throws ComponentNotFoundException {
         Composition composition = Composition.builder()
                 .id(compositionDto.getId())
                 .dish(dishProvider.fetchDish(compositionDto))
@@ -46,8 +42,7 @@ public class CompositionMapper {
         return compositionDto;
     }
 
-    public List<Composition> mapToCompositionList(final List<CompositionDto> compositionDtoList) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException {
+    public List<Composition> mapToCompositionList(final List<CompositionDto> compositionDtoList) throws ComponentNotFoundException {
         List<Composition> compositionList = new ArrayList<>();
         for (CompositionDto compositionDto : compositionDtoList) {
             Composition composition = mapToComposition(compositionDto);

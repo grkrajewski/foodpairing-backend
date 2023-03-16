@@ -1,10 +1,8 @@
 package com.myapp.foodpairingbackend.controller;
 
 import com.myapp.foodpairingbackend.domain.dto.CommentDto;
-import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
-import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
-import com.myapp.foodpairingbackend.exception.IdFoundException;
-import com.myapp.foodpairingbackend.exception.IdNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.facade.CommentFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -33,27 +31,25 @@ public class CommentController {
     }
 
     @GetMapping(value = "{commentId}")
-    public ResponseEntity<CommentDto> getComment(@PathVariable Long commentId) throws CommentNotFoundException {
+    public ResponseEntity<CommentDto> getComment(@PathVariable Long commentId) throws ComponentNotFoundException {
         return ResponseEntity.ok(commentFacade.getComment(commentId));
     }
 
     @DeleteMapping(value = "{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) throws CommentNotFoundException {
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) throws ComponentNotFoundException {
         commentFacade.deleteComment(commentId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommentDto> saveComment(@RequestBody CommentDto commentDto) throws CompositionNotFoundException,
-            CommentNotFoundException, IdFoundException {
+    public ResponseEntity<CommentDto> saveComment(@RequestBody CommentDto commentDto) throws ComponentNotFoundException, IdException {
         CommentDto savedCommentDto = commentFacade.saveComment(commentDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedCommentDto.getId()).toUri();
         return ResponseEntity.created(location).body(savedCommentDto);
     }
 
     @PutMapping
-    public ResponseEntity<CommentDto> updateComment(@RequestBody CommentDto commentDto) throws CompositionNotFoundException,
-            CommentNotFoundException, IdNotFoundException {
+    public ResponseEntity<CommentDto> updateComment(@RequestBody CommentDto commentDto) throws ComponentNotFoundException, IdException {
         return ResponseEntity.ok(commentFacade.updateComment(commentDto));
     }
 }

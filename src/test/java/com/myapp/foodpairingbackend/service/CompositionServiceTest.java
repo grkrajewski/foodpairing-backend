@@ -3,8 +3,8 @@ package com.myapp.foodpairingbackend.service;
 import com.myapp.foodpairingbackend.domain.entity.Composition;
 import com.myapp.foodpairingbackend.domain.entity.Dish;
 import com.myapp.foodpairingbackend.domain.entity.Drink;
-import com.myapp.foodpairingbackend.exception.CompositionNotFoundException;
-import com.myapp.foodpairingbackend.exception.DrinkExistsException;
+import com.myapp.foodpairingbackend.exception.ComponentExistsException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.repository.CompositionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ class CompositionServiceTest {
             .build();
 
     @Test
-    void testGetComposition() throws CompositionNotFoundException, DrinkExistsException {
+    void testGetComposition() throws ComponentNotFoundException, ComponentExistsException {
         //Given
         compositionService.saveComposition(composition);
         Long compositionId = composition.getId();
@@ -59,7 +59,7 @@ class CompositionServiceTest {
     }
 
     @Test
-    void testDeleteComposition() throws DrinkExistsException {
+    void testDeleteComposition() throws ComponentExistsException {
         //Given
         compositionService.saveComposition(composition);
         Long compositionId = composition.getId();
@@ -72,7 +72,7 @@ class CompositionServiceTest {
     }
 
     @Test
-    void testSaveComposition() throws DrinkExistsException {
+    void testSaveComposition() throws ComponentExistsException {
         //When
         compositionService.saveComposition(composition);
         Long compositionId = composition.getId();

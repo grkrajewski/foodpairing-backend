@@ -1,7 +1,7 @@
 package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.Dish;
-import com.myapp.foodpairingbackend.exception.DishNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.repository.DishRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,8 @@ public class DishService {
         return dishRepository.findAll();
     }
 
-    public Dish getDish(final Long dishId) throws DishNotFoundException {
-        return dishRepository.findById(dishId).orElseThrow(DishNotFoundException::new);
+    public Dish getDish(final Long dishId) throws ComponentNotFoundException {
+        return dishRepository.findById(dishId).orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.DISH));
     }
 
     public Dish getDishByExternalSystemId(final Long dishExternalId) {

@@ -37,7 +37,7 @@ class DrinkMapperTest {
     }
 
     @Test
-    void testMapToDrinkDto() throws Exception {
+    void testMapToDrinkDto() {
         //Given
         Drink drink = Drink.builder().id(1L).externalSystemId("10").name("test name").alcoholic("test alcoholic")
                 .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
@@ -57,7 +57,7 @@ class DrinkMapperTest {
     }
 
     @Test
-    void testMapToDrinkDtoList() throws Exception {
+    void testMapToDrinkDtoList() {
         //Given
         Drink drink = Drink.builder().id(1L).externalSystemId("10").name("test name").alcoholic("test alcoholic")
                 .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())

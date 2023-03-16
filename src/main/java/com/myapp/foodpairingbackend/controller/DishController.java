@@ -25,27 +25,26 @@ public class DishController {
     }
 
     @GetMapping(value = "{dishId}")
-    public ResponseEntity<DishDto> getDish(@PathVariable Long dishId) throws DishNotFoundException {
+    public ResponseEntity<DishDto> getDish(@PathVariable Long dishId) throws ComponentNotFoundException {
         return ResponseEntity.ok(dishFacade.getDish(dishId));
     }
 
     @DeleteMapping(value = "{dishId}")
-    public ResponseEntity<Void> deleteDish(@PathVariable Long dishId) throws DishNotFoundException {
+    public ResponseEntity<Void> deleteDish(@PathVariable Long dishId) throws ComponentNotFoundException {
         dishFacade.deleteDish(dishId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DishDto> saveDishInDb(@RequestBody DishDto dishDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdFoundException, DishExistsException {
+    public ResponseEntity<DishDto> saveDishInDb(@RequestBody DishDto dishDto) throws ComponentNotFoundException, IdException,
+            ComponentExistsException {
         DishDto savedDishDto = dishFacade.saveDishInDb(dishDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedDishDto.getId()).toUri();
         return ResponseEntity.created(location).body(savedDishDto);
     }
 
     @PutMapping
-    public ResponseEntity<DishDto> updateDish(@RequestBody DishDto dishDto) throws DrinkNotFoundException,
-            DishNotFoundException, CompositionNotFoundException, CommentNotFoundException, IdNotFoundException {
+    public ResponseEntity<DishDto> updateDish(@RequestBody DishDto dishDto) throws ComponentNotFoundException, IdException {
         return ResponseEntity.ok(dishFacade.updateDish(dishDto));
     }
 }

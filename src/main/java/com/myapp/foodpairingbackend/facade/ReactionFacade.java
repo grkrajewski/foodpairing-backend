@@ -2,10 +2,8 @@ package com.myapp.foodpairingbackend.facade;
 
 import com.myapp.foodpairingbackend.domain.dto.ReactionDto;
 import com.myapp.foodpairingbackend.domain.entity.Reaction;
-import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
-import com.myapp.foodpairingbackend.exception.IdFoundException;
-import com.myapp.foodpairingbackend.exception.IdNotFoundException;
-import com.myapp.foodpairingbackend.exception.ReactionNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.mapper.ReactionMapper;
 import com.myapp.foodpairingbackend.service.ReactionService;
 import lombok.RequiredArgsConstructor;
@@ -31,35 +29,34 @@ public class ReactionFacade {
         return reactionMapper.mapToReactionDtoList(reactionList);
     }
 
-    public ReactionDto getReaction(Long reactionId) throws ReactionNotFoundException {
+    public ReactionDto getReaction(Long reactionId) throws ComponentNotFoundException {
         Reaction reaction = reactionService.getReaction(reactionId);
         return reactionMapper.mapToReactionDto(reaction);
     }
 
-    public void deleteReaction(Long reactionId) throws ReactionNotFoundException {
+    public void deleteReaction(Long reactionId) throws ComponentNotFoundException {
         try {
             reactionService.deleteReaction(reactionId);
         } catch (DataAccessException e) {
-            throw new ReactionNotFoundException();
+            throw new ComponentNotFoundException(ComponentNotFoundException.REACTION);
         }
     }
 
-    public ReactionDto saveReaction(ReactionDto reactionDto) throws CommentNotFoundException, IdFoundException {
+    public ReactionDto saveReaction(ReactionDto reactionDto) throws ComponentNotFoundException, IdException {
         if (reactionDto.getId() == null) {
             Reaction reaction = reactionMapper.mapToReaction(reactionDto);
             Reaction savedReaction = reactionService.saveReaction(reaction);
             return reactionMapper.mapToReactionDto(savedReaction);
         }
-        throw new IdFoundException();
+        throw new IdException(IdException.ID_FOUND);
     }
 
-    public ReactionDto updateReaction(ReactionDto reactionDto) throws CommentNotFoundException, IdNotFoundException,
-            ReactionNotFoundException {
+    public ReactionDto updateReaction(ReactionDto reactionDto) throws ComponentNotFoundException, IdException {
         if (reactionDto.getId() != null && reactionService.getReaction(reactionDto.getId()) != null) {
             Reaction reaction = reactionMapper.mapToReaction(reactionDto);
             Reaction savedReaction = reactionService.saveReaction(reaction);
             return reactionMapper.mapToReactionDto(savedReaction);
         }
-        throw new IdNotFoundException();
+        throw new IdException(IdException.ID_NOT_FOUND);
     }
 }

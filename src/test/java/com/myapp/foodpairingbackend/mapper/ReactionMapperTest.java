@@ -48,7 +48,7 @@ class ReactionMapperTest {
     }
 
     @Test
-    void testMapToCommentDto() throws Exception {
+    void testMapToCommentDto() {
         //Given
         Reaction reaction = Reaction.builder().id(2L).description("test reaction description")
                 .created(new Date()).comment(comment)
@@ -85,7 +85,7 @@ class ReactionMapperTest {
     }
 
     @Test
-    void testMapToCommentDtoList() throws Exception {
+    void testMapToCommentDtoList() {
         //Given
         Reaction reaction = Reaction.builder().id(2L).description("test reaction description")
                 .created(new Date()).comment(comment)

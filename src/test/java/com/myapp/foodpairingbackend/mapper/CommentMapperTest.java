@@ -49,7 +49,7 @@ class CommentMapperTest {
     }
 
     @Test
-    void testMapToCommentDto() throws Exception {
+    void testMapToCommentDto() {
         //Given
         Comment comment = Comment.builder().id(2L).description("test description")
                 .created(new Date()).composition(composition).reactionList(List.of())
@@ -88,7 +88,7 @@ class CommentMapperTest {
     }
 
     @Test
-    void testMapToCommentDtoList() throws Exception {
+    void testMapToCommentDtoList() {
         //Given
         Comment comment = Comment.builder().id(2L).description("test description")
                 .created(new Date()).composition(composition).reactionList(List.of())

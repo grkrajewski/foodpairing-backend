@@ -1,7 +1,7 @@
 package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.Comment;
-import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,8 +22,8 @@ public class CommentService {
         return commentRepository.findByCompositionId(compositionId);
     }
 
-    public Comment getComment(final Long commentId) throws CommentNotFoundException {
-        return commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+    public Comment getComment(final Long commentId) throws ComponentNotFoundException {
+        return commentRepository.findById(commentId).orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.COMMENT));
     }
 
     public void deleteComment(final Long commentId) {

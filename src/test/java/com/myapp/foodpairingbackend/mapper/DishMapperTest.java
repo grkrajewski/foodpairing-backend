@@ -37,7 +37,7 @@ class DishMapperTest {
     }
 
     @Test
-    void testMapToDishDto() throws Exception {
+    void testMapToDishDto() {
         //Given
         Dish dish = Dish.builder().id(1L).externalSystemId(10L).name("test name").readyInMinutes(15)
                 .servings(4).recipeUrl("https://test.com").compositionList(List.of())
@@ -57,7 +57,7 @@ class DishMapperTest {
     }
 
     @Test
-    void testMapToDishDtoList() throws Exception {
+    void testMapToDishDtoList() {
         //Given
         Dish dish = Dish.builder().id(1L).externalSystemId(10L).name("test name").readyInMinutes(15)
                 .servings(4).recipeUrl("https://test.com").compositionList(List.of())

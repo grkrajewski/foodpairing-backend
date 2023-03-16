@@ -4,8 +4,8 @@ import com.myapp.foodpairingbackend.domain.entity.Comment;
 import com.myapp.foodpairingbackend.domain.entity.Composition;
 import com.myapp.foodpairingbackend.domain.entity.Dish;
 import com.myapp.foodpairingbackend.domain.entity.Drink;
-import com.myapp.foodpairingbackend.exception.CommentNotFoundException;
-import com.myapp.foodpairingbackend.exception.DrinkExistsException;
+import com.myapp.foodpairingbackend.exception.ComponentExistsException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.repository.CommentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ class CommentServiceTest {
             .build();
 
     @Test
-    void testGetCommentsForComposition() throws DrinkExistsException {
+    void testGetCommentsForComposition() throws ComponentExistsException {
         //Given
         compositionService.saveComposition(composition);
         commentService.saveComment(comment);
@@ -71,7 +71,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void testGetComment() throws DrinkExistsException, CommentNotFoundException {
+    void testGetComment() throws ComponentExistsException, ComponentNotFoundException {
         //Given
         compositionService.saveComposition(composition);
         commentService.saveComment(comment);
@@ -88,7 +88,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void testDeleteComment() throws DrinkExistsException {
+    void testDeleteComment() throws ComponentExistsException {
         //Given
         compositionService.saveComposition(composition);
         commentService.saveComment(comment);
@@ -102,7 +102,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void testSaveComment() throws DrinkExistsException {
+    void testSaveComment() throws ComponentExistsException {
         //Given
         compositionService.saveComposition(composition);
 

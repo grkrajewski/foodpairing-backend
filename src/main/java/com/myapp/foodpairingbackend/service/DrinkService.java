@@ -1,7 +1,7 @@
 package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.Drink;
-import com.myapp.foodpairingbackend.exception.DrinkNotFoundException;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.repository.DrinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,8 @@ public class DrinkService {
         return drinkRepository.findAll();
     }
 
-    public Drink getDrink(final Long drinkId) throws DrinkNotFoundException {
-        return drinkRepository.findById(drinkId).orElseThrow(DrinkNotFoundException::new);
+    public Drink getDrink(final Long drinkId) throws ComponentNotFoundException {
+        return drinkRepository.findById(drinkId).orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.DRINK));
     }
 
     public void deleteDrink(final Long drinkId) {

@@ -25,44 +25,41 @@ public class DishFacade {
         return dishMapper.mapToDishDtoList(dishList);
     }
 
-    public DishDto getDish(Long dishId) throws DishNotFoundException {
+    public DishDto getDish(Long dishId) throws ComponentNotFoundException {
         Dish dish = dishService.getDish(dishId);
         return dishMapper.mapToDishDto(dish);
     }
 
-    public void deleteDish(Long dishId) throws DishNotFoundException {
+    public void deleteDish(Long dishId) throws ComponentNotFoundException {
         try {
             dishService.deleteDish(dishId);
         } catch (DataAccessException e) {
-            throw new DishNotFoundException();
+            throw new ComponentNotFoundException(ComponentNotFoundException.DISH);
         }
     }
 
-    public DishDto saveDishInDb(DishDto dishDto) throws DrinkNotFoundException, DishNotFoundException,
-            CompositionNotFoundException, CommentNotFoundException, IdFoundException, DishExistsException {
+    public DishDto saveDishInDb(DishDto dishDto) throws ComponentNotFoundException, IdException, ComponentExistsException {
         if (dishDto.getId() == null) {
             Dish dish = dishMapper.mapToDish(dishDto);
-            DishDto mappedDish = null;
+            DishDto mappedDish;
             boolean isDishNew = dishValidator.validateDish(dish);
             if (isDishNew) {
                 Dish savedDish = dishService.saveDish(dish);
                 mappedDish = dishMapper.mapToDishDto(savedDish);
             } else {
-                throw new DishExistsException();
+                throw new ComponentExistsException(ComponentExistsException.DISH_EXISTS);
             }
             return mappedDish;
-
         }
-        throw new IdFoundException();
+        throw new IdException(IdException.ID_FOUND);
     }
 
-    public DishDto updateDish(DishDto dishDto) throws DrinkNotFoundException, DishNotFoundException,
-            CompositionNotFoundException, CommentNotFoundException, IdNotFoundException {
+    public DishDto updateDish(DishDto dishDto) throws ComponentNotFoundException, IdException {
         if (dishDto.getId() != null && dishService.getDish(dishDto.getId()) != null) {
             Dish dish = dishMapper.mapToDish(dishDto);
             Dish savedDish = dishService.saveDish(dish);
             return dishMapper.mapToDishDto(savedDish);
         }
-        throw new IdNotFoundException();
+        throw new IdException(IdException.ID_NOT_FOUND);
     }
 }

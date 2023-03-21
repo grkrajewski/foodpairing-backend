@@ -55,7 +55,7 @@ class ReactionServiceTest {
             .build();
 
     @Test
-    void testGetReactionsForComment() throws ComponentExistsException {
+    void testGetReactionsForComment() throws ComponentExistsException, ComponentNotFoundException {
         //Given
         compositionService.saveComposition(composition);
         commentService.saveComment(comment);

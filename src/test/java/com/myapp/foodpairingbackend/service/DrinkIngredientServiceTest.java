@@ -37,7 +37,7 @@ class DrinkIngredientServiceTest {
             .build();
 
     @Test
-    void testGetDrinkIngredientsForDrink() {
+    void testGetDrinkIngredientsForDrink() throws ComponentNotFoundException {
         //Given
         drinkService.saveDrink(drink);
         drinkIngredientService.saveDrinkIngredient(drinkIngredient);

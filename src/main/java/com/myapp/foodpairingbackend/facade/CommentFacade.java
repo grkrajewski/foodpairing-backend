@@ -24,7 +24,7 @@ public class CommentFacade {
         return commentMapper.mapToCommentDtoList(commentList);
     }
 
-    public List<CommentDto> getCommentsForComposition(Long compositionId) {
+    public List<CommentDto> getCommentsForComposition(Long compositionId) throws ComponentNotFoundException {
         List<Comment> commentList = commentService.getCommentsForComposition(compositionId);
         return commentMapper.mapToCommentDtoList(commentList);
     }

@@ -51,7 +51,7 @@ class CommentServiceTest {
             .build();
 
     @Test
-    void testGetCommentsForComposition() throws ComponentExistsException {
+    void testGetCommentsForComposition() throws ComponentExistsException, ComponentNotFoundException {
         //Given
         compositionService.saveComposition(composition);
         commentService.saveComment(comment);

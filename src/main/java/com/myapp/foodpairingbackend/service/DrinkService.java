@@ -19,7 +19,8 @@ public class DrinkService {
     }
 
     public Drink getDrink(final Long drinkId) throws ComponentNotFoundException {
-        return drinkRepository.findById(drinkId).orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.DRINK));
+        return drinkRepository.findById(drinkId)
+                .orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.DRINK));
     }
 
     public void deleteDrink(final Long drinkId) {

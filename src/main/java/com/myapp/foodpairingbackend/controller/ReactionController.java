@@ -26,7 +26,7 @@ public class ReactionController {
     }
 
     @GetMapping(value = "for-comment/{commentId}")
-    public ResponseEntity<List<ReactionDto>> getReactionsForComment(@PathVariable Long commentId) {
+    public ResponseEntity<List<ReactionDto>> getReactionsForComment(@PathVariable Long commentId) throws ComponentNotFoundException {
         return ResponseEntity.ok(reactionFacade.getReactionsForComment(commentId));
     }
 

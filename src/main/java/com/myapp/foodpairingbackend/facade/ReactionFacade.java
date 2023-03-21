@@ -24,7 +24,7 @@ public class ReactionFacade {
         return reactionMapper.mapToReactionDtoList(reactionList);
     }
 
-    public List<ReactionDto> getReactionsForComment(Long commentId) {
+    public List<ReactionDto> getReactionsForComment(Long commentId) throws ComponentNotFoundException {
         List<Reaction> reactionList = reactionService.getReactionsForComment(commentId);
         return reactionMapper.mapToReactionDtoList(reactionList);
     }

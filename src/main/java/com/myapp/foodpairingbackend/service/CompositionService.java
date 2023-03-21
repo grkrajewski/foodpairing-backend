@@ -20,7 +20,8 @@ public class CompositionService {
     }
 
     public Composition getComposition(final Long compositionId) throws ComponentNotFoundException {
-        return compositionRepository.findById(compositionId).orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.COMPOSITION));
+        return compositionRepository.findById(compositionId)
+                .orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.COMPOSITION));
     }
 
     public void deleteComposition(final Long compositionId) {

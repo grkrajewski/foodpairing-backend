@@ -19,7 +19,8 @@ public class DishService {
     }
 
     public Dish getDish(final Long dishId) throws ComponentNotFoundException {
-        return dishRepository.findById(dishId).orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.DISH));
+        return dishRepository.findById(dishId)
+                .orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.DISH));
     }
 
     public Dish getDishByExternalSystemId(final Long dishExternalId) {

@@ -24,7 +24,7 @@ public class DrinkIngredientFacade {
         return drinkIngredientMapper.mapToDrinkIngredientDtoList(drinkIngredientList);
     }
 
-    public List<DrinkIngredientDto> getDrinkIngredientsForDrink(Long drinkId) {
+    public List<DrinkIngredientDto> getDrinkIngredientsForDrink(Long drinkId) throws ComponentNotFoundException {
         List<DrinkIngredient> drinkIngredientList = drinkIngredientService.getDrinkIngredientsForDrink(drinkId);
         return drinkIngredientMapper.mapToDrinkIngredientDtoList(drinkIngredientList);
     }

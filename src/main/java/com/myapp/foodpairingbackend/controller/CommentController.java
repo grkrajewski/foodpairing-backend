@@ -26,7 +26,7 @@ public class CommentController {
     }
 
     @GetMapping(value = "for-composition/{compositionId}")
-    public ResponseEntity<List<CommentDto>> getCommentsForComposition(@PathVariable Long compositionId) {
+    public ResponseEntity<List<CommentDto>> getCommentsForComposition(@PathVariable Long compositionId) throws ComponentNotFoundException {
         return ResponseEntity.ok(commentFacade.getCommentsForComposition(compositionId));
     }
 

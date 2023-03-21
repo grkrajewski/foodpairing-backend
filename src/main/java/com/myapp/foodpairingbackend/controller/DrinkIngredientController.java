@@ -26,7 +26,7 @@ public class DrinkIngredientController {
     }
 
     @GetMapping(value = "for-drink/{drinkId}")
-    public ResponseEntity<List<DrinkIngredientDto>> getDrinkIngredientsForDrink(@PathVariable Long drinkId) {
+    public ResponseEntity<List<DrinkIngredientDto>> getDrinkIngredientsForDrink(@PathVariable Long drinkId) throws ComponentNotFoundException {
         return ResponseEntity.ok(drinkIngredientFacade.getDrinkIngredientsForDrink(drinkId));
     }
 

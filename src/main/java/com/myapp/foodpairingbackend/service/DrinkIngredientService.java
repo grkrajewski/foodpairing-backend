@@ -2,9 +2,11 @@ package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.DrinkIngredient;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.DrinkIngredientRepository;
 import com.myapp.foodpairingbackend.repository.DrinkRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,11 +35,26 @@ public class DrinkIngredientService {
                 .orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.DRINK_INGREDIENT));
     }
 
-    public void deleteDrinkIngredient(final Long drinkIngredientId) {
-        drinkIngredientRepository.deleteById(drinkIngredientId);
+    public void deleteDrinkIngredient(final Long drinkIngredientId) throws ComponentNotFoundException {
+        try {
+            drinkIngredientRepository.deleteById(drinkIngredientId);
+        } catch (DataAccessException e) {
+            throw new ComponentNotFoundException(ComponentNotFoundException.DRINK_INGREDIENT);
+        }
     }
 
-    public DrinkIngredient saveDrinkIngredient(final DrinkIngredient drinkIngredient) {
-        return drinkIngredientRepository.save(drinkIngredient);
+    public DrinkIngredient saveDrinkIngredient(final DrinkIngredient drinkIngredient) throws IdException {
+        if (drinkIngredient.getId() == null) {
+            return drinkIngredientRepository.save(drinkIngredient);
+        }
+        throw new IdException(IdException.ID_FOUND);
+    }
+
+    public DrinkIngredient updateDrinkIngredient(final DrinkIngredient drinkIngredient) throws IdException,
+            ComponentNotFoundException {
+        if (drinkIngredient.getId() != null && getDrinkIngredient(drinkIngredient.getId()) != null) {
+            return drinkIngredientRepository.save(drinkIngredient);
+        }
+        throw new IdException(IdException.ID_NOT_FOUND);
     }
 }

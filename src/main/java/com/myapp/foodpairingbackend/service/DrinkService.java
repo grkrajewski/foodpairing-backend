@@ -2,8 +2,10 @@ package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.Drink;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.DrinkRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +25,25 @@ public class DrinkService {
                 .orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.DRINK));
     }
 
-    public void deleteDrink(final Long drinkId) {
-        drinkRepository.deleteById(drinkId);
+    public void deleteDrink(final Long drinkId) throws ComponentNotFoundException {
+        try {
+            drinkRepository.deleteById(drinkId);
+        } catch (DataAccessException e) {
+            throw new ComponentNotFoundException(ComponentNotFoundException.DRINK);
+        }
     }
 
-    public Drink saveDrink(final Drink drink) {
-        return drinkRepository.save(drink);
+    public Drink saveDrink(final Drink drink) throws IdException {
+        if (drink.getId() == null) {
+            return drinkRepository.save(drink);
+        }
+        throw new IdException(IdException.ID_FOUND);
+    }
+
+    public Drink updateDrink(final Drink drink) throws ComponentNotFoundException, IdException {
+        if (drink.getId() != null && getDrink(drink.getId()) != null) {
+            return drinkRepository.save(drink);
+        }
+        throw new IdException(IdException.ID_NOT_FOUND);
     }
 }

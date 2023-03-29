@@ -4,6 +4,7 @@ import com.myapp.foodpairingbackend.domain.dto.CompositionDto;
 import com.myapp.foodpairingbackend.domain.entity.Composition;
 import com.myapp.foodpairingbackend.domain.entity.Dish;
 import com.myapp.foodpairingbackend.domain.entity.Drink;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.service.DishService;
 import com.myapp.foodpairingbackend.service.DrinkService;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ class CompositionMapperTest {
             .build();
 
     @Test
-    void testMapToComposition() throws Exception {
+    void testMapToComposition() throws ComponentNotFoundException {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(dish.getId())
                 .drinkId(drink.getId()).created(new Date()).commentList(List.of())
@@ -76,7 +77,7 @@ class CompositionMapperTest {
     }
 
     @Test
-    void testMapToCompositionList() throws Exception {
+    void testMapToCompositionList() throws ComponentNotFoundException {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(dish.getId())
                 .drinkId(drink.getId()).created(new Date()).commentList(List.of())

@@ -7,7 +7,6 @@ import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.mapper.DrinkMapper;
 import com.myapp.foodpairingbackend.service.DrinkService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,28 +29,18 @@ public class DrinkFacade {
     }
 
     public void deleteDrink(Long drinkId) throws ComponentNotFoundException {
-        try {
-            drinkService.deleteDrink(drinkId);
-        } catch (DataAccessException e) {
-            throw new ComponentNotFoundException(ComponentNotFoundException.DRINK);
-        }
+        drinkService.deleteDrink(drinkId);
     }
 
     public DrinkDto saveDrinkInDb(DrinkDto drinkDto) throws ComponentNotFoundException, IdException {
-        if (drinkDto.getId() == null) {
-            Drink drink = drinkMapper.mapToDrink(drinkDto);
-            Drink savedDrink = drinkService.saveDrink(drink);
-            return drinkMapper.mapToDrinkDto(savedDrink);
-        }
-        throw new IdException(IdException.ID_FOUND);
+        Drink drink = drinkMapper.mapToDrink(drinkDto);
+        Drink savedDrink = drinkService.saveDrink(drink);
+        return drinkMapper.mapToDrinkDto(savedDrink);
     }
 
     public DrinkDto updateDrink(DrinkDto drinkDto) throws ComponentNotFoundException, IdException {
-        if (drinkDto.getId() != null && drinkService.getDrink(drinkDto.getId()) != null) {
-            Drink drink = drinkMapper.mapToDrink(drinkDto);
-            Drink savedDrink = drinkService.saveDrink(drink);
-            return drinkMapper.mapToDrinkDto(savedDrink);
-        }
-        throw new IdException(IdException.ID_NOT_FOUND);
+        Drink drink = drinkMapper.mapToDrink(drinkDto);
+        Drink savedDrink = drinkService.updateDrink(drink);
+        return drinkMapper.mapToDrinkDto(savedDrink);
     }
 }

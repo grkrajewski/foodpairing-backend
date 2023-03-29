@@ -6,8 +6,7 @@ import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.mapper.CommentMapper;
 import com.myapp.foodpairingbackend.service.CommentService;
-import lombok.RequiredArgsConstructor;;
-import org.springframework.dao.DataAccessException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,28 +34,18 @@ public class CommentFacade {
     }
 
     public void deleteComment(Long commentId) throws ComponentNotFoundException {
-        try {
-            commentService.deleteComment(commentId);
-        } catch (DataAccessException e) {
-            throw new ComponentNotFoundException(ComponentNotFoundException.COMMENT);
-        }
+        commentService.deleteComment(commentId);
     }
 
     public CommentDto saveComment(CommentDto commentDto) throws ComponentNotFoundException, IdException {
-        if (commentDto.getId() == null) {
-            Comment comment = commentMapper.mapToComment(commentDto);
-            Comment savedComment = commentService.saveComment(comment);
-            return commentMapper.mapToCommentDto(savedComment);
-        }
-        throw new IdException(IdException.ID_FOUND);
+        Comment comment = commentMapper.mapToComment(commentDto);
+        Comment savedComment = commentService.saveComment(comment);
+        return commentMapper.mapToCommentDto(savedComment);
     }
 
     public CommentDto updateComment(CommentDto commentDto) throws ComponentNotFoundException, IdException {
-        if (commentDto.getId() != null && commentService.getComment(commentDto.getId()) != null) {
-            Comment comment = commentMapper.mapToComment(commentDto);
-            Comment savedComment = commentService.saveComment(comment);
-            return commentMapper.mapToCommentDto(savedComment);
-        }
-        throw new IdException(IdException.ID_NOT_FOUND);
+        Comment comment = commentMapper.mapToComment(commentDto);
+        Comment savedComment = commentService.updateComment(comment);
+        return commentMapper.mapToCommentDto(savedComment);
     }
 }

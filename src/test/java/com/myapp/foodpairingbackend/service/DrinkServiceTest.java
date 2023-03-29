@@ -2,6 +2,7 @@ package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.Drink;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.DrinkRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ class DrinkServiceTest {
             .build();
 
     @Test
-    void testGetDrink() throws ComponentNotFoundException {
+    void testGetDrink() throws ComponentNotFoundException, IdException {
         //Given
         drinkService.saveDrink(drink);
         Long drinkId = drink.getId();
@@ -48,7 +49,7 @@ class DrinkServiceTest {
     }
 
     @Test
-    void testDeleteDrink() {
+    void testDeleteDrink() throws ComponentNotFoundException, IdException {
         //Given
         drinkService.saveDrink(drink);
         Long drinkId = drink.getId();
@@ -61,7 +62,7 @@ class DrinkServiceTest {
     }
 
     @Test
-    void testSaveDrink() {
+    void testSaveDrink() throws IdException {
         //When
         drinkService.saveDrink(drink);
         Long drinkId = drink.getId();

@@ -2,6 +2,7 @@ package com.myapp.foodpairingbackend.mapper;
 
 import com.myapp.foodpairingbackend.domain.dto.DrinkDto;
 import com.myapp.foodpairingbackend.domain.entity.Drink;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +18,7 @@ class DrinkMapperTest {
     private DrinkMapper drinkMapper;
 
     @Test
-    void testMapToDrink() throws Exception {
+    void testMapToDrink() throws ComponentNotFoundException {
         //Given
         DrinkDto drinkDto = DrinkDto.builder().id(1L).externalSystemId("10").name("test name").alcoholic("test alcoholic")
                 .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())

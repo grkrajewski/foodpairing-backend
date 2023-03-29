@@ -1,7 +1,9 @@
 package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.Dish;
+import com.myapp.foodpairingbackend.exception.ComponentExistsException;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.DishRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ class DishServiceTest {
             .build();
 
     @Test
-    void testGetDish() throws ComponentNotFoundException {
+    void testGetDish() throws ComponentNotFoundException, ComponentExistsException, IdException {
         //Given
         dishService.saveDish(dish);
         Long dishId = dish.getId();
@@ -49,7 +51,7 @@ class DishServiceTest {
     }
 
     @Test
-    void testGetDishByExternalSystemId() {
+    void testGetDishByExternalSystemId() throws ComponentExistsException, IdException {
         //Given
         dishService.saveDish(dish);
         Long dishId = dish.getId();
@@ -69,7 +71,7 @@ class DishServiceTest {
     }
 
     @Test
-    void testDeleteDish() {
+    void testDeleteDish() throws ComponentNotFoundException, ComponentExistsException, IdException {
         //Given
         dishService.saveDish(dish);
         Long dishId = dish.getId();
@@ -82,7 +84,7 @@ class DishServiceTest {
     }
 
     @Test
-    void testSaveDish() {
+    void testSaveDish() throws ComponentExistsException, IdException {
         //When
         dishService.saveDish(dish);
         Long dishId = dish.getId();

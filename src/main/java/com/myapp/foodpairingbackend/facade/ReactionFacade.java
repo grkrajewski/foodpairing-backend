@@ -7,7 +7,6 @@ import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.mapper.ReactionMapper;
 import com.myapp.foodpairingbackend.service.ReactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,28 +34,19 @@ public class ReactionFacade {
     }
 
     public void deleteReaction(Long reactionId) throws ComponentNotFoundException {
-        try {
-            reactionService.deleteReaction(reactionId);
-        } catch (DataAccessException e) {
-            throw new ComponentNotFoundException(ComponentNotFoundException.REACTION);
-        }
+        reactionService.deleteReaction(reactionId);
     }
 
     public ReactionDto saveReaction(ReactionDto reactionDto) throws ComponentNotFoundException, IdException {
-        if (reactionDto.getId() == null) {
-            Reaction reaction = reactionMapper.mapToReaction(reactionDto);
-            Reaction savedReaction = reactionService.saveReaction(reaction);
-            return reactionMapper.mapToReactionDto(savedReaction);
-        }
-        throw new IdException(IdException.ID_FOUND);
+        Reaction reaction = reactionMapper.mapToReaction(reactionDto);
+        Reaction savedReaction = reactionService.saveReaction(reaction);
+        return reactionMapper.mapToReactionDto(savedReaction);
+
     }
 
     public ReactionDto updateReaction(ReactionDto reactionDto) throws ComponentNotFoundException, IdException {
-        if (reactionDto.getId() != null && reactionService.getReaction(reactionDto.getId()) != null) {
-            Reaction reaction = reactionMapper.mapToReaction(reactionDto);
-            Reaction savedReaction = reactionService.saveReaction(reaction);
-            return reactionMapper.mapToReactionDto(savedReaction);
-        }
-        throw new IdException(IdException.ID_NOT_FOUND);
+        Reaction reaction = reactionMapper.mapToReaction(reactionDto);
+        Reaction savedReaction = reactionService.updateReaction(reaction);
+        return reactionMapper.mapToReactionDto(savedReaction);
     }
 }

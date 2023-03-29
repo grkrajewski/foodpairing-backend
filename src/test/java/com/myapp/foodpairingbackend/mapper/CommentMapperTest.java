@@ -3,6 +3,7 @@ package com.myapp.foodpairingbackend.mapper;
 import com.myapp.foodpairingbackend.domain.dto.CommentDto;
 import com.myapp.foodpairingbackend.domain.entity.Comment;
 import com.myapp.foodpairingbackend.domain.entity.Composition;
+import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.service.CompositionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ class CommentMapperTest {
             .build();
 
     @Test
-    void testMapToComment() throws Exception {
+    void testMapToComment() throws ComponentNotFoundException {
         //Given
         CommentDto commentDto = CommentDto.builder().id(2L).description("test description")
                 .created(new Date()).compositionId(1L).reactionList(List.of())
@@ -67,7 +68,7 @@ class CommentMapperTest {
     }
 
     @Test
-    void testMapToCommentList() throws Exception {
+    void testMapToCommentList() throws ComponentNotFoundException {
         //Given
         CommentDto commentDto = CommentDto.builder().id(2L).description("test description")
                 .created(new Date()).compositionId(1L).reactionList(List.of())

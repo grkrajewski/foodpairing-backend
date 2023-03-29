@@ -3,6 +3,7 @@ package com.myapp.foodpairingbackend.service;
 import com.myapp.foodpairingbackend.domain.entity.*;
 import com.myapp.foodpairingbackend.exception.ComponentExistsException;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.ReactionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ class ReactionServiceTest {
             .build();
 
     @Test
-    void testGetReactionsForComment() throws ComponentExistsException, ComponentNotFoundException {
+    void testGetReactionsForComment() throws ComponentExistsException, ComponentNotFoundException, IdException {
         //Given
         compositionService.saveComposition(composition);
         commentService.saveComment(comment);
@@ -75,7 +76,7 @@ class ReactionServiceTest {
     }
 
     @Test
-    void testGetReaction() throws ComponentExistsException, ComponentNotFoundException {
+    void testGetReaction() throws ComponentExistsException, ComponentNotFoundException, IdException {
         //Given
         compositionService.saveComposition(composition);
         commentService.saveComment(comment);
@@ -93,7 +94,7 @@ class ReactionServiceTest {
     }
 
     @Test
-    void testDeleteReaction() throws ComponentExistsException {
+    void testDeleteReaction() throws ComponentExistsException, ComponentNotFoundException, IdException {
         //Given
         compositionService.saveComposition(composition);
         commentService.saveComment(comment);
@@ -108,7 +109,7 @@ class ReactionServiceTest {
     }
 
     @Test
-    void testSaveReaction() throws ComponentExistsException {
+    void testSaveReaction() throws ComponentExistsException, IdException {
         //Given
         compositionService.saveComposition(composition);
         commentService.saveComment(comment);

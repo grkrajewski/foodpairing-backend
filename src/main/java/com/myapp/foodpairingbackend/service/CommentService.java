@@ -2,9 +2,11 @@ package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.Comment;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.CommentRepository;
 import com.myapp.foodpairingbackend.repository.CompositionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,11 +34,25 @@ public class CommentService {
                 .orElseThrow(() -> new ComponentNotFoundException(ComponentNotFoundException.COMMENT));
     }
 
-    public void deleteComment(final Long commentId) {
-        commentRepository.deleteById(commentId);
+    public void deleteComment(final Long commentId) throws ComponentNotFoundException {
+        try {
+            commentRepository.deleteById(commentId);
+        } catch (DataAccessException e) {
+            throw new ComponentNotFoundException(ComponentNotFoundException.COMMENT);
+        }
     }
 
-    public Comment saveComment(final Comment comment) {
-        return commentRepository.save(comment);
+    public Comment saveComment(final Comment comment) throws IdException {
+        if (comment.getId() == null) {
+            return commentRepository.save(comment);
+        }
+        throw new IdException(IdException.ID_FOUND);
+    }
+
+    public Comment updateComment(final Comment comment) throws IdException, ComponentNotFoundException {
+        if (comment.getId() != null && getComment(comment.getId()) != null) {
+            return commentRepository.save(comment);
+        }
+        throw new IdException(IdException.ID_NOT_FOUND);
     }
 }

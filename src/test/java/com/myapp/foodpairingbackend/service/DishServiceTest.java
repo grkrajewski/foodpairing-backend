@@ -92,4 +92,17 @@ class DishServiceTest {
         //Then
         assertTrue(dishRepository.existsById(dishId));
     }
+
+    @Test
+    void testSaveDishShouldThrowIdException() {
+        //Given
+        Dish dishWithId = Dish.builder()
+                .id(1L)
+                .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
+                .recipeUrl("https://test.com").compositionList(List.of())
+                .build();
+
+        //When & Then
+        assertThrows(IdException.class, () -> dishService.saveDish(dishWithId));
+    }
 }

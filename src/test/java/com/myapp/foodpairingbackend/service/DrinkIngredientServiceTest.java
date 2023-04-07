@@ -99,4 +99,15 @@ class DrinkIngredientServiceTest {
         //Then
         assertTrue(drinkIngredientRepository.existsById(drinkIngredientId));
     }
+
+    @Test
+    void testSaveDrinkIngredientShouldThrowIdException() {
+        //Given
+        DrinkIngredient drinkIngredientWithId = DrinkIngredient.builder()
+                .id(1L).name("test name ingredient").measure("test measure").drink(drink)
+                .build();
+
+        //When & Then
+        assertThrows(IdException.class, () -> drinkIngredientService.saveDrinkIngredient(drinkIngredientWithId));
+    }
 }

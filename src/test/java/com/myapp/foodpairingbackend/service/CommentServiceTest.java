@@ -114,4 +114,15 @@ class CommentServiceTest {
         //Then
         assertTrue(commentRepository.existsById(commentId));
     }
+
+    @Test
+    void testSaveCommentShouldThrowIdException() {
+        //Given
+        Comment commentWithId = Comment.builder().id(1L).description("test description").created(new Date())
+                .composition(composition).reactionList(List.of())
+                .build();
+
+        //When & Then
+        assertThrows(IdException.class, () -> commentService.saveComment(commentWithId));
+    }
 }

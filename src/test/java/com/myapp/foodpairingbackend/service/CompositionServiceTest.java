@@ -81,4 +81,15 @@ class CompositionServiceTest {
         //Then
         assertTrue(compositionRepository.existsById(compositionId));
     }
+
+    @Test
+    void testSaveCompositionShouldThrowIdException() {
+        //Given
+        Composition compositionWithId = Composition.builder()
+                .id(1L).dish(dish).drink(drink).created(new Date()).commentList(List.of())
+                .build();
+
+        //When & Then
+        assertThrows(IdException.class, () -> compositionService.saveComposition(compositionWithId));
+    }
 }

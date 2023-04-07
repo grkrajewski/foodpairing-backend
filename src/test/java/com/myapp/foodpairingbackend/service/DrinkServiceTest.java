@@ -70,4 +70,16 @@ class DrinkServiceTest {
         //Then
         assertTrue(drinkRepository.existsById(drinkId));
     }
+
+    @Test
+    void testSaveDrinkShouldThrowIdException() {
+        //Given
+        Drink drinkWithId = Drink.builder()
+                .id(1L).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
+                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+                .build();
+
+        //When & Then
+        assertThrows(IdException.class, () -> drinkService.saveDrink(drinkWithId));
+    }
 }

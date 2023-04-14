@@ -82,4 +82,27 @@ class DrinkServiceTest {
         //When & Then
         assertThrows(IdException.class, () -> drinkService.saveDrink(drinkWithId));
     }
+
+    @Test
+    void testUpdateDrink() throws IdException, ComponentNotFoundException {
+        //Given
+        drinkService.saveDrink(drink);
+        Long drinkId = drink.getId();
+        Drink nameUpdatedDrink = Drink.builder()
+                .id(drinkId).externalSystemId("2").name("test updated name drink").alcoholic("test alcoholic")
+                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+                .build();
+
+        //When
+        Drink updatedDrink = drinkService.updateDrink(nameUpdatedDrink);
+
+        //Then
+        assertEquals("test updated name drink", updatedDrink.getName());
+    }
+
+    @Test
+    void testUpdateDrinkShouldThrowIdException() {
+        //When & Then
+        assertThrows(IdException.class, () -> drinkService.updateDrink(drink));
+    }
 }

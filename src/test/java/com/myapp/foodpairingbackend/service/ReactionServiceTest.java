@@ -121,4 +121,39 @@ class ReactionServiceTest {
         //Then
         assertTrue(reactionRepository.existsById(reactionId));
     }
+
+    @Test
+    void testSaveReactionShouldThrowIdException() {
+        //Given
+        Reaction reactionWithId = Reaction.builder()
+                .id(1L).description("test reaction description").created(new Date()).comment(comment)
+                .build();
+
+        //When & Then
+        assertThrows(IdException.class, () -> reactionService.saveReaction(reactionWithId));
+    }
+
+    @Test
+    void testUpdateReaction() throws ComponentExistsException, IdException, ComponentNotFoundException {
+        //Given
+        compositionService.saveComposition(composition);
+        commentService.saveComment(comment);
+        reactionService.saveReaction(reaction);
+        Long reactionId = reaction.getId();
+        Reaction descriptionUpdatedReaction = Reaction.builder()
+                .id(reactionId).description("test updated reaction description").created(new Date()).comment(comment)
+                .build();
+
+        //When
+        Reaction updatedReaction = reactionService.updateReaction(descriptionUpdatedReaction);
+
+        //Then
+        assertEquals("test updated reaction description", updatedReaction.getDescription());
+    }
+
+    @Test
+    void testUpdateReactionShouldThrowIdException() {
+        //When & Then
+        assertThrows(IdException.class, () -> reactionService.updateReaction(reaction));
+    }
 }

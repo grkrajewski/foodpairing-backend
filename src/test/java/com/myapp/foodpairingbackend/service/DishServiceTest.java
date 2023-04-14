@@ -105,4 +105,29 @@ class DishServiceTest {
         //When & Then
         assertThrows(IdException.class, () -> dishService.saveDish(dishWithId));
     }
+
+    @Test
+    void testUpdateDish() throws ComponentExistsException, IdException, ComponentNotFoundException {
+        //Given
+        dishService.saveDish(dish);
+        Long dishId = dish.getId();
+        Dish nameUpdatedDish = Dish.builder()
+                .id(dishId)
+                .externalSystemId(1L).name("test updated name dish").readyInMinutes(10).servings(4)
+                .recipeUrl("https://test.com").compositionList(List.of())
+                .build();
+
+        //When
+        Dish updatedDish = dishService.updateDish(nameUpdatedDish);
+
+        //Then
+        assertEquals("test updated name dish", updatedDish.getName());
+    }
+
+    @Test
+    void testUpdateDishShouldThrowIdException() {
+        //When & Then
+        assertThrows(IdException.class, () -> dishService.updateDish(dish));
+    }
+
 }

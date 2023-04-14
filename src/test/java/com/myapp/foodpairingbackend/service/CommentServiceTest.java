@@ -125,4 +125,27 @@ class CommentServiceTest {
         //When & Then
         assertThrows(IdException.class, () -> commentService.saveComment(commentWithId));
     }
+
+    @Test
+    void testUpdateComment() throws ComponentExistsException, IdException, ComponentNotFoundException {
+        //Given
+        compositionService.saveComposition(composition);
+        commentService.saveComment(comment);
+        Long commentId = comment.getId();
+        Comment descriptionUpdatedComment = Comment.builder().id(commentId).description("test updated description").created(new Date())
+                .composition(composition).reactionList(List.of())
+                .build();
+
+        //When
+        Comment updatedComment = commentService.updateComment(descriptionUpdatedComment);
+
+        //Then
+        assertEquals("test updated description", updatedComment.getDescription());
+    }
+
+    @Test
+    void testUpdateCommentShouldThrowIdException() {
+        //When & Then
+        assertThrows(IdException.class, () -> commentService.updateComment(comment));
+    }
 }

@@ -92,4 +92,30 @@ class CompositionServiceTest {
         //When & Then
         assertThrows(IdException.class, () -> compositionService.saveComposition(compositionWithId));
     }
+
+    @Test
+    void testUpdateComposition() throws ComponentExistsException, IdException, ComponentNotFoundException {
+        //Given
+        compositionService.saveComposition(composition);
+        Long compositionId = composition.getId();
+        Drink updatedDrink = Drink.builder()
+                .id(null).externalSystemId("2").name("test updated name drink").alcoholic("test alcoholic")
+                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+                .build();
+        Composition drinkUpdatedComposition = Composition.builder()
+                .id(compositionId).dish(dish).drink(updatedDrink).created(new Date()).commentList(List.of())
+                .build();
+
+        //When
+        Composition updatedComposition = compositionService.updateComposition(drinkUpdatedComposition);
+
+        //Then
+        assertEquals("test updated name drink", updatedComposition.getDrink().getName());
+    }
+
+    @Test
+    void testUpdateCompositionShouldThrowIdException() {
+        //When & Then
+        assertThrows(IdException.class, () -> compositionService.updateComposition(composition));
+    }
 }

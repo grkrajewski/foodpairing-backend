@@ -76,6 +76,20 @@ class ReactionServiceTest {
     }
 
     @Test
+    void testGetReactionsForCommentShouldGetEmptyList() throws ComponentExistsException, ComponentNotFoundException, IdException {
+        //Given
+        compositionService.saveComposition(composition);
+        commentService.saveComment(comment);
+        Long commentId = comment.getId();
+
+        //When
+        List<Reaction> reactionList = reactionService.getReactionsForComment(commentId);
+
+        //Then
+        assertEquals(0, reactionList.size());
+    }
+
+    @Test
     void testGetReaction() throws ComponentExistsException, ComponentNotFoundException, IdException {
         //Given
         compositionService.saveComposition(composition);
@@ -106,6 +120,12 @@ class ReactionServiceTest {
 
         //Then
         assertFalse(reactionRepository.existsById(reactionId));
+    }
+
+    @Test
+    void testDeleteReactionShouldThrowComponentNotFoundException() {
+        //When & Then
+        assertThrows(ComponentNotFoundException.class, () -> reactionService.deleteReaction(1L));
     }
 
     @Test

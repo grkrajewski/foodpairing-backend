@@ -62,6 +62,12 @@ class DrinkServiceTest {
     }
 
     @Test
+    void testDeleteDrinkShouldThrowComponentNotFoundException() {
+        //When & Then
+        assertThrows(ComponentNotFoundException.class, () -> drinkService.deleteDrink(1L));
+    }
+
+    @Test
     void testSaveDrink() throws IdException {
         //When
         drinkService.saveDrink(drink);

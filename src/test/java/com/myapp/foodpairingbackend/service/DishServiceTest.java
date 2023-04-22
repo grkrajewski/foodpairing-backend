@@ -84,6 +84,12 @@ class DishServiceTest {
     }
 
     @Test
+    void testDeleteDishShouldThrowComponentNotFoundException() {
+        //When & Then
+        assertThrows(ComponentNotFoundException.class, () -> dishService.deleteDish(1L));
+    }
+
+    @Test
     void testSaveDish() throws ComponentExistsException, IdException {
         //When
         dishService.saveDish(dish);

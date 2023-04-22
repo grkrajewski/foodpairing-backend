@@ -57,6 +57,19 @@ class DrinkIngredientServiceTest {
     }
 
     @Test
+    void testGetDrinkIngredientsForDrinkShouldGetEmptyList() throws ComponentNotFoundException, IdException {
+        //Given
+        drinkService.saveDrink(drink);
+        Long drinkId = drink.getId();
+
+        //When
+        List<DrinkIngredient> drinkIngredientList = drinkIngredientService.getDrinkIngredientsForDrink(drinkId);
+
+        //Then
+        assertEquals(0, drinkIngredientList.size());
+    }
+
+    @Test
     void testGetDrinkIngredient() throws ComponentNotFoundException, IdException {
         //Given
         drinkService.saveDrink(drink);
@@ -85,6 +98,12 @@ class DrinkIngredientServiceTest {
 
         //Then
         assertFalse(drinkIngredientRepository.existsById(drinkIngredientId));
+    }
+
+    @Test
+    void testDeleteDrinkIngredientShouldThrowComponentNotFoundException() {
+        //When & Then
+        assertThrows(ComponentNotFoundException.class, () -> drinkIngredientService.deleteDrinkIngredient(1L));
     }
 
     @Test

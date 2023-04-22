@@ -72,6 +72,19 @@ class CommentServiceTest {
     }
 
     @Test
+    void testGetCommentsForCompositionShouldGetEmptyList() throws ComponentExistsException, ComponentNotFoundException, IdException {
+        //Given
+        compositionService.saveComposition(composition);
+        Long compositionId = composition.getId();
+
+        //When
+        List<Comment> commentList = commentService.getCommentsForComposition(compositionId);
+
+        //Then
+        assertEquals(0, commentList.size());
+    }
+
+    @Test
     void testGetComment() throws ComponentExistsException, ComponentNotFoundException, IdException {
         //Given
         compositionService.saveComposition(composition);
@@ -100,6 +113,12 @@ class CommentServiceTest {
 
         //Then
         assertFalse(commentRepository.existsById(commentId));
+    }
+
+    @Test
+    void testDeleteCommentShouldThrowComponentNotFoundException() {
+        //When & Then
+        assertThrows(ComponentNotFoundException.class, () -> commentService.deleteComment(1L));
     }
 
     @Test

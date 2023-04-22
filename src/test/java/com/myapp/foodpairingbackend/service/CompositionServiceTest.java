@@ -73,6 +73,12 @@ class CompositionServiceTest {
     }
 
     @Test
+    void testDeleteCompositionShouldThrowComponentNotFoundException() {
+        //When & Then
+        assertThrows(ComponentNotFoundException.class, () -> compositionService.deleteComposition(1L));
+    }
+
+    @Test
     void testSaveComposition() throws ComponentExistsException, IdException {
         //When
         compositionService.saveComposition(composition);

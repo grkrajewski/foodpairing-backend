@@ -6,6 +6,8 @@ import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.ReactionRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @Transactional
 @SpringBootTest
@@ -30,6 +33,12 @@ class ReactionServiceTest {
 
     @Autowired
     private ReactionRepository reactionRepository;
+
+    @InjectMocks
+    private ReactionService reactionServiceMock;
+
+    @Mock
+    private ReactionRepository reactionRepositoryMock;
 
     //Given - data preparation
     Dish dish = Dish.builder()
@@ -56,6 +65,29 @@ class ReactionServiceTest {
             .build();
 
     @Test
+    void testGetReactions() {
+        //Given
+        when(reactionRepositoryMock.findAll()).thenReturn(List.of(reaction));
+
+        //When
+        List<Reaction> reactions = reactionServiceMock.getReactions();
+
+        //Then
+        assertEquals(1, reactions.size());
+        verify(reactionRepositoryMock, times(1)).findAll();
+    }
+
+    @Test
+    void testGetReactions_ShouldFetchEmptyList() {
+        //When
+        List<Reaction> reactions = reactionServiceMock.getReactions();
+
+        //Then
+        assertEquals(0, reactions.size());
+        verify(reactionRepositoryMock, times(1)).findAll();
+    }
+
+    @Test
     void testGetReactionsForComment() throws ComponentExistsException, ComponentNotFoundException, IdException {
         //Given
         compositionService.saveComposition(composition);
@@ -76,7 +108,7 @@ class ReactionServiceTest {
     }
 
     @Test
-    void testGetReactionsForCommentShouldGetEmptyList() throws ComponentExistsException, ComponentNotFoundException, IdException {
+    void testGetReactionsForComment_ShouldGetEmptyList() throws ComponentExistsException, ComponentNotFoundException, IdException {
         //Given
         compositionService.saveComposition(composition);
         commentService.saveComment(comment);
@@ -87,6 +119,12 @@ class ReactionServiceTest {
 
         //Then
         assertEquals(0, reactionList.size());
+    }
+
+    @Test
+    void testGetReactionsForComment_ShouldThrowComponentNotFoundException() {
+        //When & Then
+        assertThrows(ComponentNotFoundException.class, () -> reactionService.getReactionsForComment(1L));
     }
 
     @Test
@@ -123,7 +161,7 @@ class ReactionServiceTest {
     }
 
     @Test
-    void testDeleteReactionShouldThrowComponentNotFoundException() {
+    void testDeleteReaction_ShouldThrowComponentNotFoundException() {
         //When & Then
         assertThrows(ComponentNotFoundException.class, () -> reactionService.deleteReaction(1L));
     }
@@ -143,7 +181,7 @@ class ReactionServiceTest {
     }
 
     @Test
-    void testSaveReactionShouldThrowIdException() {
+    void testSaveReaction_ShouldThrowIdException() {
         //Given
         Reaction reactionWithId = Reaction.builder()
                 .id(1L).description("test reaction description").created(new Date()).comment(comment)
@@ -172,7 +210,7 @@ class ReactionServiceTest {
     }
 
     @Test
-    void testUpdateReactionShouldThrowIdException() {
+    void testUpdateReaction_ShouldThrowIdException() {
         //When & Then
         assertThrows(IdException.class, () -> reactionService.updateReaction(reaction));
     }

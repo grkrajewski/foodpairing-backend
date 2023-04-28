@@ -6,6 +6,8 @@ import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.DrinkIngredientRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @Transactional
 @SpringBootTest
@@ -27,6 +30,12 @@ class DrinkIngredientServiceTest {
     @Autowired
     private DrinkIngredientRepository drinkIngredientRepository;
 
+    @InjectMocks
+    private DrinkIngredientService drinkIngredientServiceMock;
+
+    @Mock
+    private DrinkIngredientRepository drinkIngredientRepositoryMock;
+
     //Given - data preparation
     Drink drink = Drink.builder()
             .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
@@ -36,6 +45,29 @@ class DrinkIngredientServiceTest {
     DrinkIngredient drinkIngredient = DrinkIngredient.builder()
             .id(null).name("test name ingredient").measure("test measure").drink(drink)
             .build();
+
+    @Test
+    void testGetDrinkIngredients() {
+        //Given
+        when(drinkIngredientRepositoryMock.findAll()).thenReturn(List.of(drinkIngredient));
+
+        //When
+        List<DrinkIngredient> drinkIngredients = drinkIngredientServiceMock.getDrinkIngredients();
+
+        //Then
+        assertEquals(1, drinkIngredients.size());
+        verify(drinkIngredientRepositoryMock, times(1)).findAll();
+    }
+
+    @Test
+    void testGetDrinkIngredients_ShouldFetchEmptyList() {
+        //When
+        List<DrinkIngredient> drinkIngredients = drinkIngredientServiceMock.getDrinkIngredients();
+
+        //Then
+        assertEquals(0, drinkIngredients.size());
+        verify(drinkIngredientRepositoryMock, times(1)).findAll();
+    }
 
     @Test
     void testGetDrinkIngredientsForDrink() throws ComponentNotFoundException, IdException {
@@ -57,7 +89,7 @@ class DrinkIngredientServiceTest {
     }
 
     @Test
-    void testGetDrinkIngredientsForDrinkShouldGetEmptyList() throws ComponentNotFoundException, IdException {
+    void testGetDrinkIngredientsForDrink_ShouldGetEmptyList() throws ComponentNotFoundException, IdException {
         //Given
         drinkService.saveDrink(drink);
         Long drinkId = drink.getId();
@@ -67,6 +99,12 @@ class DrinkIngredientServiceTest {
 
         //Then
         assertEquals(0, drinkIngredientList.size());
+    }
+
+    @Test
+    void testGetDrinkIngredientsForDrink_ShouldThrowComponentNotFoundException() {
+        //When & Then
+        assertThrows(ComponentNotFoundException.class, () -> drinkIngredientService.getDrinkIngredientsForDrink(1L));
     }
 
     @Test
@@ -101,7 +139,7 @@ class DrinkIngredientServiceTest {
     }
 
     @Test
-    void testDeleteDrinkIngredientShouldThrowComponentNotFoundException() {
+    void testDeleteDrinkIngredient_ShouldThrowComponentNotFoundException() {
         //When & Then
         assertThrows(ComponentNotFoundException.class, () -> drinkIngredientService.deleteDrinkIngredient(1L));
     }
@@ -120,7 +158,7 @@ class DrinkIngredientServiceTest {
     }
 
     @Test
-    void testSaveDrinkIngredientShouldThrowIdException() {
+    void testSaveDrinkIngredient_ShouldThrowIdException() {
         //Given
         DrinkIngredient drinkIngredientWithId = DrinkIngredient.builder()
                 .id(1L).name("test name ingredient").measure("test measure").drink(drink)
@@ -148,7 +186,7 @@ class DrinkIngredientServiceTest {
     }
 
     @Test
-    void testUpdateDrinkIngredientShouldThrowIdException() {
+    void testUpdateDrinkIngredient_ShouldThrowIdException() {
 
         //When & Then
         assertThrows(IdException.class, () -> drinkIngredientService.updateDrinkIngredient(drinkIngredient));

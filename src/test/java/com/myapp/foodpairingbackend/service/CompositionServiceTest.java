@@ -8,6 +8,8 @@ import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.CompositionRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @Transactional
 @SpringBootTest
@@ -26,6 +29,12 @@ class CompositionServiceTest {
 
     @Autowired
     private CompositionRepository compositionRepository;
+
+    @InjectMocks
+    private CompositionService compositionServiceMock;
+
+    @Mock
+    private CompositionRepository compositionRepositoryMock;
 
     //Given - data preparation
     Dish dish = Dish.builder()
@@ -41,6 +50,29 @@ class CompositionServiceTest {
     Composition composition = Composition.builder()
             .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
             .build();
+
+    @Test
+    void testGetCompositions() {
+        //Given
+        when(compositionRepositoryMock.findAll()).thenReturn(List.of(composition));
+
+        //When
+        List<Composition> compositions = compositionServiceMock.getCompositions();
+
+        //Then
+        assertEquals(1, compositions.size());
+        verify(compositionRepositoryMock, times(1)).findAll();
+    }
+
+    @Test
+    void testGetCompositions_ShouldFetchEmptyList() {
+        //When
+        List<Composition> compositions = compositionServiceMock.getCompositions();
+
+        //Then
+        assertEquals(0, compositions.size());
+        verify(compositionRepositoryMock, times(1)).findAll();
+    }
 
     @Test
     void testGetComposition() throws ComponentNotFoundException, ComponentExistsException, IdException {
@@ -73,7 +105,7 @@ class CompositionServiceTest {
     }
 
     @Test
-    void testDeleteCompositionShouldThrowComponentNotFoundException() {
+    void testDeleteComposition_ShouldThrowComponentNotFoundException() {
         //When & Then
         assertThrows(ComponentNotFoundException.class, () -> compositionService.deleteComposition(1L));
     }
@@ -89,7 +121,7 @@ class CompositionServiceTest {
     }
 
     @Test
-    void testSaveCompositionShouldThrowIdException() {
+    void testSaveComposition_ShouldThrowIdException() {
         //Given
         Composition compositionWithId = Composition.builder()
                 .id(1L).dish(dish).drink(drink).created(new Date()).commentList(List.of())
@@ -120,7 +152,7 @@ class CompositionServiceTest {
     }
 
     @Test
-    void testUpdateCompositionShouldThrowIdException() {
+    void testUpdateComposition_ShouldThrowIdException() {
         //When & Then
         assertThrows(IdException.class, () -> compositionService.updateComposition(composition));
     }

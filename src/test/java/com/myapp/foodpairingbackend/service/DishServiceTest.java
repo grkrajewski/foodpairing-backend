@@ -6,6 +6,8 @@ import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.DishRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @Transactional
 @SpringBootTest
@@ -24,12 +27,41 @@ class DishServiceTest {
     @Autowired
     private DishRepository dishRepository;
 
+    @InjectMocks
+    private DishService dishServiceMock;
+
+    @Mock
+    private DishRepository dishRepositoryMock;
+
     //Given - data preparation
     Dish dish = Dish.builder()
             .id(null)
             .externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
             .recipeUrl("https://test.com").compositionList(List.of())
             .build();
+
+    @Test
+    void testGetDishes() {
+        //Given
+        when(dishRepositoryMock.findAll()).thenReturn(List.of(dish));
+
+        //When
+        List<Dish> dishes = dishServiceMock.getDishes();
+
+        //Then
+        assertEquals(1, dishes.size());
+        verify(dishRepositoryMock, times(1)).findAll();
+    }
+
+    @Test
+    void testGetDishes_ShouldFetchEmptyList() {
+        //When
+        List<Dish> dishes = dishServiceMock.getDishes();
+
+        //Then
+        assertEquals(0, dishes.size());
+        verify(dishRepositoryMock, times(1)).findAll();
+    }
 
     @Test
     void testGetDish() throws ComponentNotFoundException, ComponentExistsException, IdException {
@@ -84,7 +116,7 @@ class DishServiceTest {
     }
 
     @Test
-    void testDeleteDishShouldThrowComponentNotFoundException() {
+    void testDeleteDish_ShouldThrowComponentNotFoundException() {
         //When & Then
         assertThrows(ComponentNotFoundException.class, () -> dishService.deleteDish(1L));
     }
@@ -100,7 +132,7 @@ class DishServiceTest {
     }
 
     @Test
-    void testSaveDishShouldThrowIdException() {
+    void testSaveDish_ShouldThrowIdException() {
         //Given
         Dish dishWithId = Dish.builder()
                 .id(1L)
@@ -131,7 +163,7 @@ class DishServiceTest {
     }
 
     @Test
-    void testUpdateDishShouldThrowIdException() {
+    void testUpdateDish_ShouldThrowIdException() {
         //When & Then
         assertThrows(IdException.class, () -> dishService.updateDish(dish));
     }

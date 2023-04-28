@@ -5,6 +5,8 @@ import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.DrinkRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @Transactional
 @SpringBootTest
@@ -23,11 +26,40 @@ class DrinkServiceTest {
     @Autowired
     private DrinkRepository drinkRepository;
 
+    @InjectMocks
+    private DrinkService drinkServiceMock;
+
+    @Mock
+    private DrinkRepository drinkRepositoryMock;
+
     //Given - data preparation
     Drink drink = Drink.builder()
             .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
             .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
             .build();
+
+    @Test
+    void testGetDrinks() {
+        //Given
+        when(drinkRepositoryMock.findAll()).thenReturn(List.of(drink));
+
+        //When
+        List<Drink> drinks = drinkServiceMock.getDrinks();
+
+        //Then
+        assertEquals(1, drinks.size());
+        verify(drinkRepositoryMock, times(1)).findAll();
+    }
+
+    @Test
+    void testGetDrinks_ShouldFetchEmptyList() {
+        //When
+        List<Drink> drinks = drinkServiceMock.getDrinks();
+
+        //Then
+        assertEquals(0, drinks.size());
+        verify(drinkRepositoryMock, times(1)).findAll();
+    }
 
     @Test
     void testGetDrink() throws ComponentNotFoundException, IdException {
@@ -62,7 +94,7 @@ class DrinkServiceTest {
     }
 
     @Test
-    void testDeleteDrinkShouldThrowComponentNotFoundException() {
+    void testDeleteDrink_ShouldThrowComponentNotFoundException() {
         //When & Then
         assertThrows(ComponentNotFoundException.class, () -> drinkService.deleteDrink(1L));
     }
@@ -78,7 +110,7 @@ class DrinkServiceTest {
     }
 
     @Test
-    void testSaveDrinkShouldThrowIdException() {
+    void testSaveDrink_ShouldThrowIdException() {
         //Given
         Drink drinkWithId = Drink.builder()
                 .id(1L).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
@@ -107,7 +139,7 @@ class DrinkServiceTest {
     }
 
     @Test
-    void testUpdateDrinkShouldThrowIdException() {
+    void testUpdateDrink_ShouldThrowIdException() {
         //When & Then
         assertThrows(IdException.class, () -> drinkService.updateDrink(drink));
     }

@@ -22,7 +22,7 @@ class EmailServiceTest {
     private JavaMailSender javaMailSender;
 
     @Test
-    void testShouldSendEmail() {
+    void testSend() {
         //Given
         Mail mail = Mail.builder()
                 .mailTo("test@test.com")

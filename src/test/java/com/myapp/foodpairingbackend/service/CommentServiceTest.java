@@ -9,6 +9,8 @@ import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.CommentRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 @Transactional
 @SpringBootTest
@@ -31,6 +34,12 @@ class CommentServiceTest {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @InjectMocks
+    private CommentService commentServiceMock;
+
+    @Mock
+    private CommentRepository commentRepositoryMock;
 
     //Given - data preparation
     Dish dish = Dish.builder()
@@ -50,6 +59,29 @@ class CommentServiceTest {
     Comment comment = Comment.builder().id(null).description("test description").created(new Date())
             .composition(composition).reactionList(List.of())
             .build();
+
+    @Test
+    void testGetComments() {
+        //Given
+        when(commentRepositoryMock.findAll()).thenReturn(List.of(comment));
+
+        //When
+        List<Comment> comments = commentServiceMock.getComments();
+
+        //Then
+        assertEquals(1, comments.size());
+        verify(commentRepositoryMock, times(1)).findAll();
+    }
+
+    @Test
+    void testGetComments_ShouldFetchEmptyList() {
+        //When
+        List<Comment> comments = commentServiceMock.getComments();
+
+        //Then
+        assertEquals(0, comments.size());
+        verify(commentRepositoryMock, times(1)).findAll();
+    }
 
     @Test
     void testGetCommentsForComposition() throws ComponentExistsException, ComponentNotFoundException, IdException {
@@ -72,7 +104,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void testGetCommentsForCompositionShouldGetEmptyList() throws ComponentExistsException, ComponentNotFoundException, IdException {
+    void testGetCommentsForComposition_ShouldGetEmptyList() throws ComponentExistsException, ComponentNotFoundException, IdException {
         //Given
         compositionService.saveComposition(composition);
         Long compositionId = composition.getId();
@@ -82,6 +114,12 @@ class CommentServiceTest {
 
         //Then
         assertEquals(0, commentList.size());
+    }
+
+    @Test
+    void testGetCommentsForComposition_ShouldThrowComponentNotFoundException() {
+        //When & Then
+        assertThrows(ComponentNotFoundException.class, () -> commentService.getCommentsForComposition(1L));
     }
 
     @Test
@@ -116,7 +154,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void testDeleteCommentShouldThrowComponentNotFoundException() {
+    void testDeleteComment_ShouldThrowComponentNotFoundException() {
         //When & Then
         assertThrows(ComponentNotFoundException.class, () -> commentService.deleteComment(1L));
     }
@@ -135,7 +173,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void testSaveCommentShouldThrowIdException() {
+    void testSaveComment_ShouldThrowIdException() {
         //Given
         Comment commentWithId = Comment.builder().id(1L).description("test description").created(new Date())
                 .composition(composition).reactionList(List.of())
@@ -163,7 +201,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void testUpdateCommentShouldThrowIdException() {
+    void testUpdateComment_ShouldThrowIdException() {
         //When & Then
         assertThrows(IdException.class, () -> commentService.updateComment(comment));
     }

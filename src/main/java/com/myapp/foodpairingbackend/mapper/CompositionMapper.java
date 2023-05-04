@@ -5,6 +5,7 @@ import com.myapp.foodpairingbackend.dataprovider.DrinkProvider;
 import com.myapp.foodpairingbackend.domain.dto.CompositionDto;
 import com.myapp.foodpairingbackend.domain.entity.Composition;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.utils.DateTimeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class CompositionMapper {
                 .id(compositionDto.getId())
                 .dish(dishProvider.fetchDish(compositionDto))
                 .drink(drinkProvider.fetchDrink(compositionDto))
-                .created(compositionDto.getCreated())
+                .created(DateTimeConverter.convertStringToLocalDateTime(compositionDto.getCreated()))
                 .commentList(commentMapper.mapToCommentList(compositionDto.getCommentList()))
                 .build();
         return composition;
@@ -36,7 +37,7 @@ public class CompositionMapper {
                 .id(composition.getId())
                 .dishId(composition.getDish().getId())
                 .drinkId(composition.getDrink().getId())
-                .created(composition.getCreated())
+                .created(DateTimeConverter.convertLocalDateTimeToString(composition.getCreated()))
                 .commentList(commentMapper.mapToCommentDtoList(composition.getCommentList()))
                 .build();
         return compositionDto;

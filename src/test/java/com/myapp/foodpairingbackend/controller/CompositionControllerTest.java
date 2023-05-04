@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -51,7 +50,7 @@ class CompositionControllerTest {
     void testShouldGetCompositions() throws Exception {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(1L)
-                .drinkId(2L).created(new Date()).commentList(List.of())
+                .drinkId(2L).created("2023-05-04 22:12:00").commentList(List.of())
                 .build();
         List<CompositionDto> compositionDtoList = List.of(compositionDto);
         when(compositionFacade.getCompositions()).thenReturn(compositionDtoList);
@@ -66,7 +65,7 @@ class CompositionControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].dishId", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].drinkId", Matchers.is(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].commentList", Matchers.hasSize(0)));
     }
 
@@ -74,7 +73,7 @@ class CompositionControllerTest {
     void testShouldGetComposition() throws Exception {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(1L)
-                .drinkId(2L).created(new Date()).commentList(List.of())
+                .drinkId(2L).created("2023-05-04 22:12:00").commentList(List.of())
                 .build();
         when(compositionFacade.getComposition(compositionDto.getId())).thenReturn(compositionDto);
 
@@ -88,7 +87,7 @@ class CompositionControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.dishId", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.drinkId", Matchers.is(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commentList", Matchers.hasSize(0)));
     }
 
@@ -107,11 +106,10 @@ class CompositionControllerTest {
     void testShouldSaveComposition() throws Exception {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(1L)
-                .drinkId(2L).created(new Date()).commentList(List.of())
+                .drinkId(2L).created("2023-05-04 22:12:00").commentList(List.of())
                 .build();
         when(compositionFacade.saveComposition(any(CompositionDto.class))).thenReturn(compositionDto);
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .create();
         String jsonContent = gson.toJson(compositionDto);
 
@@ -127,7 +125,7 @@ class CompositionControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.dishId", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.drinkId", Matchers.is(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commentList", Matchers.hasSize(0)));
     }
 
@@ -135,11 +133,10 @@ class CompositionControllerTest {
     void testShouldUpdateComposition() throws Exception {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(1L)
-                .drinkId(2L).created(new Date()).commentList(List.of())
+                .drinkId(2L).created("2023-05-04 22:12:00").commentList(List.of())
                 .build();
         when(compositionFacade.updateComposition(any(CompositionDto.class))).thenReturn(compositionDto);
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .create();
         String jsonContent = gson.toJson(compositionDto);
 
@@ -154,7 +151,7 @@ class CompositionControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.dishId", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.drinkId", Matchers.is(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commentList", Matchers.hasSize(0)));
     }
 }

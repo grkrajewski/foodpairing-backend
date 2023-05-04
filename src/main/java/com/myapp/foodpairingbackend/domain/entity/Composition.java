@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -35,7 +35,7 @@ public class Composition {
 
     @NotNull
     @Column(name = "CREATED")
-    private Date created;
+    private LocalDateTime created;
 
     @OneToMany(
             targetEntity = Comment.class,

@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,7 +42,7 @@ class CompositionMapperTest {
     void testMapToComposition() throws ComponentNotFoundException {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(dish.getId())
-                .drinkId(drink.getId()).created(new Date()).commentList(List.of())
+                .drinkId(drink.getId()).created("2023-05-04 22:12:00").commentList(List.of())
                 .build();
         when(dishService.getDish(compositionDto.getDishId())).thenReturn(dish);
         when(drinkService.getDrink(compositionDto.getDrinkId())).thenReturn(drink);
@@ -62,7 +62,7 @@ class CompositionMapperTest {
     void testMapToCompositionDto() {
         //Given
         Composition composition = Composition.builder().id(3L).dish(dish)
-                .drink(drink).created(new Date()).commentList(List.of())
+                .drink(drink).created(LocalDateTime.now()).commentList(List.of())
                 .build();
 
         //When
@@ -80,7 +80,7 @@ class CompositionMapperTest {
     void testMapToCompositionList() throws ComponentNotFoundException {
         //Given
         CompositionDto compositionDto = CompositionDto.builder().id(3L).dishId(dish.getId())
-                .drinkId(drink.getId()).created(new Date()).commentList(List.of())
+                .drinkId(drink.getId()).created("2023-05-04 22:12:00").commentList(List.of())
                 .build();
         List<CompositionDto> compositionDtoList = List.of(compositionDto);
         when(dishService.getDish(compositionDto.getDishId())).thenReturn(dish);
@@ -102,7 +102,7 @@ class CompositionMapperTest {
     void testMapToCompositionDtoList() {
         //Given
         Composition composition = Composition.builder().id(3L).dish(dish)
-                .drink(drink).created(new Date()).commentList(List.of())
+                .drink(drink).created(LocalDateTime.now()).commentList(List.of())
                 .build();
         List<Composition> compositionList = List.of(composition);
 

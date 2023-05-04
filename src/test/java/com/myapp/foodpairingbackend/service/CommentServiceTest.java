@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,10 +53,10 @@ class CommentServiceTest {
             .build();
 
     Composition composition = Composition.builder()
-            .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
+            .id(null).dish(dish).drink(drink).created(LocalDateTime.now()).commentList(List.of())
             .build();
 
-    Comment comment = Comment.builder().id(null).description("test description").created(new Date())
+    Comment comment = Comment.builder().id(null).description("test description").created(LocalDateTime.now())
             .composition(composition).reactionList(List.of())
             .build();
 
@@ -175,7 +175,7 @@ class CommentServiceTest {
     @Test
     void testSaveComment_ShouldThrowIdException() {
         //Given
-        Comment commentWithId = Comment.builder().id(1L).description("test description").created(new Date())
+        Comment commentWithId = Comment.builder().id(1L).description("test description").created(LocalDateTime.now())
                 .composition(composition).reactionList(List.of())
                 .build();
 
@@ -189,7 +189,7 @@ class CommentServiceTest {
         compositionService.saveComposition(composition);
         commentService.saveComment(comment);
         Long commentId = comment.getId();
-        Comment descriptionUpdatedComment = Comment.builder().id(commentId).description("test updated description").created(new Date())
+        Comment descriptionUpdatedComment = Comment.builder().id(commentId).description("test updated description").created(LocalDateTime.now())
                 .composition(composition).reactionList(List.of())
                 .build();
 

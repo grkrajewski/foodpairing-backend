@@ -4,6 +4,7 @@ import com.myapp.foodpairingbackend.dataprovider.CommentProvider;
 import com.myapp.foodpairingbackend.domain.dto.ReactionDto;
 import com.myapp.foodpairingbackend.domain.entity.Reaction;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
+import com.myapp.foodpairingbackend.utils.DateTimeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class ReactionMapper {
         Reaction reaction = Reaction.builder()
                 .id(reactionDto.getId())
                 .description(reactionDto.getDescription())
-                .created(reactionDto.getCreated())
+                .created(DateTimeConverter.convertStringToLocalDateTime(reactionDto.getCreated()))
                 .comment(commentProvider.fetchComment(reactionDto))
                 .build();
         return reaction;
@@ -31,7 +32,7 @@ public class ReactionMapper {
         ReactionDto reactionDto = ReactionDto.builder()
                 .id(reaction.getId())
                 .description(reaction.getDescription())
-                .created(reaction.getCreated())
+                .created(DateTimeConverter.convertLocalDateTimeToString(reaction.getCreated()))
                 .commentId(reaction.getComment().getId())
                 .build();
         return reactionDto;

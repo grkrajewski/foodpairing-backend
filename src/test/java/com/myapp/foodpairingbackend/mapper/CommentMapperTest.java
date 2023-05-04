@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,14 +27,14 @@ class CommentMapperTest {
 
     //Given - data preparation
     Composition composition = Composition.builder().id(1L).dish(null)
-            .drink(null).created(new Date()).commentList(List.of())
+            .drink(null).created(LocalDateTime.now()).commentList(List.of())
             .build();
 
     @Test
     void testMapToComment() throws ComponentNotFoundException {
         //Given
         CommentDto commentDto = CommentDto.builder().id(2L).description("test description")
-                .created(new Date()).compositionId(1L).reactionList(List.of())
+                .created("2023-05-04 22:12:00").compositionId(1L).reactionList(List.of())
                 .build();
         when(compositionService.getComposition(commentDto.getCompositionId())).thenReturn(composition);
 
@@ -53,7 +53,7 @@ class CommentMapperTest {
     void testMapToCommentDto() {
         //Given
         Comment comment = Comment.builder().id(2L).description("test description")
-                .created(new Date()).composition(composition).reactionList(List.of())
+                .created(LocalDateTime.now()).composition(composition).reactionList(List.of())
                 .build();
 
         //When
@@ -71,7 +71,7 @@ class CommentMapperTest {
     void testMapToCommentList() throws ComponentNotFoundException {
         //Given
         CommentDto commentDto = CommentDto.builder().id(2L).description("test description")
-                .created(new Date()).compositionId(1L).reactionList(List.of())
+                .created("2023-05-04 22:12:00").compositionId(1L).reactionList(List.of())
                 .build();
         List<CommentDto> commentDtoList = List.of(commentDto);
         when(compositionService.getComposition(commentDto.getCompositionId())).thenReturn(composition);
@@ -92,7 +92,7 @@ class CommentMapperTest {
     void testMapToCommentDtoList() {
         //Given
         Comment comment = Comment.builder().id(2L).description("test description")
-                .created(new Date()).composition(composition).reactionList(List.of())
+                .created(LocalDateTime.now()).composition(composition).reactionList(List.of())
                 .build();
         List<Comment> commentList = List.of(comment);
 

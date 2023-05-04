@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,7 +48,7 @@ class CompositionServiceTest {
             .build();
 
     Composition composition = Composition.builder()
-            .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
+            .id(null).dish(dish).drink(drink).created(LocalDateTime.now()).commentList(List.of())
             .build();
 
     @Test
@@ -124,7 +124,7 @@ class CompositionServiceTest {
     void testSaveComposition_ShouldThrowIdException() {
         //Given
         Composition compositionWithId = Composition.builder()
-                .id(1L).dish(dish).drink(drink).created(new Date()).commentList(List.of())
+                .id(1L).dish(dish).drink(drink).created(LocalDateTime.now()).commentList(List.of())
                 .build();
 
         //When & Then
@@ -141,7 +141,7 @@ class CompositionServiceTest {
                 .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
                 .build();
         Composition drinkUpdatedComposition = Composition.builder()
-                .id(compositionId).dish(dish).drink(updatedDrink).created(new Date()).commentList(List.of())
+                .id(compositionId).dish(dish).drink(updatedDrink).created(LocalDateTime.now()).commentList(List.of())
                 .build();
 
         //When

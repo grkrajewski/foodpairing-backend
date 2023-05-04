@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -28,7 +28,7 @@ public class Reaction {
 
     @NotNull
     @Column(name = "CREATED")
-    private Date created;
+    private LocalDateTime created;
 
     @ManyToOne
     @JoinColumn(name = "COMMENT_ID")

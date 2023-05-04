@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -50,7 +49,7 @@ class ReactionControllerTest {
     @Test
     void testShouldGetReactions() throws Exception {
         //Given
-        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
+        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created("2023-05-04 22:12:00").commentId(2L)
                 .build();
         List<ReactionDto> reactionDtoList = List.of(reactionDto);
         when(reactionFacade.getReactions()).thenReturn(reactionDtoList);
@@ -64,14 +63,14 @@ class ReactionControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].description", Matchers.is("test description")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].commentId", Matchers.is(2)));
     }
 
     @Test
     void testShouldGetReactionsForComment() throws Exception {
         //Given
-        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
+        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created("2023-05-04 22:12:00").commentId(2L)
                 .build();
         List<ReactionDto> reactionDtoList = List.of(reactionDto);
         when(reactionFacade.getReactionsForComment(2L)).thenReturn(reactionDtoList);
@@ -85,14 +84,14 @@ class ReactionControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].description", Matchers.is("test description")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].commentId", Matchers.is(2)));
     }
 
     @Test
     void testShouldGetReaction() throws Exception {
         //Given
-        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
+        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created("2023-05-04 22:12:00").commentId(2L)
                 .build();
         when(reactionFacade.getReaction(reactionDto.getId())).thenReturn(reactionDto);
 
@@ -105,7 +104,7 @@ class ReactionControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commentId", Matchers.is(2)));
     }
 
@@ -123,11 +122,10 @@ class ReactionControllerTest {
     @Test
     void testShouldSaveReaction() throws Exception {
         //Given
-        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
+        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created("2023-05-04 22:12:00").commentId(2L)
                 .build();
         when(reactionFacade.saveReaction(any(ReactionDto.class))).thenReturn(reactionDto);
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .create();
         String jsonContent = gson.toJson(reactionDto);
 
@@ -142,18 +140,17 @@ class ReactionControllerTest {
                 .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/foodpairing/v1/reactions/1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commentId", Matchers.is(2)));
     }
 
     @Test
     void testShouldUpdateReaction() throws Exception {
         //Given
-        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created(new Date()).commentId(2L)
+        ReactionDto reactionDto = ReactionDto.builder().id(1L).description("test description").created("2023-05-04 22:12:00").commentId(2L)
                 .build();
         when(reactionFacade.updateReaction(any(ReactionDto.class))).thenReturn(reactionDto);
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .create();
         String jsonContent = gson.toJson(reactionDto);
 
@@ -167,7 +164,7 @@ class ReactionControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.commentId", Matchers.is(2)));
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,16 +52,16 @@ class ReactionServiceTest {
             .build();
 
     Composition composition = Composition.builder()
-            .id(null).dish(dish).drink(drink).created(new Date()).commentList(List.of())
+            .id(null).dish(dish).drink(drink).created(LocalDateTime.now()).commentList(List.of())
             .build();
 
     Comment comment = Comment.builder()
-            .id(null).description("test comment description").created(new Date())
+            .id(null).description("test comment description").created(LocalDateTime.now())
             .composition(composition).reactionList(List.of())
             .build();
 
     Reaction reaction = Reaction.builder()
-            .id(null).description("test reaction description").created(new Date()).comment(comment)
+            .id(null).description("test reaction description").created(LocalDateTime.now()).comment(comment)
             .build();
 
     @Test
@@ -184,7 +184,7 @@ class ReactionServiceTest {
     void testSaveReaction_ShouldThrowIdException() {
         //Given
         Reaction reactionWithId = Reaction.builder()
-                .id(1L).description("test reaction description").created(new Date()).comment(comment)
+                .id(1L).description("test reaction description").created(LocalDateTime.now()).comment(comment)
                 .build();
 
         //When & Then
@@ -199,7 +199,7 @@ class ReactionServiceTest {
         reactionService.saveReaction(reaction);
         Long reactionId = reaction.getId();
         Reaction descriptionUpdatedReaction = Reaction.builder()
-                .id(reactionId).description("test updated reaction description").created(new Date()).comment(comment)
+                .id(reactionId).description("test updated reaction description").created(LocalDateTime.now()).comment(comment)
                 .build();
 
         //When

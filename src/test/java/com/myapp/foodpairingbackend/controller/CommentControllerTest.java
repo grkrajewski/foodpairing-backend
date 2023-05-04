@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -51,7 +50,7 @@ class CommentControllerTest {
     void testShouldGetComments() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
-                .created(new Date()).compositionId(2L).reactionList(List.of())
+                .created("2023-05-04 22:12:00").compositionId(2L).reactionList(List.of())
                 .build();
         List<CommentDto> commentDtoList = List.of(commentDto);
         when(commentFacade.getComments()).thenReturn(commentDtoList);
@@ -65,7 +64,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].description", Matchers.is("test description")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].compositionId", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].reactionList", Matchers.hasSize(0)));
     }
@@ -74,7 +73,7 @@ class CommentControllerTest {
     void testShouldGetCommentsForComposition() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
-                .created(new Date()).compositionId(2L).reactionList(List.of())
+                .created("2023-05-04 22:12:00").compositionId(2L).reactionList(List.of())
                 .build();
         List<CommentDto> commentDtoList = List.of(commentDto);
         when(commentFacade.getCommentsForComposition(2L)).thenReturn(commentDtoList);
@@ -88,7 +87,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].description", Matchers.is("test description")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].compositionId", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].reactionList", Matchers.hasSize(0)));
     }
@@ -97,7 +96,7 @@ class CommentControllerTest {
     void testShouldGetComment() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
-                .created(new Date()).compositionId(2L).reactionList(List.of())
+                .created("2023-05-04 22:12:00").compositionId(2L).reactionList(List.of())
                 .build();
         when(commentFacade.getComment(commentDto.getId())).thenReturn(commentDto);
 
@@ -110,7 +109,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.compositionId", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.reactionList", Matchers.hasSize(0)));
     }
@@ -130,11 +129,10 @@ class CommentControllerTest {
     void testShouldSaveComment() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
-                .created(new Date()).compositionId(2L).reactionList(List.of())
+                .created("2023-05-04 22:12:00").compositionId(2L).reactionList(List.of())
                 .build();
         when(commentFacade.saveComment(any(CommentDto.class))).thenReturn(commentDto);
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .create();
         String jsonContent = gson.toJson(commentDto);
 
@@ -149,7 +147,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/foodpairing/v1/comments/1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.compositionId", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.reactionList", Matchers.hasSize(0)));
     }
@@ -158,11 +156,10 @@ class CommentControllerTest {
     void testShouldUpdateComment() throws Exception {
         //Given
         CommentDto commentDto = CommentDto.builder().id(1L).description("test description")
-                .created(new Date()).compositionId(2L).reactionList(List.of())
+                .created("2023-05-04 22:12:00").compositionId(2L).reactionList(List.of())
                 .build();
         when(commentFacade.updateComment(any(CommentDto.class))).thenReturn(commentDto);
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .create();
         String jsonContent = gson.toJson(commentDto);
 
@@ -176,7 +173,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("test description")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created", Matchers.is("2023-05-04 22:12:00")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.compositionId", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.reactionList", Matchers.hasSize(0)));
     }

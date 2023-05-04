@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,14 +27,14 @@ class ReactionMapperTest {
 
     //Given - data preparation
     Comment comment = Comment.builder().id(1L).description("test comment description")
-            .created(new Date()).composition(null).reactionList(List.of())
+            .created(LocalDateTime.now()).composition(null).reactionList(List.of())
             .build();
 
     @Test
     void testMapToComment() throws ComponentNotFoundException {
         //Given
         ReactionDto reactionDto = ReactionDto.builder().id(2L).description("test reaction description")
-                .created(new Date()).commentId(1L)
+                .created("2023-05-04 22:12:00").commentId(1L)
                 .build();
         when(commentService.getComment(reactionDto.getCommentId())).thenReturn(comment);
 
@@ -52,7 +52,7 @@ class ReactionMapperTest {
     void testMapToCommentDto() {
         //Given
         Reaction reaction = Reaction.builder().id(2L).description("test reaction description")
-                .created(new Date()).comment(comment)
+                .created(LocalDateTime.now()).comment(comment)
                 .build();
 
         //When
@@ -69,7 +69,7 @@ class ReactionMapperTest {
     void testMapToCommentList() throws ComponentNotFoundException {
         //Given
         ReactionDto reactionDto = ReactionDto.builder().id(2L).description("test reaction description")
-                .created(new Date()).commentId(1L)
+                .created("2023-05-04 22:12:00").commentId(1L)
                 .build();
         List<ReactionDto> reactionDtoList = List.of(reactionDto);
         when(commentService.getComment(reactionDto.getCommentId())).thenReturn(comment);
@@ -89,7 +89,7 @@ class ReactionMapperTest {
     void testMapToCommentDtoList() {
         //Given
         Reaction reaction = Reaction.builder().id(2L).description("test reaction description")
-                .created(new Date()).comment(comment)
+                .created(LocalDateTime.now()).comment(comment)
                 .build();
         List<Reaction> reactionList = List.of(reaction);
 

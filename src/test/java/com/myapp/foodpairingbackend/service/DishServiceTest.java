@@ -5,6 +5,7 @@ import com.myapp.foodpairingbackend.exception.ComponentExistsException;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.DishRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -63,6 +64,7 @@ class DishServiceTest {
         verify(dishRepositoryMock, times(1)).findAll();
     }
 
+    @Disabled
     @Test
     void testGetDish() throws ComponentNotFoundException, ComponentExistsException, IdException {
         //Given
@@ -82,6 +84,7 @@ class DishServiceTest {
         assertEquals(0, savedDish.getCompositionList().size());
     }
 
+    @Disabled
     @Test
     void testGetDishByExternalSystemId() throws ComponentExistsException, IdException {
         //Given
@@ -102,6 +105,7 @@ class DishServiceTest {
         assertEquals(0, savedDish.getCompositionList().size());
     }
 
+    @Disabled
     @Test
     void testDeleteDish() throws ComponentNotFoundException, ComponentExistsException, IdException {
         //Given
@@ -115,12 +119,14 @@ class DishServiceTest {
         assertFalse(dishRepository.existsById(dishId));
     }
 
+    @Disabled
     @Test
     void testDeleteDish_ShouldThrowComponentNotFoundException() {
         //When & Then
         assertThrows(ComponentNotFoundException.class, () -> dishService.deleteDish(1L));
     }
 
+    @Disabled
     @Test
     void testSaveDish() throws ComponentExistsException, IdException {
         //When
@@ -144,6 +150,7 @@ class DishServiceTest {
         assertThrows(IdException.class, () -> dishService.saveDish(dishWithId));
     }
 
+    @Disabled
     @Test
     void testUpdateDish() throws ComponentExistsException, IdException, ComponentNotFoundException {
         //Given

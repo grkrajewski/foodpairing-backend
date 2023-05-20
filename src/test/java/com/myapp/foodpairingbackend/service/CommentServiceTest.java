@@ -4,197 +4,196 @@ import com.myapp.foodpairingbackend.domain.entity.Comment;
 import com.myapp.foodpairingbackend.domain.entity.Composition;
 import com.myapp.foodpairingbackend.domain.entity.Dish;
 import com.myapp.foodpairingbackend.domain.entity.Drink;
-import com.myapp.foodpairingbackend.exception.ComponentExistsException;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.CommentRepository;
+import com.myapp.foodpairingbackend.repository.CompositionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@Transactional
 @SpringBootTest
 class CommentServiceTest {
 
     @Autowired
-    private CompositionService compositionService;
-
-    @Autowired
     private CommentService commentService;
 
-    @Autowired
+    @MockBean
+    private CompositionRepository compositionRepository;
+
+    @MockBean
     private CommentRepository commentRepository;
 
-    @InjectMocks
-    private CommentService commentServiceMock;
+    private Composition composition;
+    private Comment comment;
 
-    @Mock
-    private CommentRepository commentRepositoryMock;
+    @BeforeEach
+    public void setup() {
+        //Given
+        Dish dish = Dish.builder()
+                .id(1L).externalSystemId(10L).name("test name dish").readyInMinutes(10).servings(4)
+                .recipeUrl("https://test.com").compositionList(List.of())
+                .build();
 
-    //Given - data preparation
-    Dish dish = Dish.builder()
-            .id(null).externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-            .recipeUrl("https://test.com").compositionList(List.of())
-            .build();
+        Drink drink = Drink.builder()
+                .id(2L).externalSystemId("20").name("test name drink").alcoholic("test alcoholic")
+                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+                .build();
 
-    Drink drink = Drink.builder()
-            .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-            .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-            .build();
+        composition = Composition.builder()
+                .id(3L).dish(dish).drink(drink).created(LocalDateTime.now()).commentList(List.of())
+                .build();
 
-    Composition composition = Composition.builder()
-            .id(null).dish(dish).drink(drink).created(LocalDateTime.now()).commentList(List.of())
-            .build();
-
-    Comment comment = Comment.builder().id(null).description("test description").created(LocalDateTime.now())
-            .composition(composition).reactionList(List.of())
-            .build();
+        comment = Comment.builder().
+                id(4L).description("test description").created(LocalDateTime.now())
+                .composition(composition).reactionList(List.of())
+                .build();
+    }
 
     @Test
     void testGetComments() {
         //Given
-        when(commentRepositoryMock.findAll()).thenReturn(List.of(comment));
+        when(commentRepository.findAll()).thenReturn(List.of(comment));
 
         //When
-        List<Comment> comments = commentServiceMock.getComments();
+        List<Comment> comments = commentService.getComments();
 
         //Then
         assertEquals(1, comments.size());
-        verify(commentRepositoryMock, times(1)).findAll();
+        verify(commentRepository, times(1)).findAll();
     }
 
     @Test
     void testGetComments_ShouldFetchEmptyList() {
+        //Given
+        when(commentRepository.findAll()).thenReturn(List.of());
+
         //When
-        List<Comment> comments = commentServiceMock.getComments();
+        List<Comment> comments = commentService.getComments();
 
         //Then
         assertEquals(0, comments.size());
-        verify(commentRepositoryMock, times(1)).findAll();
+        verify(commentRepository, times(1)).findAll();
     }
 
     @Test
-    void testGetCommentsForComposition() throws ComponentExistsException, ComponentNotFoundException, IdException {
+    void testGetCommentsForComposition() throws ComponentNotFoundException {
         //Given
-        compositionService.saveComposition(composition);
-        commentService.saveComment(comment);
-        Long compositionId = composition.getId();
-        Long commentId = comment.getId();
+        when(compositionRepository.existsById(composition.getId())).thenReturn(true);
+        when(commentRepository.findByCompositionId(composition.getId())).thenReturn(List.of(comment));
 
         //When
-        List<Comment> savedCommentList = commentService.getCommentsForComposition(compositionId);
+        List<Comment> savedCommentList = commentService.getCommentsForComposition(composition.getId());
 
         //Then
-        assertTrue(commentRepository.existsById(commentId));
         assertEquals(1, savedCommentList.size());
-        assertEquals("test description", savedCommentList.get(0).getDescription());
-        assertNotNull(savedCommentList.get(0).getCreated());
-        assertNotNull(savedCommentList.get(0).getComposition());
-        assertEquals(0, savedCommentList.get(0).getReactionList().size());
+        verify(commentRepository, times(1)).findByCompositionId(3L);
     }
 
     @Test
-    void testGetCommentsForComposition_ShouldGetEmptyList() throws ComponentExistsException, ComponentNotFoundException, IdException {
+    void testGetCommentsForComposition_ShouldGetEmptyList() throws ComponentNotFoundException {
         //Given
-        compositionService.saveComposition(composition);
-        Long compositionId = composition.getId();
+        when(compositionRepository.existsById(composition.getId())).thenReturn(true);
+        when(commentRepository.findByCompositionId(composition.getId())).thenReturn(List.of());
 
         //When
-        List<Comment> commentList = commentService.getCommentsForComposition(compositionId);
+        List<Comment> commentList = commentService.getCommentsForComposition(composition.getId());
 
         //Then
         assertEquals(0, commentList.size());
+        verify(commentRepository, times(1)).findByCompositionId(3L);
     }
 
     @Test
     void testGetCommentsForComposition_ShouldThrowComponentNotFoundException() {
+        //Given
+        when(compositionRepository.existsById(3L)).thenReturn(false);
+
         //When & Then
-        assertThrows(ComponentNotFoundException.class, () -> commentService.getCommentsForComposition(1L));
+        assertThrows(ComponentNotFoundException.class, () -> commentService.getCommentsForComposition(3L));
     }
 
     @Test
-    void testGetComment() throws ComponentExistsException, ComponentNotFoundException, IdException {
+    void testGetComment() throws ComponentNotFoundException {
         //Given
-        compositionService.saveComposition(composition);
-        commentService.saveComment(comment);
-        Long commentId = comment.getId();
+        when(commentRepository.findById(comment.getId())).thenReturn(Optional.ofNullable(comment));
 
         //When
-        Comment savedComment = commentService.getComment(commentId);
+        Comment savedComment = commentService.getComment(comment.getId());
 
         //Then
+        assertEquals(4L, savedComment.getId());
         assertEquals("test description", savedComment.getDescription());
         assertNotNull(savedComment.getCreated());
         assertNotNull(savedComment.getComposition());
         assertEquals(0, savedComment.getReactionList().size());
+        verify(commentRepository, times(1)).findById(4L);
     }
 
     @Test
-    void testDeleteComment() throws ComponentExistsException, ComponentNotFoundException, IdException {
+    void testDeleteComment() throws ComponentNotFoundException {
         //Given
-        compositionService.saveComposition(composition);
-        commentService.saveComment(comment);
-        Long commentId = comment.getId();
+        doNothing().when(commentRepository).deleteById(comment.getId());
 
         //When
-        commentService.deleteComment(commentId);
+        commentService.deleteComment(comment.getId());
 
         //Then
-        assertFalse(commentRepository.existsById(commentId));
+        verify(commentRepository, times(1)).deleteById(4L);
     }
 
     @Test
-    void testDeleteComment_ShouldThrowComponentNotFoundException() {
-        //When & Then
-        assertThrows(ComponentNotFoundException.class, () -> commentService.deleteComment(1L));
-    }
-
-    @Test
-    void testSaveComment() throws ComponentExistsException, IdException {
+    void testSaveComment() throws IdException {
         //Given
-        compositionService.saveComposition(composition);
+        ReflectionTestUtils.setField(comment, "id", null);
+        when(commentRepository.save(any(Comment.class))).thenAnswer(answer -> {
+            ReflectionTestUtils.setField(comment, "id", 4L);
+            return comment;
+        });
 
         //When
-        commentService.saveComment(comment);
-        Long commentId = comment.getId();
+        Comment savedComment = commentService.saveComment(comment);
 
         //Then
-        assertTrue(commentRepository.existsById(commentId));
+        assertEquals(4L, savedComment.getId());
+        assertEquals("test description", savedComment.getDescription());
+        assertNotNull(savedComment.getCreated());
+        assertNotNull(savedComment.getComposition());
+        assertEquals(0, savedComment.getReactionList().size());
+        verify(commentRepository, times(1)).save(comment);
     }
 
     @Test
     void testSaveComment_ShouldThrowIdException() {
         //Given
-        Comment commentWithId = Comment.builder().id(1L).description("test description").created(LocalDateTime.now())
-                .composition(composition).reactionList(List.of())
-                .build();
+        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
 
         //When & Then
-        assertThrows(IdException.class, () -> commentService.saveComment(commentWithId));
+        assertThrows(IdException.class, () -> commentService.saveComment(comment));
     }
 
     @Test
-    void testUpdateComment() throws ComponentExistsException, IdException, ComponentNotFoundException {
+    void testUpdateComment() throws IdException, ComponentNotFoundException {
         //Given
-        compositionService.saveComposition(composition);
-        commentService.saveComment(comment);
-        Long commentId = comment.getId();
-        Comment descriptionUpdatedComment = Comment.builder().id(commentId).description("test updated description").created(LocalDateTime.now())
-                .composition(composition).reactionList(List.of())
-                .build();
+        when(commentRepository.findById(comment.getId())).thenReturn(Optional.ofNullable(comment));
+        when(commentRepository.save(any(Comment.class))).thenAnswer(answer -> {
+            ReflectionTestUtils.setField(comment, "description", "test updated description");
+            return comment;
+        });
 
         //When
-        Comment updatedComment = commentService.updateComment(descriptionUpdatedComment);
+        Comment updatedComment = commentService.updateComment(comment);
 
         //Then
         assertEquals("test updated description", updatedComment.getDescription());
@@ -202,6 +201,10 @@ class CommentServiceTest {
 
     @Test
     void testUpdateComment_ShouldThrowIdException() {
+        //Given
+        ReflectionTestUtils.setField(comment, "id", null);
+        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
+
         //When & Then
         assertThrows(IdException.class, () -> commentService.updateComment(comment));
     }

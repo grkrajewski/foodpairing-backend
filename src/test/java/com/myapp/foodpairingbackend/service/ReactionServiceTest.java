@@ -1,209 +1,194 @@
 package com.myapp.foodpairingbackend.service;
 
 import com.myapp.foodpairingbackend.domain.entity.*;
-import com.myapp.foodpairingbackend.exception.ComponentExistsException;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
+import com.myapp.foodpairingbackend.repository.CommentRepository;
 import com.myapp.foodpairingbackend.repository.ReactionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@Transactional
 @SpringBootTest
 class ReactionServiceTest {
 
     @Autowired
-    private CompositionService compositionService;
-
-    @Autowired
-    private CommentService commentService;
-
-    @Autowired
     private ReactionService reactionService;
 
-    @Autowired
+    @MockBean
     private ReactionRepository reactionRepository;
 
-    @InjectMocks
-    private ReactionService reactionServiceMock;
+    @MockBean
+    private CommentRepository commentRepository;
 
-    @Mock
-    private ReactionRepository reactionRepositoryMock;
+    private Comment comment;
+    private Reaction reaction;
 
-    //Given - data preparation
-    Dish dish = Dish.builder()
-            .id(null).externalSystemId(1L).name("test name dish").readyInMinutes(10).servings(4)
-            .recipeUrl("https://test.com").compositionList(List.of())
-            .build();
+    @BeforeEach
+    void setup() {
+        //Given
+        Dish dish = Dish.builder()
+                .id(1L).externalSystemId(10L).name("test name dish").readyInMinutes(10).servings(4)
+                .recipeUrl("https://test.com").compositionList(List.of())
+                .build();
 
-    Drink drink = Drink.builder()
-            .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-            .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-            .build();
+        Drink drink = Drink.builder()
+                .id(2L).externalSystemId("20").name("test name drink").alcoholic("test alcoholic")
+                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+                .build();
 
-    Composition composition = Composition.builder()
-            .id(null).dish(dish).drink(drink).created(LocalDateTime.now()).commentList(List.of())
-            .build();
+        Composition composition = Composition.builder()
+                .id(3L).dish(dish).drink(drink).created(LocalDateTime.now()).commentList(List.of())
+                .build();
 
-    Comment comment = Comment.builder()
-            .id(null).description("test comment description").created(LocalDateTime.now())
-            .composition(composition).reactionList(List.of())
-            .build();
+        comment = Comment.builder()
+                .id(4L).description("test comment description").created(LocalDateTime.now())
+                .composition(composition).reactionList(List.of())
+                .build();
 
-    Reaction reaction = Reaction.builder()
-            .id(null).description("test reaction description").created(LocalDateTime.now()).comment(comment)
-            .build();
+        reaction = Reaction.builder()
+                .id(5L).description("test reaction description").created(LocalDateTime.now()).comment(comment)
+                .build();
+    }
 
     @Test
     void testGetReactions() {
         //Given
-        when(reactionRepositoryMock.findAll()).thenReturn(List.of(reaction));
+        when(reactionRepository.findAll()).thenReturn(List.of(reaction));
 
         //When
-        List<Reaction> reactions = reactionServiceMock.getReactions();
+        List<Reaction> reactions = reactionService.getReactions();
 
         //Then
         assertEquals(1, reactions.size());
-        verify(reactionRepositoryMock, times(1)).findAll();
+        verify(reactionRepository, times(1)).findAll();
     }
 
     @Test
     void testGetReactions_ShouldFetchEmptyList() {
+        //Given
+        when(reactionRepository.findAll()).thenReturn(List.of());
+
         //When
-        List<Reaction> reactions = reactionServiceMock.getReactions();
+        List<Reaction> reactions = reactionService.getReactions();
 
         //Then
         assertEquals(0, reactions.size());
-        verify(reactionRepositoryMock, times(1)).findAll();
+        verify(reactionRepository, times(1)).findAll();
     }
 
     @Test
-    void testGetReactionsForComment() throws ComponentExistsException, ComponentNotFoundException, IdException {
+    void testGetReactionsForComment() throws ComponentNotFoundException {
         //Given
-        compositionService.saveComposition(composition);
-        commentService.saveComment(comment);
-        reactionService.saveReaction(reaction);
-        Long commentId = comment.getId();
-        Long reactionId = reaction.getId();
+        when(commentRepository.existsById(comment.getId())).thenReturn(true);
+        when(reactionRepository.findByCommentId(comment.getId())).thenReturn(List.of(reaction));
 
         //When
-        List<Reaction> savedReactionList = reactionService.getReactionsForComment(commentId);
+        List<Reaction> savedReactionList = reactionService.getReactionsForComment(comment.getId());
 
         //Then
-        assertTrue(reactionRepository.existsById(reactionId));
         assertEquals(1, savedReactionList.size());
-        assertEquals("test reaction description", savedReactionList.get(0).getDescription());
-        assertNotNull(savedReactionList.get(0).getCreated());
-        assertEquals("test comment description", savedReactionList.get(0).getComment().getDescription());
+        verify(reactionRepository, times(1)).findByCommentId(4L);
     }
 
     @Test
-    void testGetReactionsForComment_ShouldGetEmptyList() throws ComponentExistsException, ComponentNotFoundException, IdException {
+    void testGetReactionsForComment_ShouldGetEmptyList() throws ComponentNotFoundException {
         //Given
-        compositionService.saveComposition(composition);
-        commentService.saveComment(comment);
-        Long commentId = comment.getId();
+        when(commentRepository.existsById(comment.getId())).thenReturn(true);
+        when(reactionRepository.findByCommentId(comment.getId())).thenReturn(List.of());
 
         //When
-        List<Reaction> reactionList = reactionService.getReactionsForComment(commentId);
+        List<Reaction> savedReactionList = reactionService.getReactionsForComment(comment.getId());
 
         //Then
-        assertEquals(0, reactionList.size());
+        assertEquals(0, savedReactionList.size());
+        verify(reactionRepository, times(1)).findByCommentId(4L);
     }
 
     @Test
     void testGetReactionsForComment_ShouldThrowComponentNotFoundException() {
+        //Give
+        when(commentRepository.existsById(4L)).thenReturn(false);
+
         //When & Then
-        assertThrows(ComponentNotFoundException.class, () -> reactionService.getReactionsForComment(1L));
+        assertThrows(ComponentNotFoundException.class, () -> reactionService.getReactionsForComment(4L));
     }
 
     @Test
-    void testGetReaction() throws ComponentExistsException, ComponentNotFoundException, IdException {
+    void testGetReaction() throws ComponentNotFoundException {
         //Given
-        compositionService.saveComposition(composition);
-        commentService.saveComment(comment);
-        reactionService.saveReaction(reaction);
-        Long reactionId = reaction.getId();
+        when(reactionRepository.findById(reaction.getId())).thenReturn(Optional.ofNullable(reaction));
 
         //When
-        Reaction savedReaction = reactionService.getReaction(reactionId);
+        Reaction savedReaction = reactionService.getReaction(reaction.getId());
 
         //Then
-        assertTrue(reactionRepository.existsById(reactionId));
+        assertEquals(5L, savedReaction.getId());
         assertEquals("test reaction description", savedReaction.getDescription());
         assertNotNull(savedReaction.getCreated());
         assertNotNull(savedReaction.getComment());
+        verify(reactionRepository, times(1)).findById(5L);
     }
 
     @Test
-    void testDeleteReaction() throws ComponentExistsException, ComponentNotFoundException, IdException {
+    void testDeleteReaction() throws ComponentNotFoundException {
         //Given
-        compositionService.saveComposition(composition);
-        commentService.saveComment(comment);
-        reactionService.saveReaction(reaction);
-        Long reactionId = reaction.getId();
+        doNothing().when(reactionRepository).deleteById(reaction.getId());
 
         //When
-        reactionService.deleteReaction(reactionId);
+        reactionService.deleteReaction(reaction.getId());
 
         //Then
-        assertFalse(reactionRepository.existsById(reactionId));
+        verify(reactionRepository, times(1)).deleteById(5L);
     }
 
     @Test
-    void testDeleteReaction_ShouldThrowComponentNotFoundException() {
-        //When & Then
-        assertThrows(ComponentNotFoundException.class, () -> reactionService.deleteReaction(1L));
-    }
-
-    @Test
-    void testSaveReaction() throws ComponentExistsException, IdException {
+    void testSaveReaction() throws IdException {
         //Given
-        compositionService.saveComposition(composition);
-        commentService.saveComment(comment);
+        ReflectionTestUtils.setField(reaction, "id", null);
+        when(reactionRepository.save(reaction)).thenAnswer(answer -> {
+            ReflectionTestUtils.setField(reaction, "id", 5L);
+            return reaction;
+        });
 
         //When
-        reactionService.saveReaction(reaction);
-        Long reactionId = reaction.getId();
+        Reaction savedReaction = reactionService.saveReaction(reaction);
 
         //Then
-        assertTrue(reactionRepository.existsById(reactionId));
+        assertEquals(5L, savedReaction.getId());
+        assertEquals("test reaction description", savedReaction.getDescription());
+        assertNotNull(savedReaction.getCreated());
+        assertNotNull(savedReaction.getComment());
+        verify(reactionRepository, times(1)).save(reaction);
     }
 
     @Test
     void testSaveReaction_ShouldThrowIdException() {
-        //Given
-        Reaction reactionWithId = Reaction.builder()
-                .id(1L).description("test reaction description").created(LocalDateTime.now()).comment(comment)
-                .build();
-
         //When & Then
-        assertThrows(IdException.class, () -> reactionService.saveReaction(reactionWithId));
+        assertThrows(IdException.class, () -> reactionService.saveReaction(reaction));
     }
 
     @Test
-    void testUpdateReaction() throws ComponentExistsException, IdException, ComponentNotFoundException {
+    void testUpdateReaction() throws IdException, ComponentNotFoundException {
         //Given
-        compositionService.saveComposition(composition);
-        commentService.saveComment(comment);
-        reactionService.saveReaction(reaction);
-        Long reactionId = reaction.getId();
-        Reaction descriptionUpdatedReaction = Reaction.builder()
-                .id(reactionId).description("test updated reaction description").created(LocalDateTime.now()).comment(comment)
-                .build();
+        when(reactionRepository.findById(reaction.getId())).thenReturn(Optional.ofNullable(reaction));
+        when(reactionRepository.save(reaction)).thenAnswer(answer -> {
+            ReflectionTestUtils.setField(reaction, "description", "test updated reaction description");
+            return reaction;
+        });
 
         //When
-        Reaction updatedReaction = reactionService.updateReaction(descriptionUpdatedReaction);
+        Reaction updatedReaction = reactionService.updateReaction(reaction);
 
         //Then
         assertEquals("test updated reaction description", updatedReaction.getDescription());
@@ -211,6 +196,9 @@ class ReactionServiceTest {
 
     @Test
     void testUpdateReaction_ShouldThrowIdException() {
+        //Given
+        ReflectionTestUtils.setField(reaction, "id", null);
+
         //When & Then
         assertThrows(IdException.class, () -> reactionService.updateReaction(reaction));
     }

@@ -39,7 +39,7 @@ class CommentServiceTest {
     private Comment comment;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         //Given
         Dish dish = Dish.builder()
                 .id(1L).externalSystemId(10L).name("test name dish").readyInMinutes(10).servings(4)
@@ -176,9 +176,6 @@ class CommentServiceTest {
 
     @Test
     void testSaveComment_ShouldThrowIdException() {
-        //Given
-        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
-
         //When & Then
         assertThrows(IdException.class, () -> commentService.saveComment(comment));
     }
@@ -203,7 +200,6 @@ class CommentServiceTest {
     void testUpdateComment_ShouldThrowIdException() {
         //Given
         ReflectionTestUtils.setField(comment, "id", null);
-        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
 
         //When & Then
         assertThrows(IdException.class, () -> commentService.updateComment(comment));

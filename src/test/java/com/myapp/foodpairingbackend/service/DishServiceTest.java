@@ -183,6 +183,7 @@ class DishServiceTest {
 
         //Then
         assertEquals("test updated name", updatedDish.getName());
+        verify(dishRepository, times(1)).save(dish);
     }
 
     @Test

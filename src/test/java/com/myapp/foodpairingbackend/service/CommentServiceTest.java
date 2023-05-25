@@ -194,6 +194,7 @@ class CommentServiceTest {
 
         //Then
         assertEquals("test updated description", updatedComment.getDescription());
+        verify(commentRepository, times(1)).save(comment);
     }
 
     @Test

@@ -192,6 +192,7 @@ class ReactionServiceTest {
 
         //Then
         assertEquals("test updated reaction description", updatedReaction.getDescription());
+        verify(reactionRepository, times(1)).save(reaction);
     }
 
     @Test

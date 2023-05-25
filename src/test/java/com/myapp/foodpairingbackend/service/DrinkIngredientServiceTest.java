@@ -5,188 +5,186 @@ import com.myapp.foodpairingbackend.domain.entity.DrinkIngredient;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.DrinkIngredientRepository;
+import com.myapp.foodpairingbackend.repository.DrinkRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@Transactional
 @SpringBootTest
 class DrinkIngredientServiceTest {
 
     @Autowired
-    private DrinkService drinkService;
-
-    @Autowired
     private DrinkIngredientService drinkIngredientService;
 
-    @Autowired
+    @MockBean
+    private DrinkRepository drinkRepository;
+
+    @MockBean
     private DrinkIngredientRepository drinkIngredientRepository;
 
-    @InjectMocks
-    private DrinkIngredientService drinkIngredientServiceMock;
+    Drink drink;
+    DrinkIngredient drinkIngredient;
 
-    @Mock
-    private DrinkIngredientRepository drinkIngredientRepositoryMock;
+    @BeforeEach
+    void setup() {
+        //Given
+        drink = Drink.builder()
+                .id(1L).externalSystemId("20").name("test name drink").alcoholic("test alcoholic")
+                .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
+                .build();
 
-    //Given - data preparation
-    Drink drink = Drink.builder()
-            .id(null).externalSystemId("2").name("test name drink").alcoholic("test alcoholic")
-            .glass("test glass").instructions("test instructions").drinkIngredientList(List.of())
-            .build();
-
-    DrinkIngredient drinkIngredient = DrinkIngredient.builder()
-            .id(null).name("test name ingredient").measure("test measure").drink(drink)
-            .build();
+        drinkIngredient = DrinkIngredient.builder()
+                .id(2L).name("test name ingredient").measure("test measure").drink(drink)
+                .build();
+    }
 
     @Test
     void testGetDrinkIngredients() {
         //Given
-        when(drinkIngredientRepositoryMock.findAll()).thenReturn(List.of(drinkIngredient));
+        when(drinkIngredientRepository.findAll()).thenReturn(List.of(drinkIngredient));
 
         //When
-        List<DrinkIngredient> drinkIngredients = drinkIngredientServiceMock.getDrinkIngredients();
+        List<DrinkIngredient> drinkIngredients = drinkIngredientService.getDrinkIngredients();
 
         //Then
         assertEquals(1, drinkIngredients.size());
-        verify(drinkIngredientRepositoryMock, times(1)).findAll();
+        verify(drinkIngredientRepository, times(1)).findAll();
     }
 
     @Test
     void testGetDrinkIngredients_ShouldFetchEmptyList() {
+        //Given
+        when(drinkIngredientRepository.findAll()).thenReturn(List.of());
+
         //When
-        List<DrinkIngredient> drinkIngredients = drinkIngredientServiceMock.getDrinkIngredients();
+        List<DrinkIngredient> drinkIngredients = drinkIngredientService.getDrinkIngredients();
 
         //Then
         assertEquals(0, drinkIngredients.size());
-        verify(drinkIngredientRepositoryMock, times(1)).findAll();
+        verify(drinkIngredientRepository, times(1)).findAll();
     }
 
     @Test
-    void testGetDrinkIngredientsForDrink() throws ComponentNotFoundException, IdException {
+    void testGetDrinkIngredientsForDrink() throws ComponentNotFoundException {
         //Given
-        drinkService.saveDrink(drink);
-        drinkIngredientService.saveDrinkIngredient(drinkIngredient);
-        Long drinkId = drink.getId();
-        Long drinkIngredientId = drinkIngredient.getId();
+        when(drinkRepository.existsById(drink.getId())).thenReturn(true);
+        when(drinkIngredientRepository.findByDrinkId(drink.getId())).thenReturn(List.of(drinkIngredient));
 
         //When
-        List<DrinkIngredient> savedDrinkIngredientList = drinkIngredientService.getDrinkIngredientsForDrink(drinkId);
+        List<DrinkIngredient> savedDrinkIngredientList = drinkIngredientService.getDrinkIngredientsForDrink(drink.getId());
 
         //Then
-        assertTrue(drinkIngredientRepository.existsById(drinkIngredientId));
         assertEquals(1, savedDrinkIngredientList.size());
-        assertEquals("test name ingredient", savedDrinkIngredientList.get(0).getName());
-        assertEquals("test measure", savedDrinkIngredientList.get(0).getMeasure());
-        assertEquals("test name drink", savedDrinkIngredientList.get(0).getDrink().getName());
+        verify(drinkIngredientRepository, times(1)).findByDrinkId(1L);
     }
 
     @Test
-    void testGetDrinkIngredientsForDrink_ShouldGetEmptyList() throws ComponentNotFoundException, IdException {
+    void testGetDrinkIngredientsForDrink_ShouldGetEmptyList() throws ComponentNotFoundException {
         //Given
-        drinkService.saveDrink(drink);
-        Long drinkId = drink.getId();
+        when(drinkRepository.existsById(drink.getId())).thenReturn(true);
+        when(drinkIngredientRepository.findByDrinkId(drink.getId())).thenReturn(List.of());
 
         //When
-        List<DrinkIngredient> drinkIngredientList = drinkIngredientService.getDrinkIngredientsForDrink(drinkId);
+        List<DrinkIngredient> savedDrinkIngredientList = drinkIngredientService.getDrinkIngredientsForDrink(drink.getId());
 
         //Then
-        assertEquals(0, drinkIngredientList.size());
+        assertEquals(0, savedDrinkIngredientList.size());
+        verify(drinkIngredientRepository, times(1)).findByDrinkId(1L);
     }
 
     @Test
     void testGetDrinkIngredientsForDrink_ShouldThrowComponentNotFoundException() {
+        //Given
+        when(drinkRepository.existsById(1L)).thenReturn(false);
+
         //When & Then
         assertThrows(ComponentNotFoundException.class, () -> drinkIngredientService.getDrinkIngredientsForDrink(1L));
     }
 
     @Test
-    void testGetDrinkIngredient() throws ComponentNotFoundException, IdException {
+    void testGetDrinkIngredient() throws ComponentNotFoundException {
         //Given
-        drinkService.saveDrink(drink);
-        drinkIngredientService.saveDrinkIngredient(drinkIngredient);
-        Long drinkIngredientId = drinkIngredient.getId();
+        when(drinkIngredientRepository.findById(drinkIngredient.getId())).thenReturn(Optional.ofNullable(drinkIngredient));
 
         //When
-        DrinkIngredient savedDrinkIngredient = drinkIngredientService.getDrinkIngredient(drinkIngredientId);
+        DrinkIngredient savedDrinkIngredient = drinkIngredientService.getDrinkIngredient(drinkIngredient.getId());
 
         //Then
-        assertTrue(drinkIngredientRepository.existsById(drinkIngredientId));
+        assertEquals(2L, savedDrinkIngredient.getId());
         assertEquals("test name ingredient", savedDrinkIngredient.getName());
         assertEquals("test measure", savedDrinkIngredient.getMeasure());
-        assertEquals("test name drink", savedDrinkIngredient.getDrink().getName());
+        assertNotNull(drinkIngredient.getDrink());
+        verify(drinkIngredientRepository, times(1)).findById(2L);
     }
 
     @Test
-    void testDeleteDrinkIngredient() throws ComponentNotFoundException, IdException {
+    void testDeleteDrinkIngredient() throws ComponentNotFoundException {
         //Given
-        drinkService.saveDrink(drink);
-        drinkIngredientService.saveDrinkIngredient(drinkIngredient);
-        Long drinkIngredientId = drinkIngredient.getId();
+        doNothing().when(drinkIngredientRepository).deleteById(drinkIngredient.getId());
 
         //When
-        drinkIngredientService.deleteDrinkIngredient(drinkIngredientId);
+        drinkIngredientService.deleteDrinkIngredient(drinkIngredient.getId());
 
         //Then
-        assertFalse(drinkIngredientRepository.existsById(drinkIngredientId));
-    }
-
-    @Test
-    void testDeleteDrinkIngredient_ShouldThrowComponentNotFoundException() {
-        //When & Then
-        assertThrows(ComponentNotFoundException.class, () -> drinkIngredientService.deleteDrinkIngredient(1L));
+        verify(drinkIngredientRepository, times(1)).deleteById(2L);
     }
 
     @Test
     void testSaveDrinkIngredient() throws IdException {
         //Given
-        drinkService.saveDrink(drink);
+        ReflectionTestUtils.setField(drinkIngredient, "id", null);
+        when(drinkIngredientRepository.save(drinkIngredient)).thenAnswer(answer -> {
+            ReflectionTestUtils.setField(drinkIngredient, "id", 2L);
+            return drinkIngredient;
+        });
 
         //When
-        drinkIngredientService.saveDrinkIngredient(drinkIngredient);
-        Long drinkIngredientId = drinkIngredient.getId();
+        DrinkIngredient savedDrinkIngredient = drinkIngredientService.saveDrinkIngredient(drinkIngredient);
 
         //Then
-        assertTrue(drinkIngredientRepository.existsById(drinkIngredientId));
+        assertEquals(2L, savedDrinkIngredient.getId());
+        assertEquals("test name ingredient", savedDrinkIngredient.getName());
+        assertEquals("test measure", savedDrinkIngredient.getMeasure());
+        assertNotNull(drinkIngredient.getDrink());
+        verify(drinkIngredientRepository, times(1)).save(drinkIngredient);
     }
 
     @Test
     void testSaveDrinkIngredient_ShouldThrowIdException() {
-        //Given
-        DrinkIngredient drinkIngredientWithId = DrinkIngredient.builder()
-                .id(1L).name("test name ingredient").measure("test measure").drink(drink)
-                .build();
-
         //When & Then
-        assertThrows(IdException.class, () -> drinkIngredientService.saveDrinkIngredient(drinkIngredientWithId));
+        assertThrows(IdException.class, () -> drinkIngredientService.saveDrinkIngredient(drinkIngredient));
     }
 
     @Test
     void testUpdateDrinkIngredient() throws IdException, ComponentNotFoundException {
         //Given
-        drinkService.saveDrink(drink);
-        drinkIngredientService.saveDrinkIngredient(drinkIngredient);
-        Long drinkIngredientId = drinkIngredient.getId();
-        DrinkIngredient nameUpdatedDrinkIngredient = DrinkIngredient.builder()
-                .id(drinkIngredientId).name("test updated name ingredient").measure("test measure").drink(drink)
-                .build();
+        when(drinkIngredientRepository.findById(drinkIngredient.getId())).thenReturn(Optional.ofNullable(drinkIngredient));
+        when(drinkIngredientRepository.save(drinkIngredient)).thenAnswer(answer -> {
+            ReflectionTestUtils.setField(drinkIngredient, "name", "test updated name ingredient");
+            return drinkIngredient;
+        });
 
         //When
-        DrinkIngredient updatedDrinkIngredient = drinkIngredientService.updateDrinkIngredient(nameUpdatedDrinkIngredient);
+        DrinkIngredient updatedDrinkIngredient = drinkIngredientService.updateDrinkIngredient(drinkIngredient);
 
         //Then
         assertEquals("test updated name ingredient", updatedDrinkIngredient.getName());
+        verify(drinkIngredientRepository, times(1)).save(drinkIngredient);
     }
 
     @Test
     void testUpdateDrinkIngredient_ShouldThrowIdException() {
+        //Given
+        ReflectionTestUtils.setField(drinkIngredient, "id", null);
 
         //When & Then
         assertThrows(IdException.class, () -> drinkIngredientService.updateDrinkIngredient(drinkIngredient));

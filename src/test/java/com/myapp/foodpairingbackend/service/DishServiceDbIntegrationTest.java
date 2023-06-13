@@ -34,9 +34,8 @@ public class DishServiceDbIntegrationTest {
     void setup() {
         //Given
         dish = Dish.builder()
-                .id(null)
-                .externalSystemId(10L).name("test name dish").readyInMinutes(12).servings(4)
-                .recipeUrl("https://test.com").compositionList(List.of())
+                .id(null).externalSystemId(10L).name("test name dish").readyInMinutes(12)
+                .servings(4).recipeUrl("https://test.com").compositionList(List.of())
                 .build();
     }
 
@@ -58,7 +57,7 @@ public class DishServiceDbIntegrationTest {
         List<Dish> dishes = dishService.getDishes();
 
         //Then
-        assertEquals(0, dishes.size());
+        assertTrue(dishes.isEmpty());
     }
 
     @Test
@@ -77,6 +76,7 @@ public class DishServiceDbIntegrationTest {
         assertEquals(12, savedDish.getReadyInMinutes());
         assertEquals(4, savedDish.getServings());
         assertEquals("https://test.com", savedDish.getRecipeUrl());
+        assertTrue(savedDish.getCompositionList().isEmpty());
     }
 
     @Test
@@ -94,6 +94,7 @@ public class DishServiceDbIntegrationTest {
         assertEquals(12, savedDish.getReadyInMinutes());
         assertEquals(4, savedDish.getServings());
         assertEquals("https://test.com", savedDish.getRecipeUrl());
+        assertTrue(savedDish.getCompositionList().isEmpty());
     }
 
     @Test

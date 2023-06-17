@@ -154,7 +154,7 @@ public class DrinkIngredientServiceDbIntegrationTest {
     }
 
     @Test
-    void testSaveDrinkIngredient_ShouldThrowIdException() throws IdException {
+    void testSaveDrinkIngredient_ShouldThrowIdException() {
         //Given
         ReflectionTestUtils.setField(drinkIngredient, "id", 2L);
 

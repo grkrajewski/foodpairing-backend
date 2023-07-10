@@ -132,7 +132,7 @@ public class CommentServiceDbIntegrationTest {
         assertEquals("test comment description", savedComment.getDescription());
         assertNotNull(savedComment.getCreated());
         assertNotNull(savedComment.getComposition());
-        assertEquals(0, savedComment.getReactionList().size());
+        assertTrue(savedComment.getReactionList().isEmpty());
     }
 
     @Test

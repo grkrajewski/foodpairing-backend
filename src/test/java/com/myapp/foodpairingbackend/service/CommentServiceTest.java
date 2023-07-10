@@ -83,7 +83,7 @@ class CommentServiceTest {
         List<Comment> comments = commentService.getComments();
 
         //Then
-        assertEquals(0, comments.size());
+        assertTrue(comments.isEmpty());
         verify(commentRepository, times(1)).findAll();
     }
 
@@ -111,7 +111,7 @@ class CommentServiceTest {
         List<Comment> commentList = commentService.getCommentsForComposition(composition.getId());
 
         //Then
-        assertEquals(0, commentList.size());
+        assertTrue(commentList.isEmpty());
         verify(commentRepository, times(1)).findByCompositionId(3L);
     }
 
@@ -137,7 +137,7 @@ class CommentServiceTest {
         assertEquals("test description", savedComment.getDescription());
         assertNotNull(savedComment.getCreated());
         assertNotNull(savedComment.getComposition());
-        assertEquals(0, savedComment.getReactionList().size());
+        assertTrue(savedComment.getReactionList().isEmpty());
         verify(commentRepository, times(1)).findById(4L);
     }
 
@@ -170,7 +170,7 @@ class CommentServiceTest {
         assertEquals("test description", savedComment.getDescription());
         assertNotNull(savedComment.getCreated());
         assertNotNull(savedComment.getComposition());
-        assertEquals(0, savedComment.getReactionList().size());
+        assertTrue(savedComment.getReactionList().isEmpty());
         verify(commentRepository, times(1)).save(comment);
     }
 

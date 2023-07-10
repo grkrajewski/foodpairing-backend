@@ -83,7 +83,7 @@ class ReactionServiceTest {
         List<Reaction> reactions = reactionService.getReactions();
 
         //Then
-        assertEquals(0, reactions.size());
+        assertTrue(reactions.isEmpty());
         verify(reactionRepository, times(1)).findAll();
     }
 
@@ -111,7 +111,7 @@ class ReactionServiceTest {
         List<Reaction> savedReactionList = reactionService.getReactionsForComment(comment.getId());
 
         //Then
-        assertEquals(0, savedReactionList.size());
+        assertTrue(savedReactionList.isEmpty());
         verify(reactionRepository, times(1)).findByCommentId(4L);
     }
 

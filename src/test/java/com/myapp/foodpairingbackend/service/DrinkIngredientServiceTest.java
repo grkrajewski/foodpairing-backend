@@ -69,7 +69,7 @@ class DrinkIngredientServiceTest {
         List<DrinkIngredient> drinkIngredients = drinkIngredientService.getDrinkIngredients();
 
         //Then
-        assertEquals(0, drinkIngredients.size());
+        assertTrue(drinkIngredients.isEmpty());
         verify(drinkIngredientRepository, times(1)).findAll();
     }
 
@@ -97,7 +97,7 @@ class DrinkIngredientServiceTest {
         List<DrinkIngredient> savedDrinkIngredientList = drinkIngredientService.getDrinkIngredientsForDrink(drink.getId());
 
         //Then
-        assertEquals(0, savedDrinkIngredientList.size());
+        assertTrue(savedDrinkIngredientList.isEmpty());
         verify(drinkIngredientRepository, times(1)).findByDrinkId(1L);
     }
 

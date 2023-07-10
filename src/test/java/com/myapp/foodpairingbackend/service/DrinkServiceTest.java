@@ -59,7 +59,7 @@ class DrinkServiceTest {
         List<Drink> drinks = drinkService.getDrinks();
 
         //Then
-        assertEquals(0, drinks.size());
+        assertTrue(drinks.isEmpty());
         verify(drinkRepository, times(1)).findAll();
     }
 
@@ -78,7 +78,7 @@ class DrinkServiceTest {
         assertEquals("test alcoholic", savedDrink.getAlcoholic());
         assertEquals("test glass", savedDrink.getGlass());
         assertEquals("test instructions", savedDrink.getInstructions());
-        assertEquals(0, savedDrink.getDrinkIngredientList().size());
+        assertTrue(savedDrink.getDrinkIngredientList().isEmpty());
         verify(drinkRepository, times(1)).findById(1L);
     }
 
@@ -113,7 +113,7 @@ class DrinkServiceTest {
         assertEquals("test alcoholic", savedDrink.getAlcoholic());
         assertEquals("test glass", savedDrink.getGlass());
         assertEquals("test instructions", savedDrink.getInstructions());
-        assertEquals(0, savedDrink.getDrinkIngredientList().size());
+        assertTrue(savedDrink.getDrinkIngredientList().isEmpty());
         verify(drinkRepository, times(1)).save(drink);
     }
 

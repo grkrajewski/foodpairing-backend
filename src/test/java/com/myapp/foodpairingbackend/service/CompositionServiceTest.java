@@ -71,7 +71,7 @@ class CompositionServiceTest {
         List<Composition> compositions = compositionService.getCompositions();
 
         //Then
-        assertEquals(0, compositions.size());
+        assertTrue(compositions.isEmpty());
         verify(compositionRepository, times(1)).findAll();
     }
 
@@ -88,7 +88,7 @@ class CompositionServiceTest {
         assertNotNull(composition.getDish());
         assertNotNull(composition.getDrink());
         assertNotNull(savedComposition.getCreated());
-        assertEquals(0, savedComposition.getCommentList().size());
+        assertTrue(savedComposition.getCommentList().isEmpty());
         verify(compositionRepository, times(1)).findById(3L);
     }
 
@@ -121,7 +121,7 @@ class CompositionServiceTest {
         assertNotNull(composition.getDish());
         assertNotNull(composition.getDrink());
         assertNotNull(savedComposition.getCreated());
-        assertEquals(0, savedComposition.getCommentList().size());
+        assertTrue(savedComposition.getCommentList().isEmpty());
         verify(compositionRepository, times(1)).save(composition);
     }
 

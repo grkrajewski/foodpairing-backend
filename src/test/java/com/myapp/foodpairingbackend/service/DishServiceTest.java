@@ -60,7 +60,7 @@ class DishServiceTest {
         List<Dish> dishes = dishService.getDishes();
 
         //Then
-        assertEquals(0, dishes.size());
+        assertTrue(dishes.isEmpty());
         verify(dishRepository, times(1)).findAll();
     }
 
@@ -79,7 +79,7 @@ class DishServiceTest {
         assertEquals(10, savedDish.getReadyInMinutes());
         assertEquals(4, savedDish.getServings());
         assertEquals("https://test.com", savedDish.getRecipeUrl());
-        assertEquals(0, savedDish.getCompositionList().size());
+        assertTrue(savedDish.getCompositionList().isEmpty());
         verify(dishRepository, times(1)).findById(1L);
     }
 
@@ -98,7 +98,7 @@ class DishServiceTest {
         assertEquals(10, savedDish.getReadyInMinutes());
         assertEquals(4, savedDish.getServings());
         assertEquals("https://test.com", savedDish.getRecipeUrl());
-        assertEquals(0, savedDish.getCompositionList().size());
+        assertTrue(savedDish.getCompositionList().isEmpty());
         verify(dishRepository, times(1)).findByExternalSystemId(10L);
     }
 
@@ -146,7 +146,7 @@ class DishServiceTest {
         assertEquals(10, savedDish.getReadyInMinutes());
         assertEquals(4, savedDish.getServings());
         assertEquals("https://test.com", savedDish.getRecipeUrl());
-        assertEquals(0, savedDish.getCompositionList().size());
+        assertTrue(savedDish.getCompositionList().isEmpty());
         verify(dishRepository, times(1)).save(dish);
     }
 

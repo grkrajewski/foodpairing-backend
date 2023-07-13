@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class DishFacadeTest {
     @MockBean
     private DishService dishService;
 
-    @MockBean
+    @SpyBean
     private DishMapper dishMapper;
 
     private Dish dish;
@@ -44,8 +45,8 @@ public class DishFacadeTest {
                 .build();
 
         dishDto = DishDto.builder()
-                .id(11L).externalSystemId(110L).name("test name dishDto").readyInMinutes(11)
-                .servings(5).recipeUrl("https://testDto.com").compositionList(List.of())
+                .id(1L).externalSystemId(10L).name("test name dish").readyInMinutes(10)
+                .servings(4).recipeUrl("https://test.com").compositionList(List.of())
                 .build();
     }
 
@@ -53,31 +54,31 @@ public class DishFacadeTest {
     void testGetDishes() {
         //Given
         when(dishService.getDishes()).thenReturn(List.of(dish));
-        when(dishMapper.mapToDishDtoList(List.of(dish))).thenReturn(List.of(dishDto));
 
         //When
         List<DishDto> dishes = dishFacade.getDishes();
 
         //Then
         assertEquals(1, dishes.size());
+        verify(dishService, times(1)).getDishes();
+        verify(dishMapper, times(1)).mapToDishDtoList(List.of(dish));
     }
 
     @Test
     void testGetDish() throws ComponentNotFoundException {
         //Give
         when(dishService.getDish(dish.getId())).thenReturn(dish);
-        when(dishMapper.mapToDishDto(dish)).thenReturn(dishDto);
 
         //When
         DishDto fetchedDishDto = dishFacade.getDish(dish.getId());
 
         //Then
-        assertEquals(11L, fetchedDishDto.getId());
-        assertEquals(110L, fetchedDishDto.getExternalSystemId());
-        assertEquals("test name dishDto", fetchedDishDto.getName());
-        assertEquals(11, fetchedDishDto.getReadyInMinutes());
-        assertEquals(5, fetchedDishDto.getServings());
-        assertEquals("https://testDto.com", fetchedDishDto.getRecipeUrl());
+        assertEquals(1L, fetchedDishDto.getId());
+        assertEquals(10L, fetchedDishDto.getExternalSystemId());
+        assertEquals("test name dish", fetchedDishDto.getName());
+        assertEquals(10, fetchedDishDto.getReadyInMinutes());
+        assertEquals(4, fetchedDishDto.getServings());
+        assertEquals("https://test.com", fetchedDishDto.getRecipeUrl());
         assertTrue(fetchedDishDto.getCompositionList().isEmpty());
         verify(dishService, times(1)).getDish(1L);
         verify(dishMapper, times(1)).mapToDishDto(dish);
@@ -99,21 +100,19 @@ public class DishFacadeTest {
     void testSaveDishInDb() throws ComponentExistsException, IdException, ComponentNotFoundException {
         //Given
         when(dishService.saveDish(any(Dish.class))).thenReturn(dish);
-        when(dishMapper.mapToDish(dishDto)).thenReturn(dish);
-        when(dishMapper.mapToDishDto(dish)).thenReturn(dishDto);
 
         //When
         DishDto savedDishDto = dishFacade.saveDishInDb(dishDto);
 
         //Then
-        assertEquals(11L, savedDishDto.getId());
-        assertEquals(110L, savedDishDto.getExternalSystemId());
-        assertEquals("test name dishDto", savedDishDto.getName());
-        assertEquals(11, savedDishDto.getReadyInMinutes());
-        assertEquals(5, savedDishDto.getServings());
-        assertEquals("https://testDto.com", savedDishDto.getRecipeUrl());
+        assertEquals(1L, savedDishDto.getId());
+        assertEquals(10L, savedDishDto.getExternalSystemId());
+        assertEquals("test name dish", savedDishDto.getName());
+        assertEquals(10, savedDishDto.getReadyInMinutes());
+        assertEquals(4, savedDishDto.getServings());
+        assertEquals("https://test.com", savedDishDto.getRecipeUrl());
         assertTrue(savedDishDto.getCompositionList().isEmpty());
-        verify(dishService, times(1)).saveDish(dish);
+        verify(dishService, times(1)).saveDish(any(Dish.class));
         verify(dishMapper, times(1)).mapToDish(dishDto);
         verify(dishMapper, times(1)).mapToDishDto(dish);
     }
@@ -121,11 +120,9 @@ public class DishFacadeTest {
     @Test
     void testUpdateDish() throws ComponentNotFoundException, IdException {
         //Give
-        when(dishService.updateDish(any(Dish.class))).thenReturn(dish);
-        when(dishMapper.mapToDish(dishDto)).thenReturn(dish);
-        when(dishMapper.mapToDishDto(dish)).thenAnswer(answer -> {
-            ReflectionTestUtils.setField(dishDto, "name", "test updated name");
-            return dishDto;
+        when(dishService.updateDish(any(Dish.class))).thenAnswer(answer -> {
+            ReflectionTestUtils.setField(dish, "name", "test updated name");
+            return dish;
         });
 
         //When
@@ -133,7 +130,7 @@ public class DishFacadeTest {
 
         //Then
         assertEquals("test updated name", updatedDishDto.getName());
-        verify(dishService, times(1)).updateDish(dish);
+        verify(dishService, times(1)).updateDish(any(Dish.class));
         verify(dishMapper, times(1)).mapToDish(dishDto);
         verify(dishMapper, times(1)).mapToDishDto(dish);
     }

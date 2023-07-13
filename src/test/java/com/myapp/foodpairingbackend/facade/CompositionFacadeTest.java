@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public class CompositionFacadeTest {
     @MockBean
     private CompositionService compositionService;
 
-    @MockBean
+    @SpyBean
     private CompositionMapper compositionMapper;
 
     private Composition composition;
@@ -51,40 +52,40 @@ public class CompositionFacadeTest {
                 .build();
 
         composition = Composition.builder()
-                .id(3L).dish(dish).drink(drink).created(LocalDateTime.now()).commentList(List.of())
+                .id(3L).dish(dish).drink(drink).created(LocalDateTime.of(2023, 7, 10, 13, 12, 33)).commentList(List.of())
                 .build();
 
         compositionDto = CompositionDto.builder()
-                .id(31L).dishId(11L).drinkId(21L).created("2023-07-10 13:12:33").commentList(List.of())
+                .id(3L).dishId(dish.getId()).drinkId(drink.getId()).created("2023-07-10 13:12:33").commentList(List.of())
                 .build();
     }
 
     @Test
     void testGetCompositions() {
         //Given
-        when(compositionFacade.getCompositions()).thenReturn(List.of(compositionDto));
-        when(compositionMapper.mapToCompositionDtoList(List.of(composition))).thenReturn(List.of(compositionDto));
+        when(compositionService.getCompositions()).thenReturn(List.of(composition));
 
         //When
         List<CompositionDto> compositions = compositionFacade.getCompositions();
 
         //Then
         assertEquals(1, compositions.size());
+        verify(compositionService, times(1)).getCompositions();
+        verify(compositionMapper, times(1)).mapToCompositionDtoList(List.of(composition));
     }
 
     @Test
     void testGetComposition() throws ComponentNotFoundException {
         //Given
         when(compositionService.getComposition(composition.getId())).thenReturn(composition);
-        when(compositionMapper.mapToCompositionDto(composition)).thenReturn(compositionDto);
 
         //When
         CompositionDto fetchedCompositionDto = compositionFacade.getComposition(composition.getId());
 
         //Then
-        assertEquals(31L, fetchedCompositionDto.getId());
-        assertEquals(11L, fetchedCompositionDto.getDishId());
-        assertEquals(21L, fetchedCompositionDto.getDrinkId());
+        assertEquals(3L, fetchedCompositionDto.getId());
+        assertEquals(1L, fetchedCompositionDto.getDishId());
+        assertEquals(2L, fetchedCompositionDto.getDrinkId());
         assertEquals("2023-07-10 13:12:33", fetchedCompositionDto.getCreated());
         assertTrue(fetchedCompositionDto.getCommentList().isEmpty());
         verify(compositionService, times(1)).getComposition(3L);
@@ -107,19 +108,17 @@ public class CompositionFacadeTest {
     void testSaveComposition() throws ComponentExistsException, IdException, ComponentNotFoundException {
         //Given
         when(compositionService.saveComposition(any(Composition.class))).thenReturn(composition);
-        when(compositionMapper.mapToComposition(compositionDto)).thenReturn(composition);
-        when(compositionMapper.mapToCompositionDto(composition)).thenReturn(compositionDto);
 
         //When
         CompositionDto savedCompositionDto = compositionFacade.saveComposition(compositionDto);
 
         //Then
-        assertEquals(31L, savedCompositionDto.getId());
-        assertEquals(11L, savedCompositionDto.getDishId());
-        assertEquals(21L, savedCompositionDto.getDrinkId());
+        assertEquals(3L, savedCompositionDto.getId());
+        assertEquals(1L, savedCompositionDto.getDishId());
+        assertEquals(2L, savedCompositionDto.getDrinkId());
         assertEquals("2023-07-10 13:12:33", savedCompositionDto.getCreated());
         assertTrue(savedCompositionDto.getCommentList().isEmpty());
-        verify(compositionService, times(1)).saveComposition(composition);
+        verify(compositionService, times(1)).saveComposition(any(Composition.class));
         verify(compositionMapper, times(1)).mapToCompositionDto(composition);
         verify(compositionMapper, times(1)).mapToComposition(compositionDto);
     }
@@ -127,11 +126,10 @@ public class CompositionFacadeTest {
     @Test
     void testUpdateComposition() throws ComponentExistsException, IdException, ComponentNotFoundException {
         //Given
-        when(compositionService.updateComposition(any(Composition.class))).thenReturn(composition);
-        when(compositionMapper.mapToComposition(compositionDto)).thenReturn(composition);
-        when(compositionMapper.mapToCompositionDto(composition)).thenAnswer(answer -> {
-            ReflectionTestUtils.setField(compositionDto, "created", "2023-07-11 10:20:30");
-            return compositionDto;
+        when(compositionService.updateComposition(any(Composition.class))).thenAnswer(answer -> {
+            ReflectionTestUtils.setField(composition, "created",
+                    LocalDateTime.of(2023, 7, 11, 10, 20, 30));
+            return composition;
         });
 
         //When
@@ -139,7 +137,7 @@ public class CompositionFacadeTest {
 
         //Then
         assertEquals("2023-07-11 10:20:30", updatedCompositionDto.getCreated());
-        verify(compositionService, times(1)).updateComposition(composition);
+        verify(compositionService, times(1)).updateComposition(any(Composition.class));
         verify(compositionMapper, times(1)).mapToCompositionDto(composition);
         verify(compositionMapper, times(1)).mapToComposition(compositionDto);
     }

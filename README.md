@@ -12,7 +12,7 @@ Application includes:
 - GET, POST, PUT, DELETE http methods,
 - two external APIs were integrated ("Spoonacular", "TheCocktailDB"),
 - two design patterns (builder, facade),
-- unit tests with coverage 83%,
+- unit tests with coverage 93% (in methods),
 - MySQL database used as a storage system,
 - scheduler (sending an e-mail information).
 

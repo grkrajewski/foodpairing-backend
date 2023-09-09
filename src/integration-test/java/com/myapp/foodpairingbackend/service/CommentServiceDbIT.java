@@ -1,12 +1,14 @@
 package com.myapp.foodpairingbackend.service;
 
-import com.myapp.foodpairingbackend.domain.entity.*;
+import com.myapp.foodpairingbackend.domain.entity.Comment;
+import com.myapp.foodpairingbackend.domain.entity.Composition;
+import com.myapp.foodpairingbackend.domain.entity.Dish;
+import com.myapp.foodpairingbackend.domain.entity.Drink;
 import com.myapp.foodpairingbackend.exception.ComponentExistsException;
 import com.myapp.foodpairingbackend.exception.ComponentNotFoundException;
 import com.myapp.foodpairingbackend.exception.IdException;
 import com.myapp.foodpairingbackend.repository.CommentRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,13 +20,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Tag("integration-test")
 @SpringBootTest
 @Transactional
 @TestPropertySource("/application-test.properties")
-public class CommentServiceDbIntegrationTest {
+public class CommentServiceDbIT {
 
     @Autowired
     private CompositionService compositionService;
